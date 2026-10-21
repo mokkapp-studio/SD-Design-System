@@ -1,0 +1,661 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "radio-group",
+  "name": "RadioGroup",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "input",
+  "description": "Conjunto de opciones excluyentes: solo una puede estar seleccionada a la vez. Cada opción es un Radio con su etiqueta.",
+  "guidance": {
+    "dos": [
+      "Usa de 2 a 6 opciones visibles a la vez y muestra todas las opciones de un vistazo.",
+      "Da nombre accesible al grupo (aria-label o aria-labelledby): Figma no define una etiqueta de grupo.",
+      "Etiquetas cortas y paralelas, en positivo.",
+      "Preselecciona la opción más segura o habitual cuando tenga sentido.",
+      "Mantén las opciones en una sola columna; el orden refleja la prioridad o la lógica natural."
+    ],
+    "donts": [
+      {
+        "case": "Varias opciones a la vez",
+        "useInstead": "Checkbox / CheckboxGroup",
+        "why": "Un radio solo permite una selección."
+      },
+      {
+        "case": "Más de 6 opciones o lista larga",
+        "useInstead": "Select",
+        "why": "Ocupa demasiado y dificulta comparar."
+      },
+      {
+        "case": "Activar un ajuste al instante",
+        "useInstead": "Switch",
+        "why": "Un grupo de radios se confirma con el formulario."
+      },
+      {
+        "case": "Grupo sin ninguna opción disponible o con una sola",
+        "useInstead": "Checkbox o texto",
+        "why": "Una única opción no es una elección."
+      }
+    ],
+    "related": [
+      {
+        "component": "Checkbox",
+        "relation": "alternative",
+        "difference": "Permite varias selecciones y estado indeterminado."
+      },
+      {
+        "component": "Select",
+        "relation": "alternative",
+        "difference": "Mejor con muchas opciones."
+      },
+      {
+        "component": "Switch",
+        "relation": "alternative",
+        "difference": "Efecto inmediato."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "div",
+    "role": "radiogroup",
+    "refTarget": "root",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "'classic' | 'surface' | 'soft'",
+      "default": "surface",
+      "description": "Aspecto de todos los radios. surface = fondo claro con borde; classic = igual con sombra; soft = relleno tenue de acento sin borde.",
+      "bindings": {
+        "figma": {
+          "property": "variant",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "size",
+      "type": "'1' | '2' | '3'",
+      "default": "2",
+      "description": "Tamaño del radio: 14 / 16 / 20 px, con su texto y el espacio entre opciones. El 2 es el valor por defecto.",
+      "bindings": {
+        "figma": {
+          "property": "size",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "highContrast",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true, la opción seleccionada usa el paso 12 del acento. Sin seleccionar no cambia.",
+      "bindings": {
+        "figma": {
+          "property": "highContrast",
+          "type": "VARIANT",
+          "value": "true"
+        }
+      }
+    },
+    {
+      "name": "children",
+      "type": "ReactNode (RadioGroup.Item)",
+      "required": true,
+      "description": "Las opciones. En Figma, hasta 6 con los booleanos item #1…#6; por defecto se ven 3.",
+      "bindings": {
+        "figma": {
+          "property": "item #1…#6",
+          "type": "BOOLEAN"
+        }
+      }
+    },
+    {
+      "name": "value",
+      "type": "string | undefined",
+      "default": null,
+      "description": "Valor de la opción seleccionada. En Figma, la selección es el eje `status=checked` de un Radio concreto (override de instancia), no una propiedad del grupo.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true, deshabilita todo el grupo. En Figma solo existe por opción (`state=disable` del Radio); el grupo no la tiene.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "name",
+      "type": "string | undefined",
+      "default": null,
+      "description": "Nombre del campo al enviar un formulario. Solo de código.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "onValueChange",
+      "type": "(value: string) => void",
+      "default": null,
+      "description": "Se emite al cambiar la selección. Solo de código.",
+      "bindings": {
+        "figma": null
+      }
+    }
+  ],
+  "states": {
+    "native": [
+      "hover",
+      "focus-visible",
+      "active"
+    ],
+    "controlled": [
+      {
+        "name": "checked",
+        "description": "La opción seleccionada. Muestra el indicador (punto).",
+        "aria": "aria-checked='true' en el item; el resto false"
+      },
+      {
+        "name": "disabled",
+        "description": "No interactiva. Fondo y borde con tokens neutros; nunca con opacity.",
+        "aria": "disabled en el item (o en todos)"
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "description": "Contenedor vertical de las opciones. Lleva role=radiogroup.",
+      "figmaLayer": "item-container"
+    },
+    "item": {
+      "element": "slot",
+      "description": "Hueco para cada opción (RadioGroup.Item).",
+      "figmaLayer": "Radio",
+      "slot": {
+        "key": "item",
+        "allowedComponents": [
+          "RadioGroup.Item"
+        ],
+        "minItems": 2,
+        "maxItems": 6,
+        "mandatory": true,
+        "figmaProp": "item #1…#6"
+      }
+    },
+    "focusRing": {
+      "element": "css",
+      "description": "No es un elemento: se pinta con :focus-visible sobre el radio. En Figma es el boolean focusRing de cada Radio: borde exterior de 4px e interior de 2px.",
+      "optional": true,
+      "figmaLayer": "focus-ring",
+      "figmaToggle": {
+        "property": "focusRing",
+        "type": "BOOLEAN",
+        "default": false
+      }
+    },
+    "radio": {
+      "element": "button",
+      "description": "El círculo de cada opción. Lleva role=radio y aria-checked.",
+      "figmaLayer": "radio"
+    },
+    "indicator": {
+      "element": "span",
+      "description": "Punto central de la opción seleccionada. Oculto si no está seleccionada.",
+      "optional": true,
+      "figmaLayer": "indicator"
+    },
+    "itemLabel": {
+      "element": "label",
+      "description": "Texto de cada opción. Asociado al radio.",
+      "optional": true,
+      "figmaLayer": "Text",
+      "figmaToggle": {
+        "property": "text",
+        "type": "BOOLEAN",
+        "default": false
+      }
+    }
+  },
+  "composition": {
+    "allowedChildren": [
+      "RadioGroup.Item"
+    ],
+    "forbiddenChildren": [
+      "RadioGroup",
+      "Button"
+    ],
+    "nestedComponents": [],
+    "codeParts": [
+      {
+        "name": "RadioGroup.Root",
+        "description": "El grupo (este componente)."
+      },
+      {
+        "name": "RadioGroup.Item",
+        "description": "Una opción: props value (string, obligatoria), disabled y label (children)."
+      }
+    ],
+    "asChild": false,
+    "item": {
+      "figmaComponent": "Radio (851:29635), 144 variantes, componente propio de Figma",
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "figma": null
+        },
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "figma": {
+            "property": "⮑ ✏️ text",
+            "type": "TEXT",
+            "toggle": "text"
+          }
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "figma": {
+            "property": "state",
+            "type": "VARIANT",
+            "value": "disable"
+          }
+        },
+        {
+          "name": "checked (derivado de value)",
+          "type": "boolean",
+          "figma": {
+            "property": "status",
+            "type": "VARIANT",
+            "value": "checked ✓"
+          }
+        }
+      ]
+    }
+  },
+  "layout": {
+    "height": {
+      "mode": "hug",
+      "values": {
+        "1": 56,
+        "2": 76,
+        "3": 96
+      },
+      "unit": "px",
+      "token": null,
+      "note": "Altura de ejemplo con 3 opciones visibles. Crece con cada opción."
+    },
+    "width": {
+      "default": "hug",
+      "modes": {
+        "hug": "La opción más ancha.",
+        "fill": "Lo decide quien usa el componente.",
+        "fixed": "En Figma, 160px de ejemplo."
+      },
+      "min": null,
+      "max": null,
+      "note": "Sin tokens de ancho."
+    },
+    "autoLayout": {
+      "direction": "VERTICAL",
+      "sizingHorizontal": "HUG",
+      "sizingVertical": "HUG",
+      "alignMain": "MIN",
+      "alignCross": "MIN",
+      "gap": "Entre opciones, por size: spacing.1 / 2 / 3. Dentro de cada opción, entre radio y texto: spacing.2 / 2 / 3."
+    },
+    "radioSize": {
+      "values": {
+        "1": 14,
+        "2": 16,
+        "3": 20
+      },
+      "unit": "px"
+    },
+    "indicatorSize": {
+      "values": {
+        "1": 6,
+        "2": 6,
+        "3": 10
+      },
+      "unit": "px"
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [
+        "colors",
+        "tokens.colors",
+        "spacing",
+        "text-style",
+        "shadows"
+      ],
+      "forbidden": []
+    },
+    "bindings": {
+      "base": {
+        "labelTextStyle": "text-style.{size}.regular",
+        "labelColor": "tokens.colors.text",
+        "focusRingOuter": {
+          "color": "colors.accent.accent-alpha.8",
+          "width": 4
+        },
+        "focusRingInner": {
+          "color": "colors.accent.accent.3",
+          "width": 2
+        }
+      },
+      "bySize": {
+        "1": {
+          "itemGap": "spacing.1",
+          "radioLabelGap": "spacing.2"
+        },
+        "2": {
+          "itemGap": "spacing.2",
+          "radioLabelGap": "spacing.2"
+        },
+        "3": {
+          "itemGap": "spacing.3",
+          "radioLabelGap": "spacing.3"
+        }
+      },
+      "byVariant": {
+        "classic": {
+          "unchecked": {
+            "default": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.7",
+              "borderWidth": 1,
+              "shadow": "shadows.shadow-1"
+            },
+            "hover": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.8",
+              "borderWidth": 1,
+              "shadow": "shadows.shadow-1"
+            },
+            "active": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.9",
+              "borderWidth": 1,
+              "shadow": "shadows.shadow-1"
+            }
+          },
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent.9",
+              "border": null,
+              "indicator": "tokens.colors.accent-contrast",
+              "shadow": "shadows.shadow-1"
+            },
+            "hover": {
+              "background": "colors.accent.accent.10",
+              "border": null,
+              "indicator": "tokens.colors.accent-contrast",
+              "shadow": "shadows.shadow-1"
+            },
+            "active": {
+              "background": "colors.accent.accent.10",
+              "border": null,
+              "indicator": "tokens.colors.accent-contrast",
+              "shadow": "shadows.shadow-1",
+              "opacity": 0.92
+            }
+          }
+        },
+        "surface": {
+          "unchecked": {
+            "default": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.7",
+              "borderWidth": 1
+            },
+            "hover": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.8",
+              "borderWidth": 1
+            },
+            "active": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.9",
+              "borderWidth": 1
+            }
+          },
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent.9",
+              "border": null,
+              "indicator": "tokens.colors.accent-contrast"
+            },
+            "hover": {
+              "background": "colors.accent.accent.10",
+              "border": null,
+              "indicator": "tokens.colors.accent-contrast"
+            },
+            "active": {
+              "background": "colors.accent.accent.10",
+              "border": null,
+              "indicator": "tokens.colors.accent-contrast",
+              "opacity": 0.92
+            }
+          }
+        },
+        "soft": {
+          "unchecked": {
+            "default": {
+              "background": "colors.accent.accent-alpha.5",
+              "border": null
+            },
+            "hover": {
+              "background": "colors.accent.accent-alpha.6",
+              "border": null
+            },
+            "active": {
+              "background": "colors.accent.accent-alpha.7",
+              "border": null
+            }
+          },
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent-alpha.5",
+              "border": null,
+              "indicator": "colors.accent.accent.11"
+            },
+            "hover": {
+              "background": "colors.accent.accent-alpha.6",
+              "border": null,
+              "indicator": "colors.accent.accent.11"
+            },
+            "active": {
+              "background": "colors.accent.accent-alpha.7",
+              "border": null,
+              "indicator": "colors.accent.accent.11",
+              "opacity": 0.92
+            }
+          }
+        }
+      },
+      "byHighContrast": {
+        "classic": {
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent.12",
+              "indicator": "colors.neutral.neutral.1"
+            },
+            "hover": {
+              "background": "colors.accent.accent.12",
+              "indicator": "colors.neutral.neutral.1",
+              "opacity": 0.88
+            },
+            "active": {
+              "background": "colors.accent.accent.12",
+              "indicator": "colors.neutral.neutral.1",
+              "opacity": 0.82
+            }
+          }
+        },
+        "surface": {
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent.12",
+              "indicator": "colors.neutral.neutral.1"
+            },
+            "hover": {
+              "background": "colors.accent.accent.12",
+              "indicator": "colors.neutral.neutral.1",
+              "opacity": 0.88
+            },
+            "active": {
+              "background": "colors.accent.accent.12",
+              "indicator": "colors.neutral.neutral.1",
+              "opacity": 0.82
+            }
+          }
+        },
+        "soft": {
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent-alpha.5",
+              "indicator": "colors.accent.accent.12"
+            },
+            "hover": {
+              "background": "colors.accent.accent-alpha.6",
+              "indicator": "colors.accent.accent.12",
+              "opacity": 0.88
+            },
+            "active": {
+              "background": "colors.accent.accent-alpha.7",
+              "indicator": "colors.accent.accent.12",
+              "opacity": 0.82
+            }
+          }
+        }
+      },
+      "byState": {
+        "disabled": {
+          "classic": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": "colors.neutral.neutral-alpha.6",
+            "borderWidth": 1,
+            "indicator": "colors.neutral.neutral-alpha.8",
+            "shadow": "shadows.shadow-1"
+          },
+          "surface": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": "colors.neutral.neutral-alpha.6",
+            "borderWidth": 1,
+            "indicator": "colors.neutral.neutral-alpha.8"
+          },
+          "soft": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": null,
+            "indicator": "colors.neutral.neutral-alpha.8"
+          }
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "name": "onValueChange",
+      "trigger": "Clic en una opción, o flechas / Espacio con foco en el grupo",
+      "payload": "string",
+      "blockedWhen": [
+        "disabled"
+      ]
+    }
+  ],
+  "a11y": {
+    "role": "radiogroup, con items role=radio",
+    "name": "El grupo necesita aria-label o aria-labelledby; cada opción toma su nombre de su etiqueta.",
+    "keyboard": [
+      "Tab — entra en el grupo (a la opción seleccionada, o a la primera si no hay)",
+      "Flecha abajo / derecha — siguiente opción y la selecciona",
+      "Flecha arriba / izquierda — opción anterior y la selecciona",
+      "Space — selecciona la opción con foco"
+    ],
+    "focusIndicator": "Anillo doble sobre el radio: exterior de 4px con colors.accent.accent-alpha.8 e interior de 2px con colors.accent.accent.3 (capa focus-ring).",
+    "minTarget": "El radio mide 14 / 16 / 20 px: por debajo de 24x24 (WCAG 2.5.8). Hay que hacer pulsable también la etiqueta o añadir padding invisible.",
+    "contrastNote": "Borde del radio ≥ 3:1 contra el fondo (WCAG 1.4.11) y texto ≥ 4.5:1. No medido en Figma; el borde sin seleccionar usa neutral-alpha.7.",
+    "wcag": [
+      "1.3.1 Información y relaciones",
+      "1.4.3 Contraste (AA)",
+      "1.4.11 Contraste no textual",
+      "2.1.1 Teclado",
+      "2.4.7 Foco visible",
+      "2.5.8 Tamaño del objetivo",
+      "4.1.2 Nombre, función, valor"
+    ]
+  },
+  "form": {
+    "control": "radio",
+    "label": {
+      "prop": "aria-label (grupo) + label (cada opción)",
+      "position": "end",
+      "required": true
+    },
+    "validation": null,
+    "errorMessage": null,
+    "note": "Figma no define etiqueta de grupo, error ni campo requerido. Valor enviado: el de la opción seleccionada, según name."
+  },
+  "content": {
+    "label": {
+      "maxLength": 60,
+      "casing": "sentence",
+      "voice": "Opción en positivo, paralela a las demás"
+    }
+  },
+  "behavior": {
+    "overflow": "wrap",
+    "motion": [],
+    "responsive": []
+  },
+  "testing": {
+    "cases": [
+      "solo una opción está seleccionada a la vez",
+      "flechas mueven y seleccionan; Tab entra una sola vez",
+      "disabled en un item lo salta con las flechas; disabled en el grupo bloquea todo",
+      "pulsar la etiqueta selecciona la opción",
+      "el grupo sin aria-label falla el check de accesibilidad"
+    ]
+  },
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/pTGbM1i9PKc6858ef7498a/Radix-Themes--Community-",
+      "node": "854:31508"
+    },
+    "code": {
+      "importPath": "@/components/radio-group/radio-group",
+      "export": "RadioGroup"
+    }
+  },
+  "meta": {
+    "source": "figma",
+    "derivableFromSource": [
+      "props.type",
+      "props.default",
+      "layout",
+      "tokens.bindings"
+    ],
+    "needsReview": [
+      "Los valores por defecto van marcados con ✦ («surface ✦», «2 ✦», «unchecked ✦», «default ✦»). El default del component set es `classic`.",
+      "El Radio Group de Figma solo tiene 3 ejes (size, variant, highContrast: 18 variantes) y 6 booleanos de visibilidad de opciones. La selección, el estado disabled y el texto son del Radio (851:29635, 144 variantes), que no tiene contrato propio: sus datos están en composition.item y en tokens.",
+      "La descripción del Radio Group en Figma es correcta; la de Checkbox Group es una copia suya y habla de «radio buttons».",
+      "Tokens leídos en size 2. Tamaños 1 y 3: solo radio, indicador, espaciado y estilo de texto.",
+      "El radio es circular, pero no se leyó su radio de esquina en Figma: no hay token de radius en el contrato.",
+      "highContrast solo cambia lo seleccionado: classic/surface usan accent.12 con indicador neutral.1; soft usa accent-alpha con indicador accent.12.",
+      "opacity en hover/active (0.88, 0.82, 0.92) fijo en Figma, sin variable. Es el único caso en que el contrato usa opacity; disabled nunca.",
+      "disabled se ve igual para seleccionado y no; el texto no cambia de color. classic mantiene shadows.shadow-1 también en disabled.",
+      "La anchura de 160px y la altura son de ejemplo. Figma limita a 6 opciones; en código no hay límite.",
+      "Faltan: etiqueta de grupo, orientación horizontal, estado de error y campo requerido.",
+      "El radio mide menos de 24px: área táctil por debajo de WCAG 2.5.8."
+    ]
+  }
+}

@@ -1,0 +1,657 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "alert-dialog",
+  "name": "AlertDialog",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "overlay",
+  "description": "Diálogo modal de confirmación que interrumpe a la persona y espera una respuesta.",
+  "guidance": {
+    "dos": [
+      "Úsalo solo cuando la acción exige una respuesta explícita: confirmar o cancelar.",
+      "Incluye siempre un Title: se anuncia al abrirse y da nombre accesible al diálogo.",
+      "Haz que Action se vea claramente distinto de Cancel (en el diseño: rojo sólido frente a gris suave).",
+      "Si no hay Description, quita la parte y pasa aria-describedby={undefined} a Content.",
+      "Escribe Title y Action con verbo concreto: «Revocar acceso», no «Aceptar»."
+    ],
+    "donts": [
+      {
+        "case": "Contenido con formulario, imágenes o información que no exige una respuesta",
+        "useInstead": "Dialog",
+        "why": "Visualmente son idénticos; la diferencia es semántica y de comportamiento. AlertDialog es solo para confirmaciones."
+      },
+      {
+        "case": "Avisar de algo sin pedir decisión",
+        "useInstead": "Un mensaje no modal (Callout o Toast, según el sistema)",
+        "why": "Un diálogo modal interrumpe; no debe usarse para informar."
+      },
+      {
+        "case": "Dejar Action y Cancel con el mismo peso visual",
+        "useInstead": "Action destacado, Cancel neutro",
+        "why": "La documentación pide que se distingan a simple vista."
+      }
+    ],
+    "related": [
+      {
+        "component": "Dialog",
+        "relation": "alternative",
+        "difference": "Mismo aspecto, distinta semántica y comportamiento; para contenido que no es una confirmación."
+      },
+      {
+        "component": "Button",
+        "relation": "contains",
+        "difference": "Cancel y Action envuelven un control de este tipo."
+      },
+      {
+        "component": "Heading",
+        "relation": "contains",
+        "difference": "Title está basado en Heading."
+      },
+      {
+        "component": "Text",
+        "relation": "contains",
+        "difference": "Description está basado en Text."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "div",
+    "role": "alertdialog",
+    "refTarget": "content",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": null,
+      "description": "Estado abierto controlado. Pertenece a Root.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "default": false,
+      "description": "Estado abierto inicial en uso no controlado. Pertenece a Root.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "default": null,
+      "description": "Se llama al abrir o cerrar. Pertenece a Root.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "size",
+      "type": "'1' | '2' | '3' | '4'",
+      "default": "3",
+      "description": "Escala del diálogo: controla padding, radio, tipografía y tamaño de los botones. En código admite valores responsivos. En Figma el valor por defecto lleva la marca ✦ («3 ✦»). Pertenece a Content.",
+      "bindings": {
+        "figma": {
+          "property": "size",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "inset",
+      "type": "boolean",
+      "default": false,
+      "description": "Solo de diseño: con true, el contenido del slot body ocupa todo el ancho, sin el padding horizontal del diálogo. No es una prop de Radix: en código se resuelve con el layout del propio contenido.",
+      "bindings": {
+        "figma": {
+          "property": "insetContent",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "required": true,
+      "description": "Texto del Title. Se anuncia al abrir el diálogo.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "description",
+      "type": "ReactNode | undefined",
+      "default": null,
+      "description": "Texto de Description. Si no se muestra, quita la parte y pasa aria-describedby={undefined} a Content.",
+      "bindings": {
+        "figma": {
+          "property": "description",
+          "type": "BOOLEAN"
+        }
+      }
+    },
+    {
+      "name": "children",
+      "type": "ReactNode | undefined",
+      "default": null,
+      "description": "Contenido libre entre la descripción y los botones (slot body).",
+      "bindings": {
+        "figma": {
+          "property": "content1",
+          "type": "INSTANCE_SWAP"
+        }
+      }
+    },
+    {
+      "name": "align",
+      "type": "'start' | 'center'",
+      "default": "center",
+      "description": "Alineación del diálogo. Pertenece a Content.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "width",
+      "type": "string",
+      "default": null,
+      "description": "Ancho. Admite valores responsivos. Pertenece a Content.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "minWidth",
+      "type": "string",
+      "default": null,
+      "description": "Ancho mínimo. Admite valores responsivos. Pertenece a Content.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "maxWidth",
+      "type": "string",
+      "default": "600px",
+      "description": "Ancho máximo. Admite valores responsivos. Pertenece a Content.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "height",
+      "type": "string",
+      "default": null,
+      "description": "Alto. Admite valores responsivos. Pertenece a Content.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "minHeight",
+      "type": "string",
+      "default": null,
+      "description": "Alto mínimo. Admite valores responsivos. Pertenece a Content.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "maxHeight",
+      "type": "string",
+      "default": null,
+      "description": "Alto máximo. Admite valores responsivos. Pertenece a Content. El diseño limita a 690px.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "asChild",
+      "type": "boolean",
+      "default": false,
+      "description": "Delega el elemento raíz de Content en su hijo. Pertenece a Content.",
+      "bindings": {
+        "figma": null
+      }
+    }
+  ],
+  "states": {
+    "native": [
+      "hover",
+      "focus-visible",
+      "active"
+    ],
+    "controlled": [
+      {
+        "name": "open",
+        "description": "El diálogo está visible: el foco queda atrapado dentro y el resto de la página no es interactiva.",
+        "aria": "role='alertdialog'; Title y Description se anuncian al abrir"
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "description": "Marco del diseño: deja 16px (spacing.4) alrededor del diálogo y aloja el backdrop. En código lo aportan el propio AlertDialog y la posición centrada de Content.",
+      "figmaLayer": "Alert Dialog (variante)"
+    },
+    "backdrop": {
+      "element": "div",
+      "description": "Capa que atenúa la página. Solo se muestra en Figma si backdrop=true.",
+      "optional": true,
+      "figmaLayer": "backdrop",
+      "figmaToggle": {
+        "property": "backdrop",
+        "type": "BOOLEAN",
+        "default": false
+      }
+    },
+    "content": {
+      "element": "div",
+      "description": "Superficie del diálogo: fondo, borde de 1px, radio y sombra. Recibe el ref y el role alertdialog.",
+      "figmaLayer": "modal-container"
+    },
+    "header": {
+      "element": "div",
+      "description": "Agrupa Title y Description.",
+      "figmaLayer": "text-container"
+    },
+    "title": {
+      "element": "Heading",
+      "description": "Título accesible, anunciado al abrir. Está basado en Heading.",
+      "content": {
+        "prop": "title"
+      },
+      "figmaLayer": "Heading"
+    },
+    "description": {
+      "element": "Text",
+      "description": "Descripción accesible, opcional. Está basada en Text.",
+      "optional": true,
+      "content": {
+        "prop": "description"
+      },
+      "figmaLayer": "Description"
+    },
+    "body": {
+      "element": "slot",
+      "description": "Hueco para contenido libre. El rectángulo discontinuo azul del diseño es solo un marcador: no se implementa.",
+      "optional": true,
+      "slot": {
+        "key": "body",
+        "allowedComponents": [
+          "any"
+        ],
+        "minItems": 0,
+        "maxItems": 1,
+        "mandatory": false,
+        "figmaProp": "content1"
+      },
+      "figmaLayer": "slot-container",
+      "figmaToggle": {
+        "property": "content",
+        "type": "BOOLEAN",
+        "default": false,
+        "note": "Solo existe con insetContent=false; con insetContent=true el hueco siempre está."
+      }
+    },
+    "footer": {
+      "element": "div",
+      "description": "Fila de acciones, alineada al final.",
+      "figmaLayer": "button-container"
+    },
+    "cancel": {
+      "element": "AlertDialog.Cancel",
+      "description": "Envuelve el control que cierra el diálogo sin confirmar.",
+      "slot": {
+        "key": "cancel",
+        "allowedComponents": [
+          "Button"
+        ],
+        "minItems": 1,
+        "maxItems": 1,
+        "mandatory": true
+      },
+      "figmaLayer": "Cancel"
+    },
+    "action": {
+      "element": "AlertDialog.Action",
+      "description": "Envuelve el control que cierra el diálogo y confirma la acción.",
+      "slot": {
+        "key": "action",
+        "allowedComponents": [
+          "Button"
+        ],
+        "minItems": 1,
+        "maxItems": 1,
+        "mandatory": true
+      },
+      "figmaLayer": "Action"
+    }
+  },
+  "composition": {
+    "allowedChildren": null,
+    "forbiddenChildren": [],
+    "nestedComponents": [
+      {
+        "part": "title",
+        "component": "Heading",
+        "fixedProps": {}
+      },
+      {
+        "part": "description",
+        "component": "Text",
+        "fixedProps": {}
+      }
+    ],
+    "codeParts": [
+      {
+        "name": "AlertDialog.Root",
+        "description": "Contiene todas las partes. Sin representación visual."
+      },
+      {
+        "name": "AlertDialog.Trigger",
+        "description": "Envuelve el control que abre el diálogo."
+      },
+      {
+        "name": "AlertDialog.Content",
+        "description": "Cuerpo del diálogo (anatomy.content). Recibe las props de tamaño y ancho."
+      },
+      {
+        "name": "AlertDialog.Title",
+        "description": "Título accesible (anatomy.title)."
+      },
+      {
+        "name": "AlertDialog.Description",
+        "description": "Descripción accesible opcional (anatomy.description)."
+      },
+      {
+        "name": "AlertDialog.Cancel",
+        "description": "Cierra sin confirmar (anatomy.cancel)."
+      },
+      {
+        "name": "AlertDialog.Action",
+        "description": "Cierra y confirma (anatomy.action)."
+      }
+    ],
+    "asChild": true
+  },
+  "layout": {
+    "height": {
+      "mode": "hug",
+      "values": null,
+      "unit": null,
+      "token": null
+    },
+    "width": {
+      "default": "fixed",
+      "modes": {
+        "hug": "No usado en el diseño.",
+        "fill": "Content ocupa el ancho disponible hasta maxWidth.",
+        "fixed": "En Figma, el marco mide 300 / 432 / 432 / 482 px según size 1 / 2 / 3 / 4, incluidos 16px de margen a cada lado: el diálogo mide 268 / 400 / 400 / 450 px."
+      },
+      "min": null,
+      "max": 600,
+      "note": "maxWidth 600px por defecto en código y en el diseño. El diseño limita además la altura a 690px, con scroll vertical interno."
+    },
+    "autoLayout": {
+      "direction": "VERTICAL",
+      "sizingHorizontal": "FILL",
+      "sizingVertical": "HUG",
+      "alignMain": "MIN",
+      "alignCross": "MIN",
+      "gap": "según size: ver tokens.bindings.bySize.*.contentGap"
+    },
+    "footer": {
+      "direction": "HORIZONTAL",
+      "alignMain": "MAX",
+      "alignCross": "CENTER",
+      "gap": "según size: ver tokens.bindings.bySize.*.actionsGap"
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [
+        "colors",
+        "tokens.colors",
+        "panel",
+        "overlays",
+        "spacing",
+        "radius",
+        "tokens.space",
+        "typography",
+        "shadows"
+      ],
+      "forbidden": []
+    },
+    "bindings": {
+      "base": {
+        "contentBackground": "panel.solid",
+        "contentBorder": "colors.neutral.neutral-alpha.3",
+        "contentShadow": "shadows.shadow-6",
+        "backdrop": "tokens.colors.overlay",
+        "textColor": "tokens.colors.text",
+        "fontFamily": "typography.font-family.text"
+      },
+      "bySize": {
+        "1": {
+          "contentPaddingY": "spacing.3",
+          "contentPaddingX": "spacing.3",
+          "contentGap": "spacing.3",
+          "radius": "radius.4",
+          "textGap": "spacing.1",
+          "titleFontSize": "typography.font-size.2",
+          "titleLineHeight": "typography.line-height.2",
+          "titleLetterSpacing": "typography.letter-spacing.2",
+          "titleFontWeight": "typography.font-weight.bold",
+          "descriptionFontSize": "typography.font-size.1",
+          "descriptionLineHeight": "typography.line-height.1",
+          "descriptionLetterSpacing": "typography.letter-spacing.1",
+          "descriptionFontWeight": "typography.font-weight.regular",
+          "actionsGap": "spacing.2",
+          "buttonHeight": "tokens.space.button-height-1",
+          "buttonPaddingX": "spacing.2",
+          "buttonGap": "spacing.1",
+          "buttonRadius": "radius.1-max",
+          "buttonFontSize": "typography.font-size.1",
+          "buttonLineHeight": "typography.line-height.1",
+          "buttonLetterSpacing": "typography.letter-spacing.1"
+        },
+        "2": {
+          "contentPaddingY": "spacing.4",
+          "contentPaddingX": "spacing.4",
+          "contentGap": "spacing.4",
+          "radius": "radius.4",
+          "textGap": "spacing.2",
+          "titleFontSize": "typography.font-size.5",
+          "titleLineHeight": "typography.line-height.5",
+          "titleLetterSpacing": "typography.letter-spacing.5",
+          "titleFontWeight": "typography.font-weight.bold",
+          "descriptionFontSize": "typography.font-size.2",
+          "descriptionLineHeight": "typography.line-height.2",
+          "descriptionLetterSpacing": "typography.letter-spacing.2",
+          "descriptionFontWeight": "typography.font-weight.regular",
+          "actionsGap": "spacing.2",
+          "buttonHeight": "tokens.space.button-height-2",
+          "buttonPaddingX": "spacing.3",
+          "buttonGap": "spacing.2",
+          "buttonRadius": "radius.2-max",
+          "buttonFontSize": "typography.font-size.2",
+          "buttonLineHeight": "typography.line-height.2",
+          "buttonLetterSpacing": "typography.letter-spacing.2"
+        },
+        "3": {
+          "contentPaddingY": "spacing.5",
+          "contentPaddingX": "spacing.5",
+          "contentGap": "spacing.4",
+          "radius": "radius.5",
+          "textGap": "spacing.3",
+          "titleFontSize": "typography.font-size.5",
+          "titleLineHeight": "typography.line-height.5",
+          "titleLetterSpacing": "typography.letter-spacing.5",
+          "titleFontWeight": "typography.font-weight.bold",
+          "descriptionFontSize": "typography.font-size.2",
+          "descriptionLineHeight": "typography.line-height.2",
+          "descriptionLetterSpacing": "typography.letter-spacing.2",
+          "descriptionFontWeight": "typography.font-weight.regular",
+          "actionsGap": "spacing.3",
+          "buttonHeight": "tokens.space.button-height-2",
+          "buttonPaddingX": "spacing.3",
+          "buttonGap": "spacing.2",
+          "buttonRadius": "radius.2-max",
+          "buttonFontSize": "typography.font-size.2",
+          "buttonLineHeight": "typography.line-height.2",
+          "buttonLetterSpacing": "typography.letter-spacing.2"
+        },
+        "4": {
+          "contentPaddingY": "spacing.6",
+          "contentPaddingX": "spacing.6",
+          "contentGap": "spacing.5",
+          "radius": "radius.5",
+          "textGap": "spacing.3",
+          "titleFontSize": "typography.font-size.6",
+          "titleLineHeight": "typography.line-height.6",
+          "titleLetterSpacing": "typography.letter-spacing.6",
+          "titleFontWeight": "typography.font-weight.bold",
+          "descriptionFontSize": "typography.font-size.3",
+          "descriptionLineHeight": "typography.line-height.3",
+          "descriptionLetterSpacing": "typography.letter-spacing.3",
+          "descriptionFontWeight": "typography.font-weight.regular",
+          "actionsGap": "spacing.3",
+          "buttonHeight": "tokens.space.button-height-3",
+          "buttonPaddingX": "spacing.4",
+          "buttonGap": "spacing.3",
+          "buttonRadius": "radius.3-max",
+          "buttonFontSize": "typography.font-size.3",
+          "buttonLineHeight": "typography.line-height.3",
+          "buttonLetterSpacing": "typography.letter-spacing.3"
+        }
+      },
+      "byPart": {
+        "cancel": {
+          "background": "colors.neutral.neutral-alpha.3",
+          "text": "colors.neutral.neutral.11",
+          "fontWeight": "typography.font-weight.medium"
+        },
+        "action": {
+          "background": "colors.semantic.error.9",
+          "text": "tokens.colors.white-contrast",
+          "fontWeight": "typography.font-weight.medium"
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "name": "onOpenChange",
+      "trigger": "Apertura o cierre: Trigger, Action, Cancel o Esc",
+      "payload": "boolean",
+      "blockedWhen": []
+    },
+    {
+      "name": "onEscapeKeyDown",
+      "trigger": "Tecla Esc con el diálogo abierto",
+      "payload": "KeyboardEvent",
+      "blockedWhen": []
+    },
+    {
+      "name": "onOpenAutoFocus",
+      "trigger": "Al abrir, cuando el foco entra en Content",
+      "payload": "Event",
+      "blockedWhen": []
+    },
+    {
+      "name": "onCloseAutoFocus",
+      "trigger": "Al cerrar, cuando el foco vuelve al Trigger",
+      "payload": "Event",
+      "blockedWhen": []
+    }
+  ],
+  "a11y": {
+    "role": "alertdialog (patrón WAI-ARIA Alert and Message Dialogs)",
+    "name": "Title nombra el diálogo y Description lo describe; ambos se anuncian al abrir.",
+    "keyboard": [
+      "Space / Enter — abren o cierran el diálogo desde el Trigger",
+      "Tab / Shift+Tab — mueven el foco al siguiente o anterior elemento enfocable dentro del diálogo (el foco queda atrapado)",
+      "Esc — cierra el diálogo y devuelve el foco al Trigger"
+    ],
+    "focusIndicator": "No definido en este nodo de Figma: añadir el estado de foco de Cancel y Action.",
+    "minTarget": "Botones de 24px (size 1) cumplen 24x24px (WCAG 2.5.8); 32px y 40px en el resto.",
+    "contrastNote": "Action: blanco sobre colors.semantic.error.9 = 3,91:1, por debajo de 4,5:1 (AA texto normal). Cancel: 5,22:1. Title y Description sobre panel.solid: 16,39:1.",
+    "wcag": [
+      "1.4.3 Contraste (AA)",
+      "2.1.1 Teclado",
+      "2.4.3 Orden del foco",
+      "4.1.2 Nombre, función, valor"
+    ]
+  },
+  "content": {
+    "title": {
+      "maxLength": 60,
+      "casing": "sentence",
+      "voice": "Pregunta o acción concreta: «¿Revocar acceso?»"
+    },
+    "action": {
+      "maxLength": 24,
+      "casing": "sentence",
+      "voice": "Verbo + objeto: «Revocar acceso»"
+    }
+  },
+  "behavior": {
+    "loading": null,
+    "overflow": "scroll",
+    "motion": [],
+    "responsive": [
+      {
+        "breakpoint": "all",
+        "change": "size admite valores responsivos en código; el diseño solo define las cuatro escalas."
+      }
+    ]
+  },
+  "testing": {
+    "cases": [
+      "Al abrir, el foco entra en el diálogo y queda atrapado",
+      "Esc cierra y devuelve el foco al Trigger",
+      "Title y Description están asociados al diálogo",
+      "Sin Description y con aria-describedby={undefined}, el diálogo no declara descripción",
+      "Action y Cancel cierran el diálogo",
+      "Las cuatro escalas de size coinciden con el diseño"
+    ]
+  },
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/pTGbM1i9PKc6858ef7498a/Radix-Themes--Community-?node-id=800-3697",
+      "node": "800:3697"
+    },
+    "code": {
+      "importPath": "@radix-ui/themes",
+      "export": "AlertDialog"
+    }
+  },
+  "meta": {
+    "source": "mixed",
+    "needsReview": [
+      "props.open / defaultOpen / onOpenChange: no aparecen en la página de Radix Themes consultada; se incluyen por ser las props habituales de Root. Verificar.",
+      "Comportamiento de cierre al hacer clic fuera y foco inicial en Cancel: no confirmados en la documentación consultada.",
+      "props.children: el nombre exacto de la propiedad en Figma («content1») es el que expone el MCP; confirmar si es instance swap o slot.",
+      "props.title: el texto del Title es un override del Heading anidado, no una propiedad del componente.",
+      "props.inset: es de diseño; confirmar cómo lo resolvéis en código.",
+      "anatomy.cancel / action: required viene del diseño (siempre aparecen), la documentación no lo exige.",
+      "Estados hover, focus-visible y active de Cancel y Action: no están en este nodo.",
+      "Variante inset=true en los tamaños 1, 2 y 4 no se inspeccionó: se asume la misma estructura que size 3.",
+      "Figma incluye la variable Shadows/shadow-5, pero ninguno de los variantes inspeccionados la usa.",
+      "tokens.policy.forbidden vacío: el archivo de Radix usa escalas (Colors/Neutral/Neutral Alpha/3) sin separar primitivos de semánticos.",
+      "Borde de 1px del Content sin variable en Figma.",
+      "a11y.contrastNote: Action no llega a 4,5:1."
+    ],
+    "derivableFromSource": [
+      "props.type",
+      "props.default",
+      "tokens.bindings.bySize",
+      "layout"
+    ]
+  }
+}

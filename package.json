@@ -1,0 +1,10 @@
+{
+  "name": "mi-sistema-de-diseno",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "tokens:build": "node scripts/build-tokens.mjs",
+    "check": "node check.mjs",
+    "icons:build": "node scripts/build-icons.mjs"
+  }
+}

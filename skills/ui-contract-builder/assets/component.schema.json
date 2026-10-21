@@ -1,0 +1,455 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Contrato de componente",
+  "description": "Bloques núcleo obligatorios; el resto de bloques son opcionales según el tipo de componente.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "version",
+    "status",
+    "description",
+    "guidance",
+    "semantics",
+    "props",
+    "states",
+    "anatomy",
+    "tokens",
+    "a11y"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "beta",
+        "stable",
+        "deprecated"
+      ]
+    },
+    "category": {
+      "enum": [
+        "action",
+        "input",
+        "container",
+        "overlay",
+        "data",
+        "media",
+        "navigation",
+        "feedback"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "guidance": {
+      "type": "object",
+      "required": [
+        "dos",
+        "donts"
+      ],
+      "properties": {
+        "dos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "donts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "case",
+              "useInstead"
+            ],
+            "properties": {
+              "case": {
+                "type": "string"
+              },
+              "useInstead": {
+                "type": "string"
+              },
+              "why": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "related": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "component",
+              "relation",
+              "difference"
+            ],
+            "properties": {
+              "component": {
+                "type": "string"
+              },
+              "relation": {
+                "enum": [
+                  "alternative",
+                  "similar",
+                  "contains",
+                  "contained-by"
+                ]
+              },
+              "difference": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "required": [
+        "element",
+        "refTarget"
+      ],
+      "properties": {
+        "element": {
+          "type": "string"
+        },
+        "role": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "refTarget": {
+          "type": "string"
+        },
+        "elementByProp": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "type",
+          "description",
+          "bindings"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "default": {},
+          "required": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "usage": {
+            "type": "string"
+          },
+          "bindings": {
+            "type": "object",
+            "required": [
+              "figma"
+            ],
+            "properties": {
+              "figma": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "required": [
+                  "property",
+                  "type"
+                ],
+                "properties": {
+                  "property": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "enum": [
+                      "VARIANT",
+                      "BOOLEAN",
+                      "TEXT",
+                      "INSTANCE_SWAP",
+                      "SLOT"
+                    ]
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "Solo si la prop es booleana en código pero en Figma es un valor de un eje VARIANT: el valor de Figma que equivale a true (p. ej. state → \"disable\")."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "states": {
+      "type": "object",
+      "required": [
+        "native",
+        "controlled"
+      ],
+      "properties": {
+        "native": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "controlled": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "description",
+              "aria"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "aria": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "anatomy": {
+      "type": "object",
+      "required": [
+        "root"
+      ],
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "element",
+          "description"
+        ],
+        "properties": {
+          "element": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "optional": {
+            "type": "boolean"
+          },
+          "content": {
+            "type": "object",
+            "required": [
+              "prop"
+            ],
+            "properties": {
+              "prop": {
+                "type": "string"
+              }
+            }
+          },
+          "slot": {
+            "type": "object",
+            "required": [
+              "key",
+              "allowedComponents"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "allowedComponents": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "minItems": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "maxItems": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "mandatory": {
+                "type": "boolean"
+              },
+              "figmaProp": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "composition": {
+      "type": "object"
+    },
+    "layout": {
+      "type": "object"
+    },
+    "tokens": {
+      "type": "object",
+      "required": [
+        "policy",
+        "bindings"
+      ],
+      "properties": {
+        "policy": {
+          "type": "object",
+          "required": [
+            "allowed",
+            "forbidden"
+          ],
+          "properties": {
+            "allowed": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "forbidden": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "scales": {
+          "type": "object",
+          "description": "Opcional. Mapa valor-de-prop (p. ej. color) → claves con rutas de token; se usa en las plantillas como {color.clave}. null = no aplica para ese valor."
+        },
+        "bindings": {
+          "type": "object"
+        }
+      }
+    },
+    "events": {
+      "type": "array"
+    },
+    "a11y": {
+      "type": "object",
+      "required": [
+        "role",
+        "name",
+        "keyboard",
+        "wcag"
+      ],
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "keyboard": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "focusIndicator": {
+          "type": "string"
+        },
+        "minTarget": {
+          "type": "string"
+        },
+        "contrastNote": {
+          "type": "string"
+        },
+        "wcag": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "content": {
+      "type": "object"
+    },
+    "behavior": {
+      "type": "object"
+    },
+    "form": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "overlay": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "data": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "media": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "theming": {
+      "type": "object"
+    },
+    "i18n": {
+      "type": "object"
+    },
+    "testing": {
+      "type": "object"
+    },
+    "governance": {
+      "type": "object"
+    },
+    "anchors": {
+      "type": "object"
+    },
+    "meta": {
+      "type": "object"
+    }
+  }
+}

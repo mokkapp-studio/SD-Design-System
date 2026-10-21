@@ -1,0 +1,183 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "icon",
+  "name": "Icon",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "media",
+  "description": "Dibuja un icono de la librería del sistema (Lucide) con tamaño y accesibilidad coherentes. Hereda el color del texto.",
+  "guidance": {
+    "dos": [
+      "Usa solo iconos de `icons/registry.json`. Si falta uno, añádelo al registry antes de usarlo.",
+      "Icono decorativo (acompaña a un texto): sin `label`; el componente lo oculta a lectores de pantalla.",
+      "Icono que comunica algo por sí solo: da siempre `label`.",
+      "Deja que el color lo herede del texto del componente padre; no lo pintes aparte."
+    ],
+    "donts": [
+      {
+        "case": "Botón solo con icono",
+        "useInstead": "IconButton con aria-label",
+        "why": "Un icono suelto no es interactivo ni tiene nombre accesible."
+      },
+      {
+        "case": "Importar toda la librería (import * as)",
+        "useInstead": "Importar desde el archivo generado de iconos",
+        "why": "Aumenta el tamaño del paquete y se salta el registro de iconos permitidos."
+      },
+      {
+        "case": "Emoji o imagen como icono",
+        "useInstead": "Un icono del registry",
+        "why": "No heredan color ni tamaño y se ven distinto en cada sistema."
+      }
+    ],
+    "related": [
+      {
+        "component": "Button",
+        "relation": "contained-by",
+        "difference": "Lo recibe como icon / iconEnd, con tamaño por size."
+      },
+      {
+        "component": "IconButton",
+        "relation": "contained-by",
+        "difference": "Lo recibe como icon; es su único contenido, con tamaño por size (16 / 16 / 18 / 20)."
+      },
+      {
+        "component": "TextField",
+        "relation": "contained-by",
+        "difference": "Lo recibe como icon, 14px en size 1 y 16px en 2 y 3."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "svg",
+    "role": "img (solo si hay label; si no, aria-hidden)",
+    "refTarget": "root",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "icon",
+      "type": "LucideIcon",
+      "required": true,
+      "description": "El componente de icono, importado del archivo generado a partir de icons/registry.json.",
+      "usage": "Icon con icon={Plus}",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "size",
+      "type": "'14' | '16' | '18' | '20'",
+      "default": "16",
+      "description": "Tamaño en px. Lo fija el componente padre según su size: Button e IconButton 16 / 16 / 18 / 20; TextField 14 / 16 / 16.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "type": "string | undefined",
+      "default": null,
+      "description": "Nombre accesible. Sin label, el icono es decorativo y lleva aria-hidden.",
+      "bindings": {
+        "figma": null
+      }
+    }
+  ],
+  "states": {
+    "native": [],
+    "controlled": []
+  },
+  "anatomy": {
+    "root": {
+      "element": "svg",
+      "description": "El icono. Hereda el color con currentColor."
+    }
+  },
+  "composition": {
+    "allowedChildren": [],
+    "forbiddenChildren": [
+      "*"
+    ],
+    "nestedComponents": [],
+    "asChild": false
+  },
+  "layout": {
+    "height": {
+      "mode": "fixed",
+      "values": {
+        "14": 14,
+        "16": 16,
+        "18": 18,
+        "20": 20
+      },
+      "unit": "px",
+      "token": null,
+      "note": "Cuadrado: ancho = alto. Sin token de tamaño de icono en Figma."
+    },
+    "width": {
+      "default": "fixed",
+      "modes": {
+        "hug": "No aplica.",
+        "fill": "No aplica.",
+        "fixed": "Igual que el alto."
+      },
+      "min": null,
+      "max": null,
+      "note": ""
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [],
+      "forbidden": [
+        "colors",
+        "tokens.colors"
+      ]
+    },
+    "bindings": {
+      "base": {
+        "strokeWidth": 2
+      }
+    }
+  },
+  "a11y": {
+    "role": "img solo si hay label",
+    "name": "label; sin label, aria-hidden",
+    "keyboard": [],
+    "wcag": [
+      "1.1.1 Contenido no textual",
+      "1.4.11 Contraste no textual"
+    ]
+  },
+  "testing": {
+    "cases": [
+      "sin label lleva aria-hidden=\"true\"",
+      "con label lleva role=\"img\" y aria-label",
+      "hereda el color del padre (currentColor)"
+    ]
+  },
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/pTGbM1i9PKc6858ef7498a/Radix-Themes--Community-",
+      "node": "—"
+    },
+    "code": {
+      "importPath": "@/components/icon/icon",
+      "export": "Icon"
+    }
+  },
+  "meta": {
+    "source": "manual",
+    "derivableFromSource": [
+      "props.type",
+      "props.default"
+    ],
+    "needsReview": [
+      "Figma de Radix usa sus propios iconos (instance swap por defecto «Design / blending-mode» y similares). El sistema usa Lucide: el aspecto cambia y hay que revisar cada icono en Figma.",
+      "strokeWidth 2 es el valor por defecto de Lucide, no viene de Figma. Radix Icons son de 15px con trazo distinto: decidir si se ajusta a 1.5.",
+      "Los tamaños 14 / 16 / 18 / 20 salen de Button y TextField; no hay token de tamaño de icono.",
+      "El anchor de Figma queda sin nodo: el componente no existe como tal en el archivo."
+    ]
+  }
+}

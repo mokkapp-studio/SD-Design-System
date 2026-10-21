@@ -1,0 +1,20 @@
+{
+  "$description": "Iconos permitidos en el sistema. Fuente de verdad: si un icono no está aquí, no se usa. Librería: Lucide (lucide-react). Para añadir uno: nueva entrada, `npm run icons:build` (en el proyecto Next.js, `npm run ds:icons`) y `npm run check`.",
+  "library": "lucide-react",
+  "install": "npm install lucide-react",
+  "docs": "https://lucide.dev/icons/",
+  "defaults": { "size": 16, "strokeWidth": 2 },
+  "icons": [
+    { "name": "ArrowRight", "use": "avanzar, siguiente, continuar" },
+    { "name": "Check", "use": "confirmación, marcado" },
+    { "name": "ChevronDown", "use": "desplegar, selector" },
+    { "name": "Eye", "use": "mostrar contenido (p. ej. contraseña)" },
+    { "name": "EyeOff", "use": "ocultar contenido" },
+    { "name": "Info", "use": "información neutra" },
+    { "name": "Minus", "use": "quitar, restar, estado indeterminado" },
+    { "name": "Plus", "use": "añadir, crear" },
+    { "name": "Search", "use": "buscar" },
+    { "name": "Trash2", "use": "eliminar (acción destructiva)" },
+    { "name": "X", "use": "cerrar, borrar el contenido" }
+  ]
+}

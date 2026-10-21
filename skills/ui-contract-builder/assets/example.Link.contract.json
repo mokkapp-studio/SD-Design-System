@@ -1,0 +1,340 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "link",
+  "name": "Link",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "navigation",
+  "description": "Enlace de texto que lleva a otra página, sección o recurso. Es un `<a>` nativo, en línea con el texto, con el color de acento del tema. Se ajusta tamaño y peso para que encaje con el texto que lo rodea.",
+  "guidance": {
+    "dos": [
+      "Etiqueta que diga a dónde lleva: «Ver precios», no «Haz clic aquí».",
+      "Dentro de un párrafo, usa el mismo `size` que el texto que lo rodea.",
+      "Usa `underline` cuando el enlace va dentro de un texto corrido: el color solo no basta para distinguirlo.",
+      "Usa `highContrast` cuando el color de acento no dé contraste suficiente sobre el fondo.",
+      "Si abre otra pestaña (`target=\"_blank\"`), avísalo en la etiqueta o con texto oculto para lectores de pantalla."
+    ],
+    "donts": [
+      {
+        "case": "Ejecutar una acción (guardar, borrar, enviar)",
+        "useInstead": "Button",
+        "why": "Un enlace navega; un botón ejecuta. Se anuncian distinto y se activan con teclas distintas."
+      },
+      {
+        "case": "Enlace sin href (para que \"haga\" algo con JavaScript)",
+        "useInstead": "Button con variant=\"ghost\"",
+        "why": "Un `<a>` sin href no es enfocable ni se anuncia como enlace."
+      },
+      {
+        "case": "Enlace solo con icono",
+        "useInstead": "IconButton (si es acción) o Link con texto visible",
+        "why": "Sin etiqueta no hay nombre accesible; el Link de Figma siempre lleva texto."
+      },
+      {
+        "case": "Varios enlaces seguidos con la misma etiqueta («Leer más»)",
+        "useInstead": "Etiquetas distintas que describan el destino",
+        "why": "Un lector de pantalla que lista los enlaces no sabe distinguirlos."
+      }
+    ],
+    "related": [
+      {
+        "component": "Button",
+        "relation": "alternative",
+        "difference": "Ejecuta una acción; el enlace navega."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "a",
+    "role": null,
+    "refTarget": "root",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "size",
+      "type": "'1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'",
+      "default": "3",
+      "description": "Tamaño del texto: 12 / 14 / 16 / 18 / 20 / 24 / 28 / 35 / 60 px, con su altura de línea. En código, por defecto el 3 (texto de cuerpo). Figma marca el 1 como valor del component set, pero es solo el valor inicial del archivo.",
+      "bindings": {
+        "figma": {
+          "property": "size",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "weight",
+      "type": "'light' | 'regular' | 'medium' | 'bold'",
+      "default": "regular",
+      "description": "Grosor de la fuente. regular por defecto; el valor inicial del component set en Figma es light.",
+      "bindings": {
+        "figma": {
+          "property": "weight",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "underline",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true, muestra el subrayado fijo (1px) debajo del texto, en color accent-alpha.5. En Figma es el eje `underline` con valores false / true.",
+      "bindings": {
+        "figma": {
+          "property": "underline",
+          "type": "VARIANT",
+          "value": "true"
+        }
+      }
+    },
+    {
+      "name": "highContrast",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true, usa el paso 12 de la escala accent en vez del accent-alpha.11 para el texto.",
+      "bindings": {
+        "figma": {
+          "property": "highContrast",
+          "type": "VARIANT",
+          "value": "true"
+        }
+      }
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": true,
+      "description": "Destino del enlace. Obligatorio: sin href un `<a>` no es enlace. Solo de código.",
+      "usage": "href=\"/precios\"",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "target",
+      "type": "'_self' | '_blank'",
+      "default": "_self",
+      "description": "Dónde se abre. Con '_blank', el componente añade rel=\"noopener noreferrer\". Solo de código.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "Texto del enlace. Texto por defecto en Figma: «Link».",
+      "bindings": {
+        "figma": {
+          "property": "✏️ text",
+          "type": "TEXT"
+        }
+      }
+    }
+  ],
+  "states": {
+    "native": [
+      "hover",
+      "focus-visible",
+      "active",
+      "visited"
+    ],
+    "controlled": []
+  },
+  "anatomy": {
+    "root": {
+      "element": "a",
+      "description": "Elemento raíz. Siempre un `<a>` nativo con href.",
+      "figmaLayer": "Link (cada variante del component set)"
+    },
+    "label": {
+      "element": "span",
+      "description": "Texto del enlace.",
+      "figmaLayer": "Link (capa de texto)",
+      "content": {
+        "prop": "children"
+      }
+    },
+    "underline": {
+      "element": "css",
+      "description": "Subrayado de 1px bajo el texto. En código es `text-decoration`, no un elemento. Solo con underline=true.",
+      "optional": true,
+      "figmaLayer": "underline (rectángulo)",
+      "figmaToggle": {
+        "property": "underline",
+        "type": "VARIANT",
+        "default": false
+      }
+    }
+  },
+  "composition": {
+    "allowedChildren": [
+      "texto",
+      "span",
+      "strong",
+      "em",
+      "Icon"
+    ],
+    "forbiddenChildren": [
+      "Button",
+      "a",
+      "input"
+    ],
+    "nestedComponents": [],
+    "asChild": true
+  },
+  "layout": {
+    "height": {
+      "mode": "hug",
+      "values": {
+        "1": 16,
+        "2": 20,
+        "3": 24,
+        "4": 26,
+        "5": 28,
+        "6": 30,
+        "7": 36,
+        "8": 40,
+        "9": 60
+      },
+      "unit": "px",
+      "token": null,
+      "note": "Alto = altura de línea del estilo de texto por size (no hay padding). No hay token propio: viene de text-style.{size}.{weight}."
+    },
+    "width": {
+      "default": "hug",
+      "modes": {
+        "hug": "Se ajusta al texto. Siempre; no hay fill ni fixed."
+      },
+      "min": null,
+      "max": null,
+      "note": "En línea con el texto que lo rodea."
+    },
+    "autoLayout": {
+      "direction": "HORIZONTAL",
+      "sizingHorizontal": "HUG",
+      "sizingVertical": "HUG",
+      "alignMain": "MIN",
+      "alignCross": "MIN",
+      "gap": "No aplica"
+    },
+    "fontSize": {
+      "values": {
+        "1": 12,
+        "2": 14,
+        "3": 16,
+        "4": 18,
+        "5": 20,
+        "6": 24,
+        "7": 28,
+        "8": 35,
+        "9": 60
+      },
+      "unit": "px"
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [
+        "colors",
+        "text-style"
+      ],
+      "forbidden": []
+    },
+    "bindings": {
+      "base": {
+        "textStyle": "text-style.{size}.{weight}"
+      },
+      "byHighContrast": {
+        "false": {
+          "text": "colors.accent.accent-alpha.11"
+        },
+        "true": {
+          "text": "colors.accent.accent.12"
+        }
+      },
+      "underline": {
+        "color": "colors.accent.accent-alpha.5",
+        "width": 1
+      }
+    }
+  },
+  "a11y": {
+    "role": "link (implícito por el elemento a con href)",
+    "name": "El texto del enlace (children). Debe tener sentido fuera de contexto.",
+    "keyboard": [
+      "Enter — sigue el enlace"
+    ],
+    "focusIndicator": "Anillo de foco visible con :focus-visible. No está en Figma: usar el mismo anillo del sistema (exterior colors.accent.accent-alpha.8 y interior colors.accent.accent.3).",
+    "minTarget": "Enlace en línea con texto: exento de 2.5.8. Si va solo en una fila, que su zona pulsable sea ≥ 24px de alto.",
+    "contrastNote": "Texto accent-alpha.11 (o accent.12 con highContrast) sobre el fondo: ≥ 4.5:1 en texto normal. Sin subrayado, el color no basta como único indicador (WCAG 1.4.1). No medido en Figma.",
+    "wcag": [
+      "1.4.1 Uso del color",
+      "1.4.3 Contraste (AA)",
+      "2.1.1 Teclado",
+      "2.4.4 Propósito del enlace (en contexto)",
+      "2.4.7 Foco visible",
+      "4.1.2 Nombre, función, valor"
+    ]
+  },
+  "content": {
+    "label": {
+      "maxLength": null,
+      "casing": "sentence",
+      "voice": "Dice a dónde lleva: «Ver precios», no «Haz clic aquí»."
+    }
+  },
+  "behavior": {
+    "overflow": "wrap",
+    "externalLinks": {
+      "whenTargetBlank": {
+        "rel": "noopener noreferrer",
+        "announce": "Avisar de que abre en otra pestaña"
+      }
+    },
+    "motion": [],
+    "responsive": []
+  },
+  "testing": {
+    "cases": [
+      "renderiza un `<a>` con el href dado; sin href falla en TypeScript",
+      "target=\"_blank\" añade rel=\"noopener noreferrer\"",
+      "cada size × weight usa text-style.{size}.{weight}",
+      "highContrast usa colors.accent.accent.12 en el texto",
+      "underline=true pinta el subrayado con colors.accent.accent-alpha.5",
+      "el foco con teclado muestra el anillo"
+    ]
+  },
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/pTGbM1i9PKc6858ef7498a/Radix-Themes--Community-",
+      "node": "1129:78567"
+    },
+    "code": {
+      "importPath": "@/components/link/link",
+      "export": "Link"
+    }
+  },
+  "meta": {
+    "source": "figma",
+    "derivableFromSource": [
+      "props.type",
+      "layout",
+      "tokens.bindings"
+    ],
+    "needsReview": [
+      "Figma solo diseña 4 propiedades: size (1-9), weight (light, regular, medium, bold), underline y highContrast. 144 variantes. No hay estados (hover, foco, visitado) ni eje de color.",
+      "Los valores por defecto del component set en Figma son size=1 y weight=light. El contrato usa size=3 y weight=regular (texto de cuerpo). Decisión mía, no del Figma: revisar.",
+      "No hay color en Figma: el enlace siempre es de la escala accent. En Radix real el componente acepta `color`; no se añadió porque Figma no lo diseña.",
+      "underline es un boolean en Figma (false / true). Radix real tiene underline: auto, always, hover y none; no se diseñó ni se incluyó. Hover no tiene diseño: decidir si el subrayado aparece al pasar el ratón.",
+      "El subrayado es un rectángulo de 1px situado justo debajo de la caja del texto (y = alto). En código se hará con text-decoration; el grosor y la separación pueden diferir algo.",
+      "El color del subrayado (accent-alpha.5) es el mismo con highContrast=true y con false.",
+      "Sin foco ni hover diseñados: el anillo de foco del contrato se copió de Button, no de Figma.",
+      "Letter spacing: en Figma el estilo Typography/9/Light usa -0.04 y los demás pesos -0.4 (misma anomalía ya anotada en los text-styles).",
+      "Figma usa SF Pro; en código la fuente es la del tema (typography.font-family).",
+      "No existen en Figma: href, target. El ancho depende del texto de ejemplo «Link».",
+      "Contraste no medido."
+    ]
+  }
+}

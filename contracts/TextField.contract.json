@@ -1,0 +1,608 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "text-field",
+  "name": "TextField",
+  "version": "0.1.1",
+  "status": "draft",
+  "category": "input",
+  "description": "Campo de una línea para que la persona escriba texto. Admite etiqueta, un icono inicial y un botón final.",
+  "guidance": {
+    "dos": [
+      "Da siempre una etiqueta visible (`label`): el placeholder no sustituye a la etiqueta.",
+      "Usa el placeholder solo como ejemplo de formato, corto: «nombre@correo.com».",
+      "Usa `variant=\"surface\"` por defecto; `classic` si el campo debe destacar con sombra; `soft` sobre fondos neutros.",
+      "Para acciones ligadas al campo (mostrar contraseña, borrar) usa el slot `iconButton`, no un botón aparte.",
+      "Usa `readOnly` si el valor se puede copiar y `disabled` si no está disponible."
+    ],
+    "donts": [
+      {
+        "case": "Texto de varias líneas",
+        "useInstead": "TextArea",
+        "why": "Un campo de una línea corta el contenido y no crece."
+      },
+      {
+        "case": "Elegir entre opciones cerradas",
+        "useInstead": "Select o RadioGroup",
+        "why": "Escribir invita a errores de formato y no valida contra la lista."
+      },
+      {
+        "case": "Usar el placeholder como etiqueta",
+        "useInstead": "La prop label",
+        "why": "Desaparece al escribir y tiene poco contraste."
+      },
+      {
+        "case": "Buscar con sugerencias",
+        "useInstead": "Combobox",
+        "why": "TextField no gestiona listas ni selección con teclado."
+      }
+    ],
+    "related": [
+      {
+        "component": "TextArea",
+        "relation": "alternative",
+        "difference": "Varias líneas."
+      },
+      {
+        "component": "Select",
+        "relation": "alternative",
+        "difference": "Opciones cerradas."
+      },
+      {
+        "component": "IconButton",
+        "relation": "contains",
+        "difference": "Aparece como botón final dentro del campo."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "input",
+    "role": null,
+    "refTarget": "input",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "'classic' | 'surface' | 'soft'",
+      "default": "surface",
+      "description": "Aspecto. surface = fondo claro con borde; classic = igual con sombra; soft = relleno tenue de acento sin borde.",
+      "bindings": {
+        "figma": {
+          "property": "variant",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "size",
+      "type": "'1' | '2' | '3'",
+      "default": "2",
+      "description": "Tamaño: altura 24 / 32 / 40 px, con su texto, radio y espaciado. El 2 es el valor por defecto.",
+      "bindings": {
+        "figma": {
+          "property": "size",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true, no se puede enfocar ni editar. En Figma es el valor «disable» del eje `state`.",
+      "bindings": {
+        "figma": {
+          "property": "state",
+          "type": "VARIANT",
+          "value": "disable"
+        }
+      }
+    },
+    {
+      "name": "readOnly",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true, se ve el valor y se puede enfocar y copiar, pero no editar. En Figma es el valor «read-only» del eje `state`.",
+      "bindings": {
+        "figma": {
+          "property": "state",
+          "type": "VARIANT",
+          "value": "read-only"
+        }
+      }
+    },
+    {
+      "name": "label",
+      "type": "string | undefined",
+      "default": null,
+      "description": "Etiqueta visible encima del campo. Si no se indica, no se muestra (en Figma, el boolean `label` la oculta). Tamaño del texto según size.",
+      "bindings": {
+        "figma": {
+          "property": "⮑ ✏️ label",
+          "type": "TEXT"
+        }
+      }
+    },
+    {
+      "name": "placeholder",
+      "type": "string | undefined",
+      "default": null,
+      "description": "Texto de ejemplo mientras el campo está vacío.",
+      "bindings": {
+        "figma": {
+          "property": "✏️ placeholder",
+          "type": "TEXT"
+        }
+      }
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "default": "",
+      "description": "Texto escrito. En Figma, `state=filled` y `state=read-only` muestran este texto; `state=placeholder` y `state=active` muestran el placeholder.",
+      "bindings": {
+        "figma": {
+          "property": "✏️ text",
+          "type": "TEXT"
+        }
+      }
+    },
+    {
+      "name": "icon",
+      "type": "ReactNode | undefined",
+      "default": null,
+      "description": "Icono inicial. 14px en size 1; 16px en size 2 y 3. aria-hidden.",
+      "usage": "icon={<Search />}",
+      "bindings": {
+        "figma": {
+          "property": "⮑ 🔄 icon",
+          "type": "INSTANCE_SWAP"
+        }
+      }
+    },
+    {
+      "name": "iconButton",
+      "type": "ReactNode | undefined",
+      "default": null,
+      "description": "Botón final dentro del campo (borrar, mostrar contraseña): un IconButton. El TextField le impone variant ghost, color neutral y el size que toca (ver composition.nestedComponents); quien lo usa solo da icon, aria-label y onPress. No existe en size 1.",
+      "usage": "iconButton={<IconButton icon={<X />} aria-label=\"Borrar\" onPress={limpiar} />}",
+      "bindings": {
+        "figma": {
+          "property": "iconButton",
+          "type": "BOOLEAN"
+        }
+      }
+    },
+    {
+      "name": "type",
+      "type": "'text' | 'email' | 'password' | 'search' | 'tel' | 'url' | 'number'",
+      "default": "text",
+      "description": "Tipo nativo del input. Solo de código.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "onChange",
+      "type": "(event: ChangeEvent<HTMLInputElement>) => void",
+      "default": null,
+      "description": "Se emite al escribir. Solo de código.",
+      "bindings": {
+        "figma": null
+      }
+    }
+  ],
+  "states": {
+    "native": [
+      "hover",
+      "focus-visible"
+    ],
+    "controlled": [
+      {
+        "name": "disabled",
+        "description": "No se puede enfocar ni editar. Texto y fondo con tokens neutros; nunca con opacity.",
+        "aria": "disabled (atributo HTML nativo)"
+      },
+      {
+        "name": "readOnly",
+        "description": "Muestra el valor, se puede enfocar y copiar, no editar.",
+        "aria": "readonly (atributo HTML nativo)"
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "description": "Contenedor del campo (borde, fondo, radio, sombra). El input vive dentro.",
+      "figmaLayer": "root"
+    },
+    "label": {
+      "element": "label",
+      "description": "Etiqueta visible encima del campo. Asociada al input con htmlFor.",
+      "optional": true,
+      "figmaLayer": "Label",
+      "figmaToggle": {
+        "property": "label",
+        "type": "BOOLEAN",
+        "default": false
+      },
+      "content": {
+        "prop": "label"
+      }
+    },
+    "focusRing": {
+      "element": "css",
+      "description": "No es un elemento: se pinta con :focus-visible. En Figma es una capa que se muestra con el boolean focusRing: borde exterior de 4px e interior de 2px.",
+      "optional": true,
+      "figmaLayer": "focus-ring",
+      "figmaToggle": {
+        "property": "focusRing",
+        "type": "BOOLEAN",
+        "default": false
+      }
+    },
+    "icon": {
+      "element": "slot",
+      "description": "Hueco para el icono inicial.",
+      "optional": true,
+      "figmaLayer": "icon-container",
+      "figmaToggle": {
+        "property": "icon",
+        "type": "BOOLEAN",
+        "default": false
+      },
+      "slot": {
+        "key": "icon",
+        "allowedComponents": [
+          "Icon"
+        ],
+        "minItems": 0,
+        "maxItems": 1,
+        "mandatory": false,
+        "figmaProp": "⮑ 🔄 icon"
+      }
+    },
+    "input": {
+      "element": "input",
+      "description": "Campo nativo. Muestra el placeholder si está vacío y el valor si está relleno. El cursor es el nativo (en Figma es un texto «|»).",
+      "figmaLayer": "input-container",
+      "content": {
+        "prop": "value"
+      }
+    },
+    "iconButton": {
+      "element": "slot",
+      "description": "Hueco para un IconButton al final del campo.",
+      "optional": true,
+      "figmaLayer": "button-container",
+      "figmaToggle": {
+        "property": "iconButton",
+        "type": "BOOLEAN",
+        "default": false
+      },
+      "slot": {
+        "key": "iconButton",
+        "allowedComponents": [
+          "IconButton"
+        ],
+        "minItems": 0,
+        "maxItems": 1,
+        "mandatory": false,
+        "figmaProp": "iconButton"
+      }
+    }
+  },
+  "composition": {
+    "allowedChildren": null,
+    "forbiddenChildren": [
+      "TextField",
+      "Button"
+    ],
+    "nestedComponents": [
+      {
+        "part": "iconButton",
+        "component": "IconButton",
+        "fixedProps": {
+          "variant": "ghost",
+          "color": "neutral"
+        },
+        "sizeFromParent": {
+          "1": null,
+          "2": "1",
+          "3": "2"
+        },
+        "note": "size del IconButton según el size del TextField: 24px en size 2 → IconButton size 1; 32px en size 3 → IconButton size 2. En size 1 no hay botón."
+      }
+    ],
+    "asChild": false
+  },
+  "layout": {
+    "height": {
+      "mode": "fixed",
+      "values": {
+        "1": 24,
+        "2": 32,
+        "3": 40
+      },
+      "unit": "px",
+      "token": null,
+      "note": "Sin token de altura en Figma: valores sueltos. Con etiqueta visible la altura total crece."
+    },
+    "width": {
+      "default": "fill",
+      "modes": {
+        "hug": "No aplica.",
+        "fill": "Ocupa el ancho del contenedor. En Figma, 200px de ejemplo.",
+        "fixed": "Lo decide quien usa el componente."
+      },
+      "min": null,
+      "max": null,
+      "note": "No hay tokens de ancho."
+    },
+    "autoLayout": {
+      "direction": "VERTICAL (etiqueta encima del campo); el campo es HORIZONTAL",
+      "sizingHorizontal": "FILL",
+      "sizingVertical": "HUG",
+      "alignMain": "MIN",
+      "alignCross": "CENTER",
+      "gap": "Entre etiqueta y campo: spacing.1 en size 1; spacing.2 en size 2 y 3"
+    },
+    "iconSize": {
+      "values": {
+        "1": 14,
+        "2": 16,
+        "3": 16
+      },
+      "unit": "px"
+    },
+    "iconButtonSize": {
+      "values": {
+        "1": null,
+        "2": 24,
+        "3": 32
+      },
+      "unit": "px",
+      "note": "Size 1 no tiene botón. En size 2 = IconButton size 1 (24px); en size 3 = IconButton size 2 (32px). Ver composition.nestedComponents."
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [
+        "colors",
+        "tokens.colors",
+        "spacing",
+        "radius",
+        "text-style",
+        "shadows"
+      ],
+      "forbidden": []
+    },
+    "bindings": {
+      "base": {
+        "inputTextStyle": "text-style.{size}.regular",
+        "labelTextStyle": "text-style.{size}.medium",
+        "labelColor": "tokens.colors.text",
+        "focusRingOuter": {
+          "color": "colors.accent.accent-alpha.8",
+          "width": 4
+        },
+        "focusRingInner": {
+          "color": "colors.accent.accent.3",
+          "width": 2
+        }
+      },
+      "bySize": {
+        "1": {
+          "paddingX": "spacing.1",
+          "radius": "radius.2-max",
+          "labelGap": "spacing.1"
+        },
+        "2": {
+          "paddingX": "spacing.1",
+          "radius": "radius.2-max",
+          "labelGap": "spacing.2",
+          "iconContainerPadding": "spacing.1"
+        },
+        "3": {
+          "paddingX": "spacing.1",
+          "radius": "radius.3-max",
+          "labelGap": "spacing.2",
+          "iconContainerPadding": "spacing.2"
+        }
+      },
+      "byVariant": {
+        "classic": {
+          "placeholder": {
+            "background": "tokens.colors.surface",
+            "border": "colors.neutral.neutral-alpha.5",
+            "shadow": "shadows.shadow-1"
+          },
+          "filled": {
+            "background": "tokens.colors.surface",
+            "border": "colors.neutral.neutral-alpha.6",
+            "shadow": "shadows.shadow-1"
+          },
+          "active": {
+            "background": "tokens.colors.surface",
+            "border": "colors.accent.accent-alpha.8",
+            "shadow": "shadows.shadow-1"
+          },
+          "readOnly": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": "colors.neutral.neutral-alpha.6"
+          }
+        },
+        "surface": {
+          "placeholder": {
+            "background": "tokens.colors.surface",
+            "border": "colors.neutral.neutral-alpha.5"
+          },
+          "filled": {
+            "background": "tokens.colors.surface",
+            "border": "colors.neutral.neutral-alpha.6"
+          },
+          "active": {
+            "background": "tokens.colors.surface",
+            "border": "colors.accent.accent-alpha.8"
+          },
+          "readOnly": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": "colors.neutral.neutral-alpha.6"
+          }
+        },
+        "soft": {
+          "placeholder": {
+            "background": "colors.accent.accent-alpha.3",
+            "border": null
+          },
+          "filled": {
+            "background": "colors.accent.accent-alpha.3",
+            "border": null
+          },
+          "active": {
+            "background": "colors.accent.accent-alpha.5",
+            "border": "colors.accent.accent-alpha.8"
+          },
+          "readOnly": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": null
+          }
+        }
+      },
+      "byState": {
+        "disabled": {
+          "classic": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": "colors.neutral.neutral-alpha.6",
+            "shadow": "shadows.shadow-1"
+          },
+          "surface": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": "colors.neutral.neutral-alpha.6"
+          },
+          "soft": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": null
+          }
+        },
+        "textByState": {
+          "placeholder": {
+            "text": "colors.neutral.neutral-alpha.9"
+          },
+          "filled": {
+            "text": "colors.neutral.neutral.12"
+          },
+          "active": {
+            "text": "colors.neutral.neutral-alpha.9",
+            "caret": "colors.neutral.neutral.12"
+          },
+          "readOnly": {
+            "text": "colors.neutral.neutral.12"
+          },
+          "disabled": {
+            "text": "colors.neutral.neutral-alpha.9"
+          }
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "name": "onChange",
+      "trigger": "Cada cambio del texto",
+      "payload": "ChangeEvent<HTMLInputElement>",
+      "blockedWhen": [
+        "disabled",
+        "readOnly"
+      ]
+    }
+  ],
+  "a11y": {
+    "role": "textbox (implícito en un input de texto)",
+    "name": "La etiqueta (label) asociada con htmlFor. Sin etiqueta visible, aria-label obligatorio.",
+    "keyboard": [
+      "Tab — entra y sale",
+      "Texto — escribe",
+      "Escape — no hace nada propio"
+    ],
+    "focusIndicator": "Anillo doble: exterior de 4px con colors.accent.accent-alpha.8 e interior de 2px con colors.accent.accent.3 (capa focus-ring). Además el borde pasa a accent-alpha.8 en el estado active.",
+    "minTarget": "24px de alto en size 1 como mínimo (WCAG 2.5.8); 32 y 40 en size 2 y 3.",
+    "contrastNote": "Texto ≥ 4.5:1 y borde del campo ≥ 3:1 contra el fondo (WCAG 1.4.11). No medido en Figma; el placeholder usa neutral-alpha.9, que conviene comprobar.",
+    "wcag": [
+      "1.3.1 Información y relaciones",
+      "1.4.3 Contraste (AA)",
+      "1.4.11 Contraste no textual",
+      "2.4.7 Foco visible",
+      "3.3.2 Etiquetas o instrucciones",
+      "4.1.2 Nombre, función, valor"
+    ]
+  },
+  "form": {
+    "control": "input",
+    "label": {
+      "prop": "label",
+      "position": "above",
+      "required": true
+    },
+    "validation": null,
+    "errorMessage": null,
+    "note": "Figma no define error, texto de ayuda ni estado inválido."
+  },
+  "content": {
+    "label": {
+      "maxLength": 40,
+      "casing": "sentence",
+      "voice": "Nombre del dato: «Correo electrónico»"
+    },
+    "placeholder": {
+      "maxLength": 32,
+      "voice": "Ejemplo de formato: «nombre@correo.com»"
+    }
+  },
+  "behavior": {
+    "overflow": "scroll horizontal dentro del input",
+    "motion": [],
+    "responsive": []
+  },
+  "testing": {
+    "cases": [
+      "disabled no recibe foco ni emite onChange",
+      "readOnly recibe foco y no emite onChange",
+      "la etiqueta está asociada al input (clic en la etiqueta enfoca el campo)",
+      "sin label visible, falta aria-label y el check de accesibilidad falla",
+      "cada variant × estado usa los tokens de tokens.bindings"
+    ]
+  },
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/pTGbM1i9PKc6858ef7498a/Radix-Themes--Community-",
+      "node": "911:73249"
+    },
+    "code": {
+      "importPath": "@/components/text-field/text-field",
+      "export": "TextField"
+    }
+  },
+  "meta": {
+    "source": "figma",
+    "derivableFromSource": [
+      "props.type",
+      "props.default",
+      "layout",
+      "tokens.bindings"
+    ],
+    "needsReview": [
+      "Los valores por defecto de Figma van marcados con ✦ («surface ✦», «2 ✦», «placeholder ✦»). El default del component set en Figma es `classic`, pero el ✦ está en `surface`.",
+      "Figma no tiene estado hover. Solo hay placeholder, active, filled, disable y read-only; hover queda sin diseñar.",
+      "placeholder y filled son el mismo componente con o sin valor; en Figma son estados distintos. active = enfocado, con cursor «|» dibujado como texto.",
+      "disabled solo muestra el placeholder: no hay variante de un campo deshabilitado con valor.",
+      "Alturas 24 / 32 / 40 sin token (las variables de altura que existen son de Button). Tokens de size 1 y 3 leídos solo en variant surface + state placeholder.",
+      "El ancho de 200px es de ejemplo. Con etiqueta visible el componente crece en vertical; Figma lo deja en 32px de alto con la etiqueta oculta.",
+      "classic usa shadows.shadow-1 también en disabled; en read-only no.",
+      "No hay error, texto de ayuda, ni campo requerido en Figma.",
+      "Contraste del placeholder (neutral-alpha.9) y del borde (neutral-alpha.5/.6) no medido.",
+      "Size 1 no tiene botón final (el boolean iconButton no tiene efecto) y su icono mide 14px. El tamaño del IconButton dentro (24px y 32px) se resolvió por medida: coincide con IconButton size 1 y 2.",
+      "Variante ghost y color neutral del IconButton interno: leídas del TextField de Figma, no verificadas contra los tokens de IconButton."
+    ]
+  }
+}

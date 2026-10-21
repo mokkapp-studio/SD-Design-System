@@ -1,0 +1,270 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "<kebab-case, p. ej. button>",
+  "name": "<NombreComponente>",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "<action | input | container | overlay | data | media | navigation | feedback>",
+  "description": "<Una frase: qué hace este componente por la persona usuaria.>",
+  "guidance": {
+    "dos": [
+      "<Buena práctica concreta y comprobable>"
+    ],
+    "donts": [
+      {
+        "case": "<Caso en el que NO se usa>",
+        "useInstead": "<Componente o patrón correcto>",
+        "why": "<Motivo en una línea>"
+      }
+    ],
+    "related": [
+      {
+        "component": "<Otro componente>",
+        "relation": "alternative | similar | contains | contained-by",
+        "difference": "<En qué se distingue>"
+      }
+    ]
+  },
+  "semantics": {
+    "element": "<elemento HTML raíz: button | div | section | input ...>",
+    "role": "<rol ARIA explícito o null si es implícito>",
+    "refTarget": "<parte de anatomy que recibe el ref>",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "<prop>",
+      "type": "<'a' | 'b' | boolean | ReactNode | función ...>",
+      "default": "<valor o null>",
+      "required": false,
+      "description": "<Qué controla y cómo se ve cada valor.>",
+      "usage": "<ejemplo de uso opcional>",
+      "bindings": {
+        "figma": {
+          "property": "<nombre exacto de la propiedad en Figma>",
+          "type": "VARIANT | BOOLEAN | TEXT | INSTANCE_SWAP | SLOT"
+        }
+      }
+    }
+  ],
+  "states": {
+    "native": [
+      "hover",
+      "focus-visible",
+      "active"
+    ],
+    "controlled": [
+      {
+        "name": "<estado controlado por prop>",
+        "description": "<Qué significa y cómo se comporta.>",
+        "aria": "<atributo aria o nativo>"
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "<elemento HTML>",
+      "description": "<Raíz del componente.>",
+      "figmaLayer": "<nombre exacto de la capa en Figma>"
+    },
+    "<parte>": {
+      "element": "<span | svg | slot | ...>",
+      "description": "<Qué es.>",
+      "optional": true,
+      "figmaLayer": "<capa en Figma>",
+      "figmaToggle": {
+        "property": "<boolean de Figma que muestra u oculta la parte y no tiene prop en código>",
+        "type": "BOOLEAN",
+        "default": false
+      },
+      "content": {
+        "prop": "<prop que rellena el contenido, p. ej. children>"
+      },
+      "slot": {
+        "key": "<nombre del slot>",
+        "allowedComponents": [
+          "<Componente aceptado>"
+        ],
+        "minItems": 0,
+        "maxItems": 1,
+        "mandatory": false,
+        "figmaProp": "<propiedad slot o instance swap en Figma>"
+      }
+    }
+  },
+  "composition": {
+    "allowedChildren": [
+      "<componentes permitidos dentro, o null>"
+    ],
+    "forbiddenChildren": [
+      "<componentes que nunca van dentro>"
+    ],
+    "nestedComponents": [
+      {
+        "part": "<parte>",
+        "component": "<Componente>",
+        "fixedProps": {}
+      }
+    ],
+    "codeParts": [
+      {
+        "name": "<Componente.Parte>",
+        "description": "<solo si la API de código es compuesta (Root, Trigger, Content...)>"
+      }
+    ],
+    "asChild": false
+  },
+  "layout": {
+    "height": {
+      "mode": "fixed | hug | fill",
+      "values": {
+        "s": 0,
+        "m": 0,
+        "l": 0
+      },
+      "unit": "px",
+      "token": "<token, admite {size}>"
+    },
+    "width": {
+      "default": "hug | fill | fixed",
+      "modes": {
+        "hug": "<...>",
+        "fill": "<...>",
+        "fixed": "<...>"
+      },
+      "min": null,
+      "max": null,
+      "note": "<...>"
+    },
+    "autoLayout": {
+      "direction": "HORIZONTAL | VERTICAL",
+      "sizingHorizontal": "HUG | FILL | FIXED",
+      "sizingVertical": "HUG | FILL | FIXED",
+      "alignMain": "MIN | CENTER | MAX | SPACE_BETWEEN",
+      "alignCross": "MIN | CENTER | MAX",
+      "gap": "<token y entre qué partes>"
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [
+        "colors",
+        "spacing",
+        "radius",
+        "text-style",
+        "shadows"
+      ],
+      "forbidden": []
+    },
+    "bindings": {
+      "base": {
+        "<propiedad visual>": "<token, admite {prop} que se expande por los valores del enum>"
+      },
+      "byVariant": {
+        "<valor de variant>": {
+          "background": "<token>",
+          "text": "<token>",
+          "icon": "<token>",
+          "border": "<token o null>"
+        }
+      },
+      "byState": {
+        "disabled": {
+          "background": "<token>",
+          "text": "<token>",
+          "icon": "<token>",
+          "border": "<token>"
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "name": "<onPress | onOpenChange | onValueChange ...>",
+      "trigger": "<qué lo dispara>",
+      "payload": "<tipo del evento>",
+      "blockedWhen": [
+        "<estado en el que no se emite>"
+      ]
+    }
+  ],
+  "a11y": {
+    "role": "<rol ARIA o implícito del elemento>",
+    "name": "<cómo obtiene su nombre accesible>",
+    "keyboard": [
+      "<Tecla — acción>"
+    ],
+    "focusIndicator": "<token y grosor del indicador de foco>",
+    "minTarget": "<área mínima táctil, p. ej. 24x24px (WCAG 2.5.8)>",
+    "contrastNote": "<requisito de contraste>",
+    "wcag": [
+      "<criterio WCAG>"
+    ]
+  },
+  "content": {
+    "label": {
+      "maxLength": 0,
+      "casing": "sentence | title | upper",
+      "voice": "<tono y ejemplo>"
+    }
+  },
+  "behavior": {
+    "loading": null,
+    "overflow": "<truncate | wrap | scroll>",
+    "motion": [
+      {
+        "on": "<hover | open | ...>",
+        "property": "<propiedad>",
+        "reducedMotion": "instant"
+      }
+    ],
+    "responsive": []
+  },
+  "form": null,
+  "overlay": null,
+  "data": null,
+  "media": null,
+  "theming": {
+    "modes": [
+      "light",
+      "dark"
+    ],
+    "density": null
+  },
+  "i18n": {
+    "rtl": "<comportamiento en RTL>",
+    "textExpansion": "<qué pasa con textos un 30-40% más largos>"
+  },
+  "testing": {
+    "cases": [
+      "<comportamiento que debe verificarse>"
+    ]
+  },
+  "governance": {
+    "owners": [
+      "<equipo>"
+    ],
+    "changelog": "<ruta o enlace>"
+  },
+  "anchors": {
+    "figma": {
+      "file": "<URL del archivo de Figma>",
+      "node": "<id del nodo del componente>"
+    },
+    "code": {
+      "importPath": "<ruta de import>",
+      "export": "<nombre exportado>"
+    }
+  },
+  "meta": {
+    "source": "manual | figma | mixed",
+    "needsReview": [
+      "<campos pendientes de revisar>"
+    ],
+    "derivableFromSource": [
+      "props.type",
+      "props.default",
+      "layout"
+    ]
+  }
+}

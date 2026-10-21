@@ -1,0 +1,649 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "checkbox",
+  "name": "Checkbox",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "input",
+  "description": "Casilla que activa o desactiva una opción independiente, con un tercer estado «indeterminado» para selecciones parciales. Se usa en formularios y listas.",
+  "guidance": {
+    "dos": [
+      "Usa una etiqueta visible (`label`) que describa la opción en positivo: «Recibir novedades».",
+      "Usa `indeterminate` solo para un «seleccionar todo» cuando hay hijos marcados y sin marcar.",
+      "Agrupa varias casillas relacionadas en CheckboxGroup.",
+      "La casilla y su etiqueta son un único objetivo pulsable: pulsar la etiqueta marca la casilla."
+    ],
+    "donts": [
+      {
+        "case": "Elegir una sola opción entre varias",
+        "useInstead": "RadioGroup",
+        "why": "Una casilla permite marcar varias a la vez."
+      },
+      {
+        "case": "Activar algo que surte efecto al instante (ajuste)",
+        "useInstead": "Switch",
+        "why": "Una casilla se confirma al enviar el formulario; un Switch actúa al cambiar."
+      },
+      {
+        "case": "Lanzar una acción",
+        "useInstead": "Button",
+        "why": "Una casilla guarda un valor, no ejecuta."
+      },
+      {
+        "case": "Casilla sin etiqueta",
+        "useInstead": "Checkbox con label o aria-label",
+        "why": "Sin nombre accesible no se sabe qué se marca."
+      }
+    ],
+    "related": [
+      {
+        "component": "CheckboxGroup",
+        "relation": "contained-by",
+        "difference": "Agrupa de 1 a 6 casillas en vertical con un gap de spacing.3."
+      },
+      {
+        "component": "RadioGroup",
+        "relation": "alternative",
+        "difference": "Solo una opción."
+      },
+      {
+        "component": "Switch",
+        "relation": "alternative",
+        "difference": "Efecto inmediato."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "button",
+    "role": "checkbox",
+    "refTarget": "box",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "'classic' | 'surface' | 'soft'",
+      "default": "surface",
+      "description": "Aspecto. surface = fondo claro con borde; classic = igual con sombra; soft = relleno tenue de acento sin borde.",
+      "bindings": {
+        "figma": {
+          "property": "variant",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "size",
+      "type": "'1' | '2' | '3'",
+      "default": "2",
+      "description": "Tamaño de la casilla: 14 / 16 / 20 px, con su texto y espaciado. El 2 es el valor por defecto.",
+      "bindings": {
+        "figma": {
+          "property": "size",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "highContrast",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true y la casilla está marcada, usa el paso 12 del acento. Sin marcar no cambia.",
+      "bindings": {
+        "figma": {
+          "property": "highContrast",
+          "type": "VARIANT",
+          "value": "true"
+        }
+      }
+    },
+    {
+      "name": "checked",
+      "type": "boolean | 'indeterminate'",
+      "default": false,
+      "description": "Valor. En Figma es el eje `status`: false = «unchecked ✦», true = «checked ✓», 'indeterminate' = «indeterminate».",
+      "bindings": {
+        "figma": {
+          "property": "status",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true, no se puede marcar ni enfocar. En Figma es el valor «disable» del eje `state`.",
+      "bindings": {
+        "figma": {
+          "property": "state",
+          "type": "VARIANT",
+          "value": "disable"
+        }
+      }
+    },
+    {
+      "name": "label",
+      "type": "string | undefined",
+      "default": null,
+      "description": "Texto junto a la casilla. En Figma el boolean `text` lo muestra u oculta (oculto por defecto). Texto de ejemplo: «Text».",
+      "bindings": {
+        "figma": {
+          "property": "⮑ ✏️ text",
+          "type": "TEXT"
+        }
+      }
+    },
+    {
+      "name": "name",
+      "type": "string | undefined",
+      "default": null,
+      "description": "Nombre del campo al enviar un formulario. Solo de código.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "onCheckedChange",
+      "type": "(checked: boolean | 'indeterminate') => void",
+      "default": null,
+      "description": "Se emite al cambiar el valor. Solo de código.",
+      "bindings": {
+        "figma": null
+      }
+    }
+  ],
+  "states": {
+    "native": [
+      "hover",
+      "focus-visible",
+      "active"
+    ],
+    "controlled": [
+      {
+        "name": "checked",
+        "description": "Casilla marcada. Muestra el check.",
+        "aria": "aria-checked='true'"
+      },
+      {
+        "name": "indeterminate",
+        "description": "Selección parcial. Muestra un guion.",
+        "aria": "aria-checked='mixed'"
+      },
+      {
+        "name": "disabled",
+        "description": "No interactiva. Fondo y borde con tokens neutros; nunca con opacity.",
+        "aria": "disabled (atributo HTML nativo)"
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "span",
+      "description": "Contenedor de casilla y etiqueta. Un solo objetivo pulsable.",
+      "figmaLayer": "Checkbox (cada variante del component set)"
+    },
+    "focusRing": {
+      "element": "css",
+      "description": "No es un elemento: se pinta con :focus-visible. En Figma es una capa que se muestra con el boolean focusRing: borde exterior de 4px e interior de 2px.",
+      "optional": true,
+      "figmaLayer": "focus-ring",
+      "figmaToggle": {
+        "property": "focusRing",
+        "type": "BOOLEAN",
+        "default": false
+      }
+    },
+    "box": {
+      "element": "button",
+      "description": "La casilla. Lleva role=checkbox y aria-checked.",
+      "figmaLayer": "checkbox"
+    },
+    "indicator": {
+      "element": "svg",
+      "description": "Check (marcada) o guion (indeterminado). Oculto si no está marcada.",
+      "optional": true,
+      "figmaLayer": "Abstract / check | Typography / dash"
+    },
+    "label": {
+      "element": "label",
+      "description": "Texto junto a la casilla. Asociado a la casilla.",
+      "optional": true,
+      "figmaLayer": "Text",
+      "figmaToggle": {
+        "property": "text",
+        "type": "BOOLEAN",
+        "default": false
+      },
+      "content": {
+        "prop": "label"
+      }
+    }
+  },
+  "composition": {
+    "allowedChildren": null,
+    "forbiddenChildren": [
+      "Checkbox",
+      "Button"
+    ],
+    "nestedComponents": [],
+    "asChild": false
+  },
+  "layout": {
+    "height": {
+      "mode": "hug",
+      "values": {
+        "1": 16,
+        "2": 20,
+        "3": 24
+      },
+      "unit": "px",
+      "token": null,
+      "note": "Es el alto de línea del texto; la casilla mide 14 / 16 / 20."
+    },
+    "width": {
+      "default": "hug",
+      "modes": {
+        "hug": "Casilla más etiqueta.",
+        "fill": "No aplica.",
+        "fixed": "No aplica."
+      },
+      "min": null,
+      "max": null,
+      "note": "Sin tokens de ancho."
+    },
+    "autoLayout": {
+      "direction": "HORIZONTAL",
+      "sizingHorizontal": "HUG",
+      "sizingVertical": "HUG",
+      "alignMain": "MIN",
+      "alignCross": "CENTER",
+      "gap": "Entre casilla y etiqueta, por size: spacing.2 / 2 / 3"
+    },
+    "boxSize": {
+      "values": {
+        "1": 14,
+        "2": 16,
+        "3": 20
+      },
+      "unit": "px"
+    },
+    "indicatorSize": {
+      "check": {
+        "1": null,
+        "2": "9x8 dentro de 16x16"
+      },
+      "dash": "5x1 dentro de 16x16"
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [
+        "colors",
+        "tokens.colors",
+        "spacing",
+        "radius",
+        "text-style",
+        "shadows"
+      ],
+      "forbidden": []
+    },
+    "bindings": {
+      "base": {
+        "labelTextStyle": "text-style.{size}.regular",
+        "labelColor": "tokens.colors.text",
+        "indicatorOnChecked": "tokens.colors.accent-contrast",
+        "indicatorOnIndeterminate": "colors.accent.accent-alpha.11",
+        "focusRingOuter": {
+          "color": "colors.accent.accent-alpha.8",
+          "width": 4
+        },
+        "focusRingInner": {
+          "color": "colors.accent.accent.3",
+          "width": 2
+        }
+      },
+      "bySize": {
+        "1": {
+          "radius": "radius.1",
+          "gap": "spacing.2"
+        },
+        "2": {
+          "radius": "radius.1",
+          "gap": "spacing.2"
+        },
+        "3": {
+          "radius": "radius.2",
+          "gap": "spacing.3"
+        }
+      },
+      "byVariant": {
+        "classic": {
+          "unchecked": {
+            "default": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.7",
+              "borderWidth": 1,
+              "shadow": "shadows.shadow-1"
+            },
+            "hover": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.8",
+              "borderWidth": 1,
+              "shadow": "shadows.shadow-1"
+            },
+            "active": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.9",
+              "borderWidth": 1,
+              "shadow": "shadows.shadow-1"
+            }
+          },
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent.9",
+              "border": null,
+              "shadow": "shadows.shadow-1"
+            },
+            "hover": {
+              "background": "colors.accent.accent.10",
+              "border": null,
+              "shadow": "shadows.shadow-1"
+            },
+            "active": {
+              "background": "colors.accent.accent.10",
+              "border": null,
+              "shadow": "shadows.shadow-1",
+              "opacity": 0.92
+            }
+          },
+          "indeterminate": {
+            "default": {
+              "background": "tokens.colors.accent-surface",
+              "border": "colors.accent.accent-alpha.7",
+              "borderWidth": 1,
+              "shadow": "shadows.shadow-1"
+            },
+            "hover": {
+              "background": "tokens.colors.accent-surface",
+              "border": "colors.accent.accent-alpha.8",
+              "borderWidth": 1,
+              "shadow": "shadows.shadow-1",
+              "opacity": 0.88
+            },
+            "active": {
+              "background": "colors.accent.accent-alpha.3",
+              "border": "colors.accent.accent-alpha.8",
+              "borderWidth": 1,
+              "shadow": "shadows.shadow-1",
+              "opacity": 0.82
+            }
+          }
+        },
+        "surface": {
+          "unchecked": {
+            "default": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.7",
+              "borderWidth": 1
+            },
+            "hover": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.8",
+              "borderWidth": 1
+            },
+            "active": {
+              "background": "tokens.colors.surface",
+              "border": "colors.neutral.neutral-alpha.9",
+              "borderWidth": 1
+            }
+          },
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent.9",
+              "border": null
+            },
+            "hover": {
+              "background": "colors.accent.accent.10",
+              "border": null
+            },
+            "active": {
+              "background": "colors.accent.accent.10",
+              "border": null,
+              "opacity": 0.92
+            }
+          },
+          "indeterminate": {
+            "default": {
+              "background": "tokens.colors.accent-surface",
+              "border": "colors.accent.accent-alpha.7",
+              "borderWidth": 1
+            },
+            "hover": {
+              "background": "tokens.colors.accent-surface",
+              "border": "colors.accent.accent-alpha.8",
+              "borderWidth": 1,
+              "opacity": 0.88
+            },
+            "active": {
+              "background": "colors.accent.accent-alpha.3",
+              "border": "colors.accent.accent-alpha.8",
+              "borderWidth": 1,
+              "opacity": 0.82
+            }
+          }
+        },
+        "soft": {
+          "unchecked": {
+            "default": {
+              "background": "colors.accent.accent-alpha.5",
+              "border": null
+            },
+            "hover": {
+              "background": "colors.accent.accent-alpha.6",
+              "border": null
+            },
+            "active": {
+              "background": "colors.accent.accent-alpha.7",
+              "border": null
+            }
+          },
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent-alpha.5",
+              "border": null
+            },
+            "hover": {
+              "background": "colors.accent.accent-alpha.6",
+              "border": null
+            },
+            "active": {
+              "background": "colors.accent.accent-alpha.7",
+              "border": null,
+              "opacity": 0.92
+            }
+          },
+          "indeterminate": {
+            "default": {
+              "background": null,
+              "border": "colors.accent.accent-alpha.6",
+              "borderWidth": 1
+            },
+            "hover": {
+              "background": null,
+              "border": "colors.accent.accent-alpha.6",
+              "borderWidth": 1,
+              "opacity": 0.88
+            },
+            "active": {
+              "background": null,
+              "border": "colors.accent.accent-alpha.6",
+              "borderWidth": 1,
+              "opacity": 0.82
+            }
+          }
+        }
+      },
+      "byHighContrast": {
+        "classic": {
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent.12"
+            },
+            "hover": {
+              "background": "colors.accent.accent.12",
+              "opacity": 0.88
+            },
+            "active": {
+              "background": "colors.accent.accent.12",
+              "opacity": 0.82
+            }
+          }
+        },
+        "surface": {
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent.12"
+            },
+            "hover": {
+              "background": "colors.accent.accent.12",
+              "opacity": 0.88
+            },
+            "active": {
+              "background": "colors.accent.accent.12",
+              "opacity": 0.82
+            }
+          }
+        },
+        "soft": {
+          "checked": {
+            "default": {
+              "background": "colors.accent.accent-alpha.5"
+            },
+            "hover": {
+              "background": "colors.accent.accent-alpha.6",
+              "opacity": 0.88
+            },
+            "active": {
+              "background": "colors.accent.accent-alpha.7",
+              "opacity": 0.82
+            }
+          }
+        }
+      },
+      "byState": {
+        "disabled": {
+          "classic": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": "colors.neutral.neutral-alpha.6",
+            "borderWidth": 1,
+            "shadow": "shadows.shadow-1"
+          },
+          "surface": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": "colors.neutral.neutral-alpha.6",
+            "borderWidth": 1
+          },
+          "soft": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "border": null
+          }
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "name": "onCheckedChange",
+      "trigger": "Clic, o Espacio con la casilla enfocada",
+      "payload": "boolean | 'indeterminate'",
+      "blockedWhen": [
+        "disabled"
+      ]
+    }
+  ],
+  "a11y": {
+    "role": "checkbox",
+    "name": "La etiqueta (label). Sin etiqueta visible, aria-label obligatorio.",
+    "keyboard": [
+      "Space — marca o desmarca",
+      "Tab — entra y sale (Enter no marca)"
+    ],
+    "focusIndicator": "Anillo doble: exterior de 4px con colors.accent.accent-alpha.8 e interior de 2px con colors.accent.accent.3 (capa focus-ring).",
+    "minTarget": "La casilla mide 14 / 16 / 20 px: por debajo de 24x24 (WCAG 2.5.8). Hay que ampliar el área pulsable (label incluida o padding invisible).",
+    "contrastNote": "Borde de la casilla ≥ 3:1 contra el fondo (WCAG 1.4.11) y texto ≥ 4.5:1. No medido en Figma; el borde unchecked usa neutral-alpha.7.",
+    "wcag": [
+      "1.4.3 Contraste (AA)",
+      "1.4.11 Contraste no textual",
+      "2.1.1 Teclado",
+      "2.4.7 Foco visible",
+      "2.5.8 Tamaño del objetivo",
+      "4.1.2 Nombre, función, valor"
+    ]
+  },
+  "form": {
+    "control": "checkbox",
+    "label": {
+      "prop": "label",
+      "position": "end",
+      "required": true
+    },
+    "validation": null,
+    "errorMessage": null,
+    "note": "Figma no define estado de error ni campo requerido. Valor enviado: según name y checked."
+  },
+  "content": {
+    "label": {
+      "maxLength": 80,
+      "casing": "sentence",
+      "voice": "Opción en positivo: «Recibir novedades»"
+    }
+  },
+  "behavior": {
+    "overflow": "wrap",
+    "motion": [],
+    "responsive": []
+  },
+  "testing": {
+    "cases": [
+      "Space alterna checked; Enter no",
+      "disabled no recibe foco ni emite onCheckedChange",
+      "indeterminate expone aria-checked=\"mixed\" y al pulsar pasa a true",
+      "pulsar la etiqueta marca la casilla",
+      "sin label ni aria-label falla el check de accesibilidad"
+    ]
+  },
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/pTGbM1i9PKc6858ef7498a/Radix-Themes--Community-",
+      "node": "837:25737"
+    },
+    "code": {
+      "importPath": "@/components/checkbox/checkbox",
+      "export": "Checkbox"
+    }
+  },
+  "meta": {
+    "source": "figma",
+    "derivableFromSource": [
+      "props.type",
+      "props.default",
+      "layout",
+      "tokens.bindings"
+    ],
+    "needsReview": [
+      "El enlace recibido (1391:12671) es Checkbox Group, no Checkbox. Este contrato es del Checkbox que usa ese grupo (837:25737, 216 variantes). El grupo (hasta 6 casillas en vertical, gap spacing.3 en size 3) no tiene contrato.",
+      "La descripción de Checkbox Group en Figma dice «radio buttons»: es un texto copiado de RadioGroup.",
+      "Los valores por defecto van marcados con ✦ («surface ✦», «2 ✦», «unchecked ✦», «default ✦»). El default del component set es `classic`.",
+      "Color del indicador (check y guion) leído solo en variant surface, sin highContrast, estado default: accent-contrast (check) y accent-alpha.11 (guion). En el resto de combinaciones no se pudo leer: el color del indicador queda sin verificar.",
+      "Tokens leídos en size 2. Tamaños 1 y 3: solo caja, radio, gap y estilo de texto. En size 1 el check no se midió.",
+      "highContrast solo cambia el fondo de checked en classic y surface (accent.12); en soft no cambia colores, solo opacidad.",
+      "opacity en hover/active (0.88, 0.82, 0.92) fijo en Figma, sin variable. Es el único caso en que el contrato usa opacity; disabled nunca.",
+      "disabled usa el mismo aspecto para unchecked, checked e indeterminate (fondo neutral-alpha.3, sin diferenciar el indicador); el texto de la etiqueta no cambia de color en disabled.",
+      "classic añade shadows.shadow-1, también en disabled.",
+      "Sin estados hover/active diferenciados para focus: el anillo es un boolean aparte.",
+      "La caja mide menos de 24px: área táctil por debajo de WCAG 2.5.8.",
+      "Sin estado de error ni campo requerido en Figma."
+    ]
+  }
+}
