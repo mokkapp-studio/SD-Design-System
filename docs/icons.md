@@ -12,10 +12,14 @@ icons/registry.json  ──(npm run icons:build)──►  icons.ts (reexporta s
 
 | Pieza | Para qué |
 | --- | --- |
-| `icons/registry.json` | Lista de iconos permitidos, con su uso. **Fuente de verdad** |
+| `icons/catalog.json` | TODO Lucide (1.903 iconos) con tags y categorías. Generado; no se edita a mano |
+| `icons/registry.json` | Lista de iconos permitidos en código, con su uso. **Fuente de verdad** |
 | `scripts/build-icons.mjs` | Genera el archivo de reexportación a partir del registry |
+| `scripts/build-icon-catalog.mjs` | Genera `icons/catalog.json` desde Lucide (`npm run icons:catalog`) |
+| `scripts/build-figma-icons.mjs` | Genera lotes de código para crear los iconos en Figma (`npm run icons:figma`) |
 | `contracts/Icon.contract.json` | Contrato del componente `Icon` (tamaño, a11y) |
-| `check.mjs` | Valida el registry (PascalCase, sin duplicados, con `use`) |
+| `contracts/IconLibrary.contract.json` | Reglas de la librería: catálogo, nombres, trazo y paso a Figma |
+| `check.mjs` | Valida el registry (PascalCase, sin duplicados, con `use`) y que cada icono exista en el catálogo |
 
 ## 1. Instalarlo en el proyecto Next.js (una vez)
 
@@ -88,9 +92,15 @@ import { IconButton } from '@/components/icon-button/icon-button';
 
 Importar siempre desde `icons.ts` y nunca `import * as` de `lucide-react`: solo así se incluyen en el paquete los iconos permitidos.
 
-## 4. Reglas para el agente
+## 4. Catálogo completo y paso a Figma
 
-- Solo iconos de `icons/registry.json`. Si necesita otro, para y pregunta (o propone la entrada para el registry).
+- **Catálogo:** `icons/catalog.json` contiene todo Lucide (1.903 iconos) con tags y categorías. Se genera con `npm run icons:catalog`, que descarga Lucide en `.cache/` la primera vez (`--update` para refrescarlo).
+- **Registry:** `icons/registry.json` sigue siendo la lista de iconos que el código puede usar. El catálogo es el universo; el registry, su subconjunto permitido.
+- **Figma:** `npm run icons:figma` prepara lotes de código en `.cache/figma/` para crear los iconos como componentes en Figma vía MCP (`use_figma`). Por defecto usa el registry; `--all`, `--category` o `--names` cambian la selección.
+
+## 5. Reglas para el agente
+
+- Solo iconos de `icons/registry.json`. Si necesita otro, búscalo en `icons/catalog.json` y propón la entrada para el registry (nombre en PascalCase y `use`); no lo añadas sin preguntar.
 - No pinta ni dimensiona el icono por su cuenta.
 - Después de añadir uno: `icons:build` y `check`.
 

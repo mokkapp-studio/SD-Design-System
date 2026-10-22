@@ -5,6 +5,8 @@
   "scripts": {
     "tokens:build": "node scripts/build-tokens.mjs",
     "check": "node check.mjs",
-    "icons:build": "node scripts/build-icons.mjs"
+    "icons:build": "node scripts/build-icons.mjs",
+    "icons:catalog": "node scripts/build-icon-catalog.mjs",
+    "icons:figma": "node scripts/build-figma-icons.mjs"
   }
 }

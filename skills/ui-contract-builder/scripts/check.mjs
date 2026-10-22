@@ -134,6 +134,26 @@ if (fs.existsSync(regPath)) {
   for (const n of ns) if (!/^[A-Z][A-Za-z0-9]*$/.test(n)) err('icons/registry.json', `nombre no válido «${n}» (PascalCase, como en ${reg.library})`);
   if (new Set(ns).size !== ns.length) err('icons/registry.json', 'nombres duplicados');
   for (const i of reg?.icons ?? []) if (!i.use) err('icons/registry.json', `«${i.name}» sin campo use`);
+
+  // 4. Catálogo completo (opcional): coherente, y el registry es un subconjunto suyo
+  const catPath = path.join(root, 'icons', 'catalog.json');
+  if (fs.existsSync(catPath)) {
+    const cat = readJson(catPath);
+    const ci = cat?.icons ?? [];
+    const kebab = ci.map((i) => i.name);
+    if (new Set(kebab).size !== kebab.length) err('icons/catalog.json', 'nombres duplicados');
+    if (cat.count !== ci.length) err('icons/catalog.json', `count (${cat.count}) no coincide con los iconos (${ci.length})`);
+    const cats = new Set((cat.categories ?? []).map((c) => c.id));
+    for (const i of ci) for (const c of i.categories ?? []) if (!cats.has(c)) err('icons/catalog.json', `«${i.name}»: categoría sin definir «${c}»`);
+    const pas = (n) => n.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join('');
+    const canon = new Set(ci.map((i) => i.pascal));
+    const alias = new Map(ci.flatMap((i) => (i.aliases ?? []).map((a) => [pas(a), i.pascal])));
+    for (const n of ns) {
+      if (canon.has(n)) continue;
+      if (alias.has(n)) warnings.push(`icons/registry.json: «${n}» es un alias antiguo de Lucide; el nombre actual es «${alias.get(n)}»`);
+      else err('icons/registry.json', `«${n}» no existe en icons/catalog.json`);
+    }
+  }
 }
 
 for (const w of warnings) console.log('aviso  ', w);

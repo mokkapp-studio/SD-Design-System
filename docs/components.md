@@ -16,6 +16,8 @@
 | Switch | `contracts/Switch.contract.json` | campo (Radix Themes) | draft | Ajuste con efecto inmediato | Checkbox, RadioGroup, Button |
 | Icon | `contracts/Icon.contract.json` | media (Lucide) | draft | Icono con tamaño y accesibilidad coherentes | Button, IconButton, TextField |
 | Divider | `contracts/Divider.contract.json` | contenedor (ejemplo mínimo) | draft | Separar dos grupos de contenido; **el contrato más corto, para empezar** | — |
+| Badge | `contracts/Badge.contract.json` | feedback | draft | Etiqueta corta no interactiva con estado o categoría; 4 variantes × 31 colores × 3 tamaños | Button, Link, Icon |
+| IconLibrary | `contracts/IconLibrary.contract.json` | media (Lucide) | draft | Reglas de la librería de iconos: catálogo completo, nombres, trazo y paso a Figma (no es un componente) | Icon, IconButton |
 | _siguiente_ | | | pendiente | | |
 
 > Un componente por vez: límpialo en Figma, haz su contrato, llévalo a código y recién entonces el siguiente.
@@ -28,7 +30,7 @@ Si dos componentes llaman distinto a lo mismo, ni las personas ni la IA aciertan
 | --- | --- | --- | --- |
 | Énfasis visual | `variant` | según componente | `kind`, `type`, `appearance` |
 | Tamaño | `size` | `'1'`…`'4'` (Radix) o `s`, `m`, `l` en sistemas propios | `small`, `large` |
-| Significado cromático | `color` | `accent`, `neutral`, `error` | `intent`, `tone`, `danger` |
+| Significado cromático | `color` | `accent`, `neutral`, `error` (Badge amplía con `success`, `warning`, `info` y las escalas de Radix) | `intent`, `tone`, `danger` |
 | Contraste reforzado | `highContrast` | boolean | `highConstrast` (errata del eje en el Figma de Radix) |
 | No disponible | `disabled` | boolean | `isDisabled`, `inactive` |
 | Acción en curso | `loading` | boolean | `isLoading`, `busy` |

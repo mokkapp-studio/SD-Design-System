@@ -1,0 +1,179 @@
+{
+    "$schema": "./component.schema.json",
+    "id": "icon-library",
+    "name": "IconLibrary",
+    "version": "0.1.0",
+    "status": "draft",
+    "category": "media",
+    "description": "Reglas de la librería de iconos del sistema (Lucide): qué iconos existen, cómo se llaman, cómo se dibujan y cómo se llevan a Figma. No es un componente: lo que se pinta en pantalla es Icon.",
+    "guidance": {
+        "dos": [
+            "Busca el icono en icons/catalog.json (todo Lucide) por nombre, tags o categoría. Si no lo encuentras por el nombre, busca por tags: «borrar» no existe, pero «delete» sí.",
+            "Para usarlo en código, añádelo antes a icons/registry.json con su campo `use`. El catálogo es lo que existe; el registry es lo que se aprueba.",
+            "En Figma, cambia el icono de un componente por instance swap con el componente «Categoría / nombre»; no lo dibujes a mano ni pegues SVG sueltos.",
+            "Un icono, un significado: no uses el mismo icono para dos acciones distintas en la misma pantalla."
+        ],
+        "donts": [
+            {
+                "case": "Usar un icono de Lucide que no está en icons/registry.json",
+                "useInstead": "Añadirlo al registry (con su `use`) y regenerar icons.ts",
+                "why": "La lista cerrada evita iconos duplicados o contradictorios y mantiene pequeño el paquete."
+            },
+            {
+                "case": "Mezclar iconos de otra librería con los de Lucide",
+                "useInstead": "Un icono equivalente de Lucide",
+                "why": "Cada librería tiene su propio trazo, redondeo y rejilla; mezclarlas se nota."
+            },
+            {
+                "case": "Un icono solo, sin texto, para algo importante",
+                "useInstead": "Icono más texto, o IconButton con aria-label",
+                "why": "El significado de un icono suelto no es universal y no lo anuncia un lector de pantalla."
+            },
+            {
+                "case": "Redimensionar o recolorear el icono a mano en un componente",
+                "useInstead": "El tamaño y el color del componente padre (Button, IconButton, TextField)",
+                "why": "El padre ya los fija por tokens; un ajuste local rompe la coherencia."
+            }
+        ],
+        "related": [
+            {
+                "component": "Icon",
+                "relation": "contains",
+                "difference": "Icon dibuja un icono de esta librería en pantalla con tamaño y accesibilidad."
+            },
+            {
+                "component": "IconButton",
+                "relation": "similar",
+                "difference": "Botón cuyo único contenido es un icono; exige aria-label."
+            }
+        ]
+    },
+    "semantics": {
+        "element": "svg",
+        "role": null,
+        "refTarget": "root",
+        "elementByProp": null
+    },
+    "props": [
+        {
+            "name": "name",
+            "type": "string",
+            "required": true,
+            "description": "Nombre del icono en kebab-case, tal como aparece en icons/catalog.json (`arrow-right`). En código, el mismo nombre en PascalCase (`ArrowRight`). En Figma, el componente «Categoría / arrow-right».",
+            "bindings": {
+                "figma": {
+                    "property": "iconStart / iconEnd / icon",
+                    "type": "INSTANCE_SWAP"
+                }
+            }
+        }
+    ],
+    "states": {
+        "native": [],
+        "controlled": []
+    },
+    "anatomy": {
+        "root": {
+            "element": "svg",
+            "description": "Lienzo de 24 × 24 con los trazos del icono. Sin relleno: solo trazo.",
+            "figmaLayer": "Categoría / nombre (componente de 24 × 24)"
+        },
+        "stroke": {
+            "element": "path",
+            "description": "Trazos del icono. Color heredado del texto (currentColor en código; variable de color en Figma).",
+            "figmaLayer": "Vectores dentro del componente"
+        }
+    },
+    "tokens": {
+        "policy": {
+            "allowed": [
+                "colors"
+            ],
+            "forbidden": []
+        },
+        "bindings": {
+            "base": {
+                "stroke": "colors.neutral.neutral.12",
+                "strokeWidth": 2
+            }
+        }
+    },
+    "a11y": {
+        "role": "Ninguno por defecto: decorativo (aria-hidden). Con `label`, role=\"img\" y aria-label.",
+        "name": "Lo da el componente Icon (prop label), no la librería.",
+        "keyboard": [],
+        "focusIndicator": "No recibe foco: no es interactivo.",
+        "minTarget": "No aplica al icono; si va dentro de un botón, el destino de pulsación es el del botón.",
+        "contrastNote": "Un icono con significado necesita ≥ 3:1 contra el fondo (WCAG 1.4.11). Hereda el color del padre: se comprueba allí.",
+        "wcag": [
+            "1.1.1 Contenido no textual",
+            "1.4.11 Contraste no textual"
+        ]
+    },
+    "layout": {
+        "canvas": {
+            "size": 24,
+            "unit": "px",
+            "viewBox": "0 0 24 24",
+            "note": "Todos los iconos de Lucide se dibujan en 24 × 24 con trazo de 2 px, extremos y uniones redondeados."
+        },
+        "renderSizes": {
+            "values": [
+                14,
+                16,
+                18,
+                20
+            ],
+            "unit": "px",
+            "note": "Los fija el componente padre (ver Icon.contract.json). Se escala el 24 × 24; al reducirlo el trazo se adelgaza en proporción."
+        }
+    },
+    "behavior": {
+        "catalog": {
+            "file": "icons/catalog.json",
+            "generatedBy": "npm run icons:catalog",
+            "source": "https://lucide.dev/icons/",
+            "fields": [
+                "name (kebab-case)",
+                "pascal (PascalCase, nombre en lucide-react)",
+                "categories",
+                "tags",
+                "aliases (nombres antiguos)"
+            ],
+            "rule": "Nunca se edita a mano. Para actualizar a una versión nueva de Lucide: `npm run icons:catalog -- --update`."
+        },
+        "registry": {
+            "file": "icons/registry.json",
+            "rule": "Subconjunto del catálogo aprobado para código. check.mjs falla si un nombre del registry no existe en el catálogo y avisa si es un alias antiguo."
+        },
+        "figma": {
+            "generatedBy": "npm run icons:figma -- [--registry | --all | --category id | --names a,b]",
+            "page": "Iconos Lucide",
+            "componentName": "Título de la categoría principal / nombre en kebab-case",
+            "componentDescription": "Primera línea `lucide:nombre` (sirve para reconocer y no duplicar); después categorías y tags, para que el buscador de Figma los encuentre.",
+            "strokeVariable": "colors.neutral.neutral.12 (configurable con --stroke-variable)",
+            "idempotent": "Repetir un lote no duplica: salta los iconos que ya existen."
+        }
+    },
+    "anchors": {
+        "code": {
+            "importPath": "@/components/icon/icons",
+            "export": "(un export por cada icono de icons/registry.json)"
+        }
+    },
+    "meta": {
+        "source": "catálogo oficial de Lucide (repositorio lucide-icons/lucide)",
+        "derivableFromSource": [
+            "behavior.catalog",
+            "layout.canvas"
+        ],
+        "needsReview": [
+            "El código de Figma (scripts/build-figma-icons.mjs) se probó contra una simulación de la API, no en un archivo real. Probar primero con `npm run icons:figma` (los iconos del registry) antes de lanzar --all.",
+            "La variable del trazo (colors.neutral.neutral.12) es una suposición: el nombre real en Figma puede ser otro. Si no se encuentra, los trazos quedan negros y el script lo avisa.",
+            "La categoría principal es la primera que lista Lucide para cada icono; muchos iconos tienen varias. La lista completa va en la descripción del componente.",
+            "El trazo se adelgaza al escalar a 14–20 px (a 16 px pasa de 2 a 1,33). Si no gusta, decidir un trazo fijo por tamaño; Lucide lo permite en código (absoluteStrokeWidth).",
+            "Algunos nombres del registry pueden ser alias antiguos de Lucide (Trash2 → Trash): siguen funcionando, pero check.mjs lo avisa.",
+            "Los usos (`use`) de los iconos del registry son una guía, no vienen de Lucide."
+        ]
+    }
+}

@@ -1,0 +1,606 @@
+{
+    "$schema": "./component.schema.json",
+    "id": "badge",
+    "name": "Badge",
+    "version": "0.1.0",
+    "status": "draft",
+    "category": "feedback",
+    "description": "Etiqueta pequeña y no interactiva que resume un estado, una categoría o un valor corto. Puede llevar un icono al inicio.",
+    "guidance": {
+        "dos": [
+            "Texto corto, de una o dos palabras: «Nuevo», «En revisión». Si necesitas una frase, no es un Badge.",
+            "El texto debe decir el estado por sí solo: el color refuerza, pero no puede ser la única señal (WCAG 1.4.1).",
+            "Usa `color=\"neutral\"` para información sin carga y `success`, `warning`, `error` o `info` cuando el color tenga significado de estado.",
+            "Usa `variant=\"solid\"` para lo que debe destacar y `soft` (el valor por defecto) para el resto. `outline` y `surface` son para fondos ya cargados.",
+            "Usa `highContrast` cuando el color de acento no dé contraste suficiente sobre el fondo."
+        ],
+        "donts": [
+            {
+                "case": "Algo que se pueda pulsar (filtro, acción, cerrar)",
+                "useInstead": "Button",
+                "why": "Un Badge no es interactivo: no recibe foco, ni teclado, ni tiene estado hover. Si parece un botón, la persona intentará pulsarlo."
+            },
+            {
+                "case": "Navegar a otra página o recurso",
+                "useInstead": "Link",
+                "why": "Un enlace se puede abrir, copiar y lo anuncia el lector de pantalla como enlace."
+            },
+            {
+                "case": "Mensajes largos o varias frases",
+                "useInstead": "Texto normal o un aviso",
+                "why": "El Badge no corta ni envuelve el texto: el ancho se ajusta a lo que lleve y se desborda."
+            },
+            {
+                "case": "Que el color sea la única forma de saber el estado",
+                "useInstead": "Un texto que diga el estado, más el color",
+                "why": "Las personas con daltonismo o lectores de pantalla no reciben el color."
+            }
+        ],
+        "related": [
+            {
+                "component": "Button",
+                "relation": "similar",
+                "difference": "Ejecuta una acción; el Badge solo informa."
+            },
+            {
+                "component": "Link",
+                "relation": "similar",
+                "difference": "Navega; el Badge solo informa."
+            },
+            {
+                "component": "Icon",
+                "relation": "contains",
+                "difference": "El icono inicial del Badge es un Icon."
+            }
+        ]
+    },
+    "semantics": {
+        "element": "span",
+        "role": null,
+        "refTarget": "root",
+        "elementByProp": null
+    },
+    "props": [
+        {
+            "name": "variant",
+            "type": "'solid' | 'soft' | 'outline' | 'surface'",
+            "default": "soft",
+            "description": "Énfasis visual. solid = relleno pleno; soft = relleno tenue; outline = solo borde; surface = borde con fondo suave. En Figma el valor marcado con ✦ es soft.",
+            "bindings": {
+                "figma": {
+                    "property": "variant",
+                    "type": "VARIANT"
+                }
+            }
+        },
+        {
+            "name": "color",
+            "type": "'accent' | 'neutral' | 'error' | 'success' | 'warning' | 'info' | 'tomato' | 'red' | 'ruby' | 'crimson' | 'pink' | 'plum' | 'purple' | 'violet' | 'iris' | 'indigo' | 'blue' | 'cyan' | 'teal' | 'jade' | 'green' | 'grass' | 'orange' | 'brown' | 'sky' | 'mint' | 'lime' | 'yellow' | 'amber' | 'bronze' | 'gold'",
+            "default": "accent",
+            "description": "Color del Badge. accent y neutral usan las escalas del tema; error, success, warning e info son los colores semánticos; el resto son las escalas de color de Radix. Es el único componente del sistema con más de tres colores.",
+            "bindings": {
+                "figma": {
+                    "property": "color",
+                    "type": "VARIANT"
+                }
+            }
+        },
+        {
+            "name": "size",
+            "type": "'1' | '2' | '3'",
+            "default": "1",
+            "description": "Tamaño: alto de 20 / 24 / 28 px, con su padding, separación, radio y estilo de texto. En Figma el valor marcado con ✦ es 1.",
+            "bindings": {
+                "figma": {
+                    "property": "size",
+                    "type": "VARIANT"
+                }
+            }
+        },
+        {
+            "name": "highContrast",
+            "type": "boolean",
+            "default": false,
+            "description": "Si es true, refuerza el contraste: usa el paso 12 de la escala en texto, fondo o borde según la variante. En Figma el eje se llama «highConstrast» (errata del archivo).",
+            "bindings": {
+                "figma": {
+                    "property": "highConstrast",
+                    "type": "VARIANT",
+                    "value": "true"
+                }
+            }
+        },
+        {
+            "name": "icon",
+            "type": "ReactNode | undefined",
+            "default": null,
+            "description": "Icono al inicio. Si no se pasa, no se pinta. Solo existe icono inicial; no hay icono final.",
+            "usage": "icon={<Check />}",
+            "bindings": {
+                "figma": {
+                    "property": "⮑ 🔄 iconStart",
+                    "type": "INSTANCE_SWAP"
+                }
+            }
+        },
+        {
+            "name": "children",
+            "type": "ReactNode",
+            "required": true,
+            "description": "Texto del Badge. Texto por defecto en Figma: «Badge».",
+            "bindings": {
+                "figma": {
+                    "property": "✏️ text",
+                    "type": "TEXT"
+                }
+            }
+        }
+    ],
+    "states": {
+        "native": [],
+        "controlled": []
+    },
+    "anatomy": {
+        "root": {
+            "element": "span",
+            "description": "Elemento raíz. Un <span> en línea con auto layout horizontal; no es interactivo.",
+            "figmaLayer": "Badge (cada variante del component set)"
+        },
+        "icon": {
+            "element": "slot",
+            "description": "Hueco para el icono inicial. Se oculta si no hay icono.",
+            "optional": true,
+            "figmaLayer": "Design / inner-shadow (instancia)",
+            "figmaToggle": {
+                "property": "iconStart",
+                "type": "BOOLEAN",
+                "default": false
+            },
+            "slot": {
+                "key": "icon",
+                "allowedComponents": [
+                    "Icon"
+                ],
+                "minItems": 0,
+                "maxItems": 1,
+                "mandatory": false,
+                "figmaProp": "⮑ 🔄 iconStart"
+            }
+        },
+        "label": {
+            "element": "span",
+            "description": "Texto del Badge.",
+            "figmaLayer": "Badge (capa de texto)",
+            "content": {
+                "prop": "children"
+            }
+        }
+    },
+    "composition": {
+        "allowedChildren": null,
+        "forbiddenChildren": [
+            "Button",
+            "IconButton",
+            "Link",
+            "a",
+            "button",
+            "input"
+        ],
+        "nestedComponents": [],
+        "asChild": false
+    },
+    "layout": {
+        "height": {
+            "mode": "hug",
+            "values": {
+                "1": 20,
+                "2": 24,
+                "3": 28
+            },
+            "unit": "px",
+            "token": null,
+            "note": "Alto = padding vertical + altura de línea del texto (2+16+2, 4+16+4 y 4+20+4). No hay token de altura: resulta del layout."
+        },
+        "width": {
+            "default": "hug",
+            "modes": {
+                "hug": "Se ajusta al texto más el padding horizontal y el icono si lo hay. Siempre; no hay fill ni fixed."
+            },
+            "min": null,
+            "max": null,
+            "note": "En Figma, con el texto de ejemplo «Badge»: 49 / 53 / 63 px sin icono visible."
+        },
+        "autoLayout": {
+            "direction": "HORIZONTAL",
+            "sizingHorizontal": "HUG",
+            "sizingVertical": "HUG",
+            "alignMain": "CENTER",
+            "alignCross": "CENTER",
+            "gap": "Por size: 6 / 6 / 8 px, entre icono y texto. Solo size 3 lo enlaza a una variable (spacing.2)."
+        },
+        "padding": {
+            "values": {
+                "1": "2px 6px",
+                "2": "4px 8px",
+                "3": "4px 10px"
+            },
+            "unit": "px",
+            "note": "Formato vertical horizontal. En Figma solo el vertical de size 2 y 3 (spacing.1) y el horizontal de size 2 (spacing.2) están enlazados a variables; el resto son valores sueltos."
+        },
+        "iconSize": {
+            "values": {
+                "1": 12,
+                "2": 16,
+                "3": 16
+            },
+            "unit": "px",
+            "note": "En size 2 y 3 el icono enlaza ancho y alto a spacing.4."
+        },
+        "fontSize": {
+            "values": {
+                "1": 12,
+                "2": 12,
+                "3": 14
+            },
+            "unit": "px",
+            "note": "Deducido de los estilos text-style.1 y text-style.2 (los mismos que usa Link); no leído aquí."
+        }
+    },
+    "behavior": {
+        "overflow": "nowrap",
+        "motion": [],
+        "responsive": []
+    },
+    "content": {
+        "label": {
+            "maxLength": 24,
+            "casing": "sentence",
+            "voice": "Estado o categoría en una o dos palabras: «Nuevo», «En revisión»"
+        }
+    },
+    "tokens": {
+        "policy": {
+            "allowed": [
+                "colors",
+                "tokens.colors",
+                "spacing",
+                "radius",
+                "text-style"
+            ],
+            "forbidden": []
+        },
+        "scales": {
+            "accent": {
+                "step": "colors.accent.accent",
+                "alpha": "colors.accent.accent-alpha",
+                "surface": "tokens.colors.accent-surface",
+                "onSolid": "tokens.colors.accent-contrast"
+            },
+            "neutral": {
+                "step": "colors.neutral.neutral",
+                "alpha": "colors.neutral.neutral-alpha",
+                "surface": "tokens.colors.surface",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "error": {
+                "step": "colors.semantic.error",
+                "alpha": "colors.semantic.error-alpha",
+                "surface": "colors.semantic.error-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "success": {
+                "step": "colors.semantic.success",
+                "alpha": "colors.semantic.success-alpha",
+                "surface": "colors.semantic.success-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "warning": {
+                "step": "colors.semantic.warning",
+                "alpha": "colors.semantic.warning-alpha",
+                "surface": "colors.semantic.warning-alpha.2",
+                "onSolid": "tokens.colors.black-contrast"
+            },
+            "info": {
+                "step": "colors.semantic.info",
+                "alpha": "colors.semantic.info-alpha",
+                "surface": "colors.semantic.info-alpha.2",
+                "onSolid": "tokens.colors.black-contrast"
+            },
+            "tomato": {
+                "step": "colors.tomato",
+                "alpha": "colors.tomato-alpha",
+                "surface": "colors.tomato-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "red": {
+                "step": "colors.red",
+                "alpha": "colors.red-alpha",
+                "surface": "colors.red-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "ruby": {
+                "step": "colors.ruby",
+                "alpha": "colors.ruby-alpha",
+                "surface": "colors.ruby-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "crimson": {
+                "step": "colors.crimson",
+                "alpha": "colors.crimson-alpha",
+                "surface": "colors.crimson-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "pink": {
+                "step": "colors.pink",
+                "alpha": "colors.pink-alpha",
+                "surface": "colors.pink-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "plum": {
+                "step": "colors.plum",
+                "alpha": "colors.plum-alpha",
+                "surface": "colors.plum-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "purple": {
+                "step": "colors.purple",
+                "alpha": "colors.purple-alpha",
+                "surface": "colors.purple-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "violet": {
+                "step": "colors.violet",
+                "alpha": "colors.violet-alpha",
+                "surface": "colors.violet-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "iris": {
+                "step": "colors.iris",
+                "alpha": "colors.iris-alpha",
+                "surface": "colors.iris-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "indigo": {
+                "step": "colors.indigo",
+                "alpha": "colors.indigo-alpha",
+                "surface": "colors.indigo-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "blue": {
+                "step": "colors.blue",
+                "alpha": "colors.blue-alpha",
+                "surface": "colors.blue-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "cyan": {
+                "step": "colors.cyan",
+                "alpha": "colors.cyan-alpha",
+                "surface": "colors.cyan-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "teal": {
+                "step": "colors.teal",
+                "alpha": "colors.teal-alpha",
+                "surface": "colors.teal-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "jade": {
+                "step": "colors.jade",
+                "alpha": "colors.jade-alpha",
+                "surface": "colors.jade-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "green": {
+                "step": "colors.green",
+                "alpha": "colors.green-alpha",
+                "surface": "colors.green-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "grass": {
+                "step": "colors.grass",
+                "alpha": "colors.grass-alpha",
+                "surface": "colors.grass-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "orange": {
+                "step": "colors.orange",
+                "alpha": "colors.orange-alpha",
+                "surface": "colors.orange-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "brown": {
+                "step": "colors.brown",
+                "alpha": "colors.brown-alpha",
+                "surface": "colors.brown-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "sky": {
+                "step": "colors.sky",
+                "alpha": "colors.sky-alpha",
+                "surface": "colors.sky-alpha.2",
+                "onSolid": "tokens.colors.black-contrast"
+            },
+            "mint": {
+                "step": "colors.mint",
+                "alpha": "colors.mint-alpha",
+                "surface": "colors.mint-alpha.2",
+                "onSolid": "tokens.colors.black-contrast"
+            },
+            "lime": {
+                "step": "colors.lime",
+                "alpha": "colors.lime-alpha",
+                "surface": "colors.lime-alpha.2",
+                "onSolid": "tokens.colors.black-contrast"
+            },
+            "yellow": {
+                "step": "colors.yellow",
+                "alpha": "colors.yellow-alpha",
+                "surface": "colors.yellow-alpha.2",
+                "onSolid": "tokens.colors.black-contrast"
+            },
+            "amber": {
+                "step": "colors.amber",
+                "alpha": "colors.amber-alpha",
+                "surface": "colors.amber-alpha.2",
+                "onSolid": "tokens.colors.black-contrast"
+            },
+            "bronze": {
+                "step": "colors.bronze",
+                "alpha": "colors.bronze-alpha",
+                "surface": "colors.bronze-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            },
+            "gold": {
+                "step": "colors.gold",
+                "alpha": "colors.gold-alpha",
+                "surface": "colors.gold-alpha.2",
+                "onSolid": "tokens.colors.white-contrast"
+            }
+        },
+        "bindings": {
+            "bySize": {
+                "1": {
+                    "radius": "radius.1-max",
+                    "textStyle": "text-style.1.medium"
+                },
+                "2": {
+                    "radius": "radius.2-max",
+                    "textStyle": "text-style.1.medium",
+                    "paddingX": "spacing.2",
+                    "paddingY": "spacing.1",
+                    "iconSize": "spacing.4"
+                },
+                "3": {
+                    "radius": "radius.2-max",
+                    "textStyle": "text-style.2.medium",
+                    "gap": "spacing.2",
+                    "paddingY": "spacing.1",
+                    "iconSize": "spacing.4"
+                }
+            },
+            "byVariant": {
+                "solid": {
+                    "default": {
+                        "background": "{color.step}.9",
+                        "text": "{color.onSolid}",
+                        "iconColor": "{color.onSolid}",
+                        "border": null
+                    }
+                },
+                "soft": {
+                    "default": {
+                        "background": "{color.alpha}.3",
+                        "text": "{color.alpha}.11",
+                        "iconColor": "{color.alpha}.11",
+                        "border": null
+                    }
+                },
+                "outline": {
+                    "default": {
+                        "background": null,
+                        "text": "{color.alpha}.11",
+                        "iconColor": "{color.alpha}.11",
+                        "border": "{color.alpha}.8",
+                        "borderWidth": 1
+                    }
+                },
+                "surface": {
+                    "default": {
+                        "background": "{color.surface}",
+                        "text": "{color.alpha}.11",
+                        "iconColor": "{color.alpha}.11",
+                        "border": "{color.alpha}.7",
+                        "borderWidth": 1
+                    }
+                }
+            },
+            "byHighContrast": {
+                "solid": {
+                    "default": {
+                        "background": "{color.step}.12",
+                        "text": "{color.step}.1",
+                        "iconColor": "{color.step}.1"
+                    }
+                },
+                "soft": {
+                    "default": {
+                        "text": "{color.step}.12",
+                        "iconColor": "{color.step}.12"
+                    }
+                },
+                "outline": {
+                    "default": {
+                        "text": "{color.step}.12",
+                        "iconColor": "{color.step}.12",
+                        "border": "{color.alpha}.11"
+                    }
+                },
+                "surface": {
+                    "default": {
+                        "text": "{color.step}.12",
+                        "iconColor": "{color.step}.12"
+                    }
+                }
+            }
+        }
+    },
+    "a11y": {
+        "role": "Ninguno propio: es texto en un <span>, no un control.",
+        "name": "El texto (children). Si hay icono, es decorativo: el texto ya dice lo mismo.",
+        "keyboard": [],
+        "focusIndicator": "No recibe foco: no es interactivo. Si hace falta que se pueda pulsar, usa Button o Link.",
+        "minTarget": "No aplica: no es interactivo.",
+        "contrastNote": "Texto sobre fondo ≥ 4.5:1 (WCAG 1.4.3). No medido en Figma. Mirar con más cuidado soft, surface y outline en colores claros (amber, yellow, lime, mint, sky). solid usa white-contrast o black-contrast según el color.",
+        "wcag": [
+            "1.3.1 Información y relaciones",
+            "1.4.1 Uso del color",
+            "1.4.3 Contraste (AA)"
+        ]
+    },
+    "testing": {
+        "cases": [
+            "no recibe foco ni emite eventos",
+            "el texto no se corta ni se envuelve (nowrap)",
+            "cada variant × color × highContrast usa los tokens de tokens.bindings",
+            "highContrast usa el paso 12 (o el 1 sobre solid) en todas las variantes y colores",
+            "solid usa black-contrast en warning, info, sky, mint, lime, yellow y amber; accent-contrast en accent; white-contrast en el resto",
+            "el icono solo se pinta si se pasa icon, y usa el tamaño de layout.iconSize según size",
+            "la altura resulta de 20 / 24 / 28 px según size, sin icono y con él"
+        ]
+    },
+    "anchors": {
+        "figma": {
+            "file": "https://www.figma.com/design/pTGbM1i9PKc6858ef7498a/Radix-Themes--Community-",
+            "node": "718:2801"
+        },
+        "code": {
+            "importPath": "@/components/badge/badge",
+            "export": "Badge"
+        }
+    },
+    "meta": {
+        "source": "figma",
+        "derivableFromSource": [
+            "props.type",
+            "props.default",
+            "layout",
+            "tokens.bindings"
+        ],
+        "needsReview": [
+            "Los valores por defecto del contrato (variant=soft, color=accent, size=1, highContrast=false) siguen la marca ✦ de Figma en variant y size. El valor por defecto del propio component set en Figma puede ser otro: comprobar con defaultVariant antes de generar el componente en código.",
+            "El eje de Figma se llama «highConstrast» (errata, igual que en Button). En código es highContrast. Se mantuvo la errata en bindings.figma.property.",
+            "Figma tiene 744 variantes: 3 sizes × 4 variants × 31 colores × 2 highConstrast. Existen todas las combinaciones. No hay estados (hover, active, foco, disabled): el Badge no es interactivo y states queda vacío.",
+            "Los tokens de fondo, borde y texto se leyeron en las 744 variantes y se agruparon por firma: todas siguen el mismo patrón por color y por variante, y el size no los cambia. Excepciones: ver los dos puntos siguientes.",
+            "El fondo de surface no es uniforme: accent usa tokens.colors.accent-surface, neutral usa tokens.colors.surface y el resto de colores usan el paso 2 de su escala alpha. Así está en tokens.scales.",
+            "El texto de solid sin highContrast tampoco es uniforme: accent usa tokens.colors.accent-contrast; warning, info, sky, mint, lime, yellow y amber usan tokens.colors.black-contrast; el resto, tokens.colors.white-contrast. Con highContrast, el texto de solid usa siempre el paso 1 de la escala del propio color (en Button, accent y neutral usan neutral.1).",
+            "El color del icono (iconColor) NO se pudo leer: el icono es una instancia y sus rellenos no son accesibles. Se asume que es el mismo que el del texto (lo habitual en Radix). Verificar a mano. El icono por defecto del archivo es un marcador («Design / inner-shadow», 16×16).",
+            "Valores sueltos en Figma, sin variable: padding de size 1 (2 / 6 px), padding horizontal de size 3 (10 px), separación entre icono y texto de size 1 y 2 (6 px), tamaño del icono de size 1 (12 px) y el grosor del borde de outline y surface (1 px, alineado dentro). 6 y 10 px no coinciden con spacing.1, 2 ni 4 (4, 8 y 16 px).",
+            "Una variante tiene el icono de 11×12 px en lugar de 12×12 (size=1, outline, accent, highConstrast=true): es una errata de Figma, no se refleja en el contrato.",
+            "size 1 y size 2 usan el mismo estilo de texto (text-style.1.medium); size 3 usa text-style.2.medium. El tamaño de letra de layout.fontSize (12 / 12 / 14) se dedujo de los estilos que usa Link, no se leyó aquí.",
+            "Solo existe icono inicial (iconStart). A diferencia de Button, no hay iconEnd.",
+            "color tiene 31 valores en Figma, mientras que docs/components.md dice «accent, neutral, error» para el sistema. El Badge es el único componente con más de tres colores.",
+            "Contenido de producto redactado como borrador, no sale de Figma: description, guidance, a11y, content.label (maxLength 24), composition.forbiddenChildren y testing. Decisiones mías: no cortar ni envolver el texto (behavior.overflow), icono decorativo y texto máximo de 24 caracteres.",
+            "Contraste no medido. No hay opacity, degradados ni sombras en el Badge."
+        ]
+    }
+}
