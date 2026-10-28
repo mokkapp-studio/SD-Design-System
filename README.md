@@ -2,6 +2,8 @@
 
 Un repositorio pequeño que guarda **la fuente de verdad** de tu sistema de diseño en archivos que entienden tanto las personas como los agentes de IA.
 
+Ejericios para Next.js y Figma
+
 ```
 Figma (componentes + variables)
         │  lo describes una vez
