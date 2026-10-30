@@ -2,7 +2,7 @@
     "$schema": "./component.schema.json",
     "id": "phosphor-icon-library",
     "name": "PhosphorIconLibrary",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "status": "draft",
     "category": "media",
     "description": "Reglas de la librería de iconos Phosphor, alternativa a Lucide (IconLibrary): qué iconos existen, cómo se llaman, qué pesos se permiten y cómo se llevan a Figma. Un proyecto usa Phosphor o Lucide, nunca las dos. No es un componente: lo que se pinta en pantalla es Icon.",
@@ -11,7 +11,7 @@
             "Busca el icono en icons/phosphor/catalog.json (todo Phosphor) por nombre, tags o categoría. Si no lo encuentras por el nombre, busca por tags: «search» no es un nombre, pero es un tag de magnifying-glass.",
             "Para usarlo en código, añádelo antes a icons/phosphor/registry.json con su campo `use`. El catálogo es lo que existe; el registry es lo que se aprueba.",
             "Usa el peso regular por defecto. Reserva fill para el estado activo o seleccionado del mismo icono (favorito marcado, pestaña actual).",
-            "En Figma, cambia el icono de un componente por instance swap con el component set «Categoría / nombre» y elige el peso con la propiedad Weight; no lo dibujes a mano ni pegues SVG sueltos.",
+            "En Figma, inserta siempre el componente «Phosphor Icon»: en sus propiedades eliges el icono (Icon, con buscador sobre todo el catálogo) y el peso (Weight). No insertes los component sets sueltos, no dibujes iconos a mano ni pegues SVG.",
             "Un icono, un significado: no uses el mismo icono para dos acciones distintas en la misma pantalla."
         ],
         "donts": [
@@ -75,10 +75,10 @@
             "name": "name",
             "type": "string",
             "required": true,
-            "description": "Nombre del icono en kebab-case, tal como aparece en icons/phosphor/catalog.json (`magnifying-glass`). En el registry y en icons.ts, el mismo nombre en PascalCase (`MagnifyingGlass`); el paquete lo exporta con sufijo (`MagnifyingGlassIcon`) e icons.ts lo reexporta sin él. En Figma, el component set «Categoría / magnifying-glass».",
+            "description": "Nombre del icono en kebab-case, tal como aparece en icons/phosphor/catalog.json (`magnifying-glass`). En el registry y en icons.ts, el mismo nombre en PascalCase (`MagnifyingGlass`); el paquete lo exporta con sufijo (`MagnifyingGlassIcon`) e icons.ts lo reexporta sin él. En Figma, la propiedad «Icon» del componente «Phosphor Icon», que apunta al component set «Categoría / magnifying-glass».",
             "bindings": {
                 "figma": {
-                    "property": "iconStart / iconEnd / icon",
+                    "property": "Icon",
                     "type": "INSTANCE_SWAP"
                 }
             }
@@ -88,7 +88,7 @@
             "type": "'regular' | 'fill'",
             "default": "regular",
             "required": false,
-            "description": "regular: estado normal. fill: el mismo icono en estado activo o seleccionado. Los demás pesos de Phosphor no se usan.",
+            "description": "regular: estado normal. fill: el mismo icono en estado activo o seleccionado. Los demás pesos de Phosphor no se usan. En Figma es la variante Weight de cada component set; en «Phosphor Icon» aparece en el panel gracias a «Expose nested instances» y se conserva al cambiar de icono.",
             "bindings": {
                 "figma": {
                     "property": "Weight",
@@ -105,7 +105,12 @@
         "root": {
             "element": "svg",
             "description": "Lienzo con viewBox 0 0 256 256 (rejilla de diseño de 16 px). Se escala al tamaño que fija el padre.",
-            "figmaLayer": "Weight=Regular / Weight=Fill (variantes de 24 × 24 dentro del component set «Categoría / nombre»)"
+            "figmaLayer": "Phosphor Icon (componente de entrada de 24 × 24)"
+        },
+        "glyph": {
+            "element": "svg",
+            "description": "Solo en Figma: la instancia del icono elegido dentro de «Phosphor Icon». Se intercambia con la propiedad Icon y expone su variante Weight.",
+            "figmaLayer": "icon (instancia de «Categoría / nombre», variante Weight=Regular o Weight=Fill)"
         },
         "shape": {
             "element": "path",
@@ -208,7 +213,18 @@
         },
         "figma": {
             "generatedBy": "npm run phosphor:figma -- [--registry | --all | --category id | --names a,b]",
+            "order": "Primero los lotes batch-NNN.js (crean los iconos); al final entry.js (crea o actualiza «Phosphor Icon»). entry.js se puede repetir cada vez que se añaden iconos.",
             "page": "Iconos Phosphor",
+            "entryComponent": {
+                "name": "Phosphor Icon",
+                "size": "24 × 24; el icono interior escala con el componente",
+                "properties": {
+                    "Icon": "INSTANCE_SWAP. Por defecto, el primer icono del registry. Valores preferidos: los iconos de icons/phosphor/registry.json (salen primero en el selector); el buscador del swap da acceso a todo el catálogo.",
+                    "Weight": "No se declara en «Phosphor Icon»: es la variante del icono interior, visible en el panel con «Expose nested instances»."
+                },
+                "swapRule": "Todos los component sets tienen la misma propiedad Weight con los mismos valores (Regular, Fill). Por eso, al cambiar de icono, Figma conserva el peso elegido.",
+                "use": "Es lo único que se inserta en diseños y dentro de otros componentes (Button, IconButton, TextField…)."
+            },
             "componentName": "Título de figmaCategory / nombre en kebab-case (component set)",
             "variants": "Weight=Regular, Weight=Fill",
             "componentDescription": "Primera línea `phosphor:nombre` (sirve para reconocer y no duplicar); después categorías y tags, para que el buscador de Figma los encuentre.",
@@ -232,6 +248,8 @@
         "needsReview": [
             "Icon.contract.json está escrito para Lucide: su prop `icon` es de tipo LucideIcon y no tiene `weight`. Para usar fill a través de Icon hay que subir su versión (minor) y añadir la prop `weight: 'regular' | 'fill'`, con tipo PhosphorIcon en los proyectos que usen esta librería.",
             "El código de Figma (scripts/build-phosphor-figma.mjs) no se probó en un archivo real. Probar primero con `npm run phosphor:figma` (los iconos del registry) antes de lanzar --all.",
+            "Comprobar en el archivo real que, al cambiar el icono de «Phosphor Icon», Figma conserva el Weight elegido y que la propiedad Weight se ve en el panel (Expose nested instances).",
+            "Para que los iconos aparezcan en el swap desde otros archivos hay que publicar la biblioteca; los valores preferidos solo cubren el registry, el resto se encuentra con el buscador.",
             "La variable del relleno (colors.neutral.neutral.12) es una suposición, igual que en Lucide. Si no se encuentra, los iconos quedan negros y el script lo avisa.",
             "Los nombres con sufijo (ArrowRightIcon) y el submódulo /ssr salen de la documentación de @phosphor-icons/react; no se compiló un proyecto con el icons.ts generado.",
             "El grupo de Figma es figma_category de Phosphor (una sola por icono); las categorías de la web (pueden ser varias) van en la descripción del componente.",
