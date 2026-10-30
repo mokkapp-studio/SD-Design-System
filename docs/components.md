@@ -16,6 +16,7 @@
 | Switch | `contracts/Switch.contract.json` | campo (Radix Themes) | draft | Ajuste con efecto inmediato | Checkbox, RadioGroup, Button |
 | Icon | `contracts/Icon.contract.json` | media (Lucide) | draft | Icono con tamaño y accesibilidad coherentes | Button, IconButton, TextField |
 | Divider | `contracts/Divider.contract.json` | contenedor (ejemplo mínimo) | draft | Separar dos grupos de contenido; **el contrato más corto, para empezar** | — |
+| PhosphorIconLibrary | `contracts/PhosphorIconLibrary.contract.json` | media (Phosphor) | draft | Alternativa a IconLibrary con Phosphor: catálogo, pesos regular / fill, nombres y paso a Figma. Un proyecto usa una librería u otra (no es un componente) | IconLibrary, Icon, IconButton |
 | Badge | `contracts/Badge.contract.json` | feedback | draft | Etiqueta corta no interactiva con estado o categoría; 4 variantes × 31 colores × 3 tamaños | Button, Link, Icon |
 | IconLibrary | `contracts/IconLibrary.contract.json` | media (Lucide) | draft | Reglas de la librería de iconos: catálogo completo, nombres, trazo y paso a Figma (no es un componente) | Icon, IconButton |
 | _siguiente_ | | | pendiente | | |

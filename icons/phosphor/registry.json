@@ -1,0 +1,21 @@
+{
+  "$description": "Iconos de Phosphor permitidos en el sistema (alternativa a Lucide: un proyecto usa una librería u otra, nunca las dos). Fuente de verdad: si un icono no está aquí, no se usa. Nombres en PascalCase como en icons/phosphor/catalog.json, sin el sufijo «Icon» del paquete. Para añadir uno: nueva entrada, `npm run phosphor:build` (en el proyecto Next.js, `npm run ds:icons`) y `npm run check`.",
+  "library": "@phosphor-icons/react",
+  "install": "npm install @phosphor-icons/react",
+  "docs": "https://phosphoricons.com",
+  "defaults": { "size": 16, "weight": "regular" },
+  "weights": ["regular", "fill"],
+  "icons": [
+    { "name": "ArrowRight", "use": "avanzar, siguiente, continuar" },
+    { "name": "Check", "use": "confirmación, marcado" },
+    { "name": "CaretDown", "use": "desplegar, selector" },
+    { "name": "Eye", "use": "mostrar contenido (p. ej. contraseña)" },
+    { "name": "EyeSlash", "use": "ocultar contenido" },
+    { "name": "Info", "use": "información neutra" },
+    { "name": "Minus", "use": "quitar, restar, estado indeterminado" },
+    { "name": "Plus", "use": "añadir, crear" },
+    { "name": "MagnifyingGlass", "use": "buscar" },
+    { "name": "Trash", "use": "eliminar (acción destructiva)" },
+    { "name": "X", "use": "cerrar, borrar el contenido" }
+  ]
+}

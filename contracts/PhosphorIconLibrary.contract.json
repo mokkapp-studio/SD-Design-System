@@ -1,0 +1,243 @@
+{
+    "$schema": "./component.schema.json",
+    "id": "phosphor-icon-library",
+    "name": "PhosphorIconLibrary",
+    "version": "0.1.0",
+    "status": "draft",
+    "category": "media",
+    "description": "Reglas de la librería de iconos Phosphor, alternativa a Lucide (IconLibrary): qué iconos existen, cómo se llaman, qué pesos se permiten y cómo se llevan a Figma. Un proyecto usa Phosphor o Lucide, nunca las dos. No es un componente: lo que se pinta en pantalla es Icon.",
+    "guidance": {
+        "dos": [
+            "Busca el icono en icons/phosphor/catalog.json (todo Phosphor) por nombre, tags o categoría. Si no lo encuentras por el nombre, busca por tags: «search» no es un nombre, pero es un tag de magnifying-glass.",
+            "Para usarlo en código, añádelo antes a icons/phosphor/registry.json con su campo `use`. El catálogo es lo que existe; el registry es lo que se aprueba.",
+            "Usa el peso regular por defecto. Reserva fill para el estado activo o seleccionado del mismo icono (favorito marcado, pestaña actual).",
+            "En Figma, cambia el icono de un componente por instance swap con el component set «Categoría / nombre» y elige el peso con la propiedad Weight; no lo dibujes a mano ni pegues SVG sueltos.",
+            "Un icono, un significado: no uses el mismo icono para dos acciones distintas en la misma pantalla."
+        ],
+        "donts": [
+            {
+                "case": "Usar un icono de Phosphor que no está en icons/phosphor/registry.json",
+                "useInstead": "Añadirlo al registry (con su `use`) y regenerar icons.ts",
+                "why": "La lista cerrada evita iconos duplicados o contradictorios y mantiene pequeño el paquete."
+            },
+            {
+                "case": "Mezclar iconos de Phosphor y de Lucide en el mismo proyecto",
+                "useInstead": "Elegir una librería por proyecto y buscar el equivalente en ella",
+                "why": "Cada librería tiene su propia rejilla, grosor y terminaciones; mezclarlas se nota."
+            },
+            {
+                "case": "Usar los pesos thin, light, bold o duotone",
+                "useInstead": "regular (por defecto) o fill (estado activo)",
+                "why": "Dos pesos bastan para distinguir reposo y activo; más pesos rompen la coherencia visual."
+            },
+            {
+                "case": "Usar fill solo para destacar un icono sin que cambie de estado",
+                "useInstead": "El color o el tamaño del componente padre",
+                "why": "Fill comunica «activo / seleccionado»; usarlo como adorno confunde ese significado."
+            },
+            {
+                "case": "Un icono solo, sin texto, para algo importante",
+                "useInstead": "Icono más texto, o IconButton con aria-label",
+                "why": "El significado de un icono suelto no es universal y no lo anuncia un lector de pantalla."
+            },
+            {
+                "case": "Redimensionar o recolorear el icono a mano en un componente",
+                "useInstead": "El tamaño y el color del componente padre (Button, IconButton, TextField)",
+                "why": "El padre ya los fija por tokens; un ajuste local rompe la coherencia."
+            }
+        ],
+        "related": [
+            {
+                "component": "IconLibrary",
+                "relation": "alternative",
+                "difference": "Librería Lucide: trazo de 2 px en 24 × 24 y un solo peso. Se elige una de las dos por proyecto."
+            },
+            {
+                "component": "Icon",
+                "relation": "contains",
+                "difference": "Icon dibuja un icono de esta librería en pantalla con tamaño y accesibilidad."
+            },
+            {
+                "component": "IconButton",
+                "relation": "similar",
+                "difference": "Botón cuyo único contenido es un icono; exige aria-label."
+            }
+        ]
+    },
+    "semantics": {
+        "element": "svg",
+        "role": null,
+        "refTarget": "root",
+        "elementByProp": null
+    },
+    "props": [
+        {
+            "name": "name",
+            "type": "string",
+            "required": true,
+            "description": "Nombre del icono en kebab-case, tal como aparece en icons/phosphor/catalog.json (`magnifying-glass`). En el registry y en icons.ts, el mismo nombre en PascalCase (`MagnifyingGlass`); el paquete lo exporta con sufijo (`MagnifyingGlassIcon`) e icons.ts lo reexporta sin él. En Figma, el component set «Categoría / magnifying-glass».",
+            "bindings": {
+                "figma": {
+                    "property": "iconStart / iconEnd / icon",
+                    "type": "INSTANCE_SWAP"
+                }
+            }
+        },
+        {
+            "name": "weight",
+            "type": "'regular' | 'fill'",
+            "default": "regular",
+            "required": false,
+            "description": "regular: estado normal. fill: el mismo icono en estado activo o seleccionado. Los demás pesos de Phosphor no se usan.",
+            "bindings": {
+                "figma": {
+                    "property": "Weight",
+                    "type": "VARIANT"
+                }
+            }
+        }
+    ],
+    "states": {
+        "native": [],
+        "controlled": []
+    },
+    "anatomy": {
+        "root": {
+            "element": "svg",
+            "description": "Lienzo con viewBox 0 0 256 256 (rejilla de diseño de 16 px). Se escala al tamaño que fija el padre.",
+            "figmaLayer": "Weight=Regular / Weight=Fill (variantes de 24 × 24 dentro del component set «Categoría / nombre»)"
+        },
+        "shape": {
+            "element": "path",
+            "description": "Formas del icono, siempre con relleno (también en regular: el trazo ya viene convertido en contorno). Color heredado del texto (currentColor en código; variable de color en Figma).",
+            "figmaLayer": "Vectores dentro de cada variante"
+        }
+    },
+    "tokens": {
+        "policy": {
+            "allowed": [
+                "colors"
+            ],
+            "forbidden": []
+        },
+        "bindings": {
+            "base": {
+                "fill": "colors.neutral.neutral.12"
+            }
+        }
+    },
+    "a11y": {
+        "role": "Ninguno por defecto: decorativo (aria-hidden). Con `label`, role=\"img\" y aria-label.",
+        "name": "Lo da el componente Icon (prop label), no la librería.",
+        "keyboard": [],
+        "focusIndicator": "No recibe foco: no es interactivo.",
+        "minTarget": "No aplica al icono; si va dentro de un botón, el destino de pulsación es el del botón.",
+        "contrastNote": "Un icono con significado necesita ≥ 3:1 contra el fondo (WCAG 1.4.11). Hereda el color del padre: se comprueba allí. El cambio regular → fill no puede ser la única señal de un estado: acompáñalo de aria-pressed / aria-selected o de texto.",
+        "wcag": [
+            "1.1.1 Contenido no textual",
+            "1.4.1 Uso del color",
+            "1.4.11 Contraste no textual"
+        ]
+    },
+    "layout": {
+        "canvas": {
+            "viewBox": "0 0 256 256",
+            "designGrid": 16,
+            "unit": "px",
+            "note": "Phosphor se diseña en una rejilla de 16 × 16 (viewBox de 256). En regular el trazo es de 16 unidades: 1 px a 16 px, 1,25 px a 20 px."
+        },
+        "renderSizes": {
+            "values": [
+                14,
+                16,
+                18,
+                20
+            ],
+            "unit": "px",
+            "note": "Los mismos que con Lucide; los fija el componente padre (ver Icon.contract.json)."
+        },
+        "figmaComponentSize": {
+            "value": 24,
+            "unit": "px",
+            "note": "Cada variante se crea a 24 × 24 en Figma, como los iconos de Lucide, para que el instance swap entre librerías no cambie el tamaño de los componentes."
+        }
+    },
+    "behavior": {
+        "weights": {
+            "allowed": [
+                "regular",
+                "fill"
+            ],
+            "default": "regular",
+            "available": [
+                "thin",
+                "light",
+                "regular",
+                "bold",
+                "fill",
+                "duotone"
+            ],
+            "rule": "fill solo para el estado activo o seleccionado del mismo icono. check.mjs falla si el registry declara un peso que no existe en el catálogo."
+        },
+        "catalog": {
+            "file": "icons/phosphor/catalog.json",
+            "generatedBy": "npm run phosphor:catalog",
+            "source": "https://github.com/phosphor-icons/core (src/icons.ts y assets/<peso>/)",
+            "fields": [
+                "name (kebab-case)",
+                "pascal (PascalCase, sin el sufijo Icon del paquete)",
+                "categories",
+                "figmaCategory (grupo en Figma)",
+                "tags",
+                "aliases (nombres antiguos)",
+                "published / updated (versión de Phosphor)"
+            ],
+            "rule": "Nunca se edita a mano. Para actualizar a una versión nueva de Phosphor: `npm run phosphor:catalog -- --update`."
+        },
+        "registry": {
+            "file": "icons/phosphor/registry.json",
+            "rule": "Subconjunto del catálogo aprobado para código. check.mjs falla si un nombre del registry no existe en el catálogo y avisa si es un alias antiguo."
+        },
+        "code": {
+            "package": "@phosphor-icons/react",
+            "generatedBy": "npm run phosphor:build (en el proyecto: node design-system/scripts/build-phosphor-icons.mjs src/components/icon/icons.ts)",
+            "import": "Desde el submódulo /ssr: sin React Context, funciona en Server y Client Components. No se usa IconContext.",
+            "naming": "icons.ts reexporta ArrowRightIcon como ArrowRight: el mismo nombre que tendría con Lucide si existe en ambas librerías.",
+            "types": "PhosphorIcon (tipo del componente de icono) e IconWeight, reexportados desde icons.ts.",
+            "nextConfig": "Opcional: añadir @phosphor-icons/react a experimental.optimizePackageImports en next.config."
+        },
+        "figma": {
+            "generatedBy": "npm run phosphor:figma -- [--registry | --all | --category id | --names a,b]",
+            "page": "Iconos Phosphor",
+            "componentName": "Título de figmaCategory / nombre en kebab-case (component set)",
+            "variants": "Weight=Regular, Weight=Fill",
+            "componentDescription": "Primera línea `phosphor:nombre` (sirve para reconocer y no duplicar); después categorías y tags, para que el buscador de Figma los encuentre.",
+            "fillVariable": "colors.neutral.neutral.12 (configurable con --fill-variable)",
+            "idempotent": "Repetir un lote no duplica: salta los iconos que ya existen."
+        }
+    },
+    "anchors": {
+        "code": {
+            "importPath": "@/components/icon/icons",
+            "export": "(un export por cada icono de icons/phosphor/registry.json)"
+        }
+    },
+    "meta": {
+        "source": "catálogo oficial de Phosphor (repositorio phosphor-icons/core, v2.1.1)",
+        "derivableFromSource": [
+            "behavior.catalog",
+            "behavior.weights.available",
+            "layout.canvas"
+        ],
+        "needsReview": [
+            "Icon.contract.json está escrito para Lucide: su prop `icon` es de tipo LucideIcon y no tiene `weight`. Para usar fill a través de Icon hay que subir su versión (minor) y añadir la prop `weight: 'regular' | 'fill'`, con tipo PhosphorIcon en los proyectos que usen esta librería.",
+            "El código de Figma (scripts/build-phosphor-figma.mjs) no se probó en un archivo real. Probar primero con `npm run phosphor:figma` (los iconos del registry) antes de lanzar --all.",
+            "La variable del relleno (colors.neutral.neutral.12) es una suposición, igual que en Lucide. Si no se encuentra, los iconos quedan negros y el script lo avisa.",
+            "Los nombres con sufijo (ArrowRightIcon) y el submódulo /ssr salen de la documentación de @phosphor-icons/react; no se compiló un proyecto con el icons.ts generado.",
+            "El grupo de Figma es figma_category de Phosphor (una sola por icono); las categorías de la web (pueden ser varias) van en la descripción del componente.",
+            "Equivalencias con el registry de Lucide elegidas a mano: ChevronDown → CaretDown, EyeOff → EyeSlash, Search → MagnifyingGlass, Trash2 → Trash.",
+            "El trazo de regular (1 px a 16 px) es más fino que el de Lucide (1,33 px). Comparar en pantalla antes de elegir librería.",
+            "Los usos (`use`) de los iconos del registry son una guía, no vienen de Phosphor."
+        ]
+    }
+}

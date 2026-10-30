@@ -7,6 +7,9 @@
     "check": "node check.mjs",
     "icons:build": "node scripts/build-icons.mjs",
     "icons:catalog": "node scripts/build-icon-catalog.mjs",
-    "icons:figma": "node scripts/build-figma-icons.mjs"
+    "icons:figma": "node scripts/build-figma-icons.mjs",
+    "phosphor:build": "node scripts/build-phosphor-icons.mjs",
+    "phosphor:catalog": "node scripts/build-phosphor-catalog.mjs",
+    "phosphor:figma": "node scripts/build-phosphor-figma.mjs"
   }
 }
