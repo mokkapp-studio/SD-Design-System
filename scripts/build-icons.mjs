@@ -16,11 +16,15 @@ if (bad.length) throw new Error(`Nombres no válidos (PascalCase): ${bad.join(',
 if (new Set(names).size !== names.length) throw new Error('Nombres duplicados en icons/registry.json');
 const sorted = [...names].sort();
 
+// Tipo del componente: `LucideIcon` para lucide-react, inferido de un export cualquiera en otras librerías.
+const typeExport = reg.library === 'lucide-react'
+  ? `export type { LucideIcon } from '${reg.library}';\n`
+  : `export type IconComponent = typeof ${sorted[0]};\n`;
+
 const src = `/* GENERADO por scripts/build-icons.mjs desde icons/registry.json. No editar a mano. */
 import { ${sorted.join(', ')} } from '${reg.library}';
 
-export type { LucideIcon } from '${reg.library}';
-export { ${sorted.join(', ')} };
+${typeExport}export { ${sorted.join(', ')} };
 `;
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, src);

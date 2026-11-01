@@ -1,5 +1,5 @@
 /* GENERADO por scripts/build-icons.mjs desde icons/registry.json. No editar a mano. */
-import { ArrowRight, Check, ChevronDown, Eye, EyeOff, Info, Minus, Plus, Search, Trash2, X } from 'lucide-react';
+import { ArrowRight, Bell, Check, EyeClosed, EyeSolid, HomeAlt, InfoCircle, Lock, LogIn, LogOut, Mail, Menu, Minus, NavArrowDown, NavArrowRight, Plus, Search, Settings, Trash, User, Xmark } from 'iconoir-react';
 
-export type { LucideIcon } from 'lucide-react';
-export { ArrowRight, Check, ChevronDown, Eye, EyeOff, Info, Minus, Plus, Search, Trash2, X };
+export type IconComponent = typeof ArrowRight;
+export { ArrowRight, Bell, Check, EyeClosed, EyeSolid, HomeAlt, InfoCircle, Lock, LogIn, LogOut, Mail, Menu, Minus, NavArrowDown, NavArrowRight, Plus, Search, Settings, Trash, User, Xmark };
