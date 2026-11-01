@@ -1,0 +1,474 @@
+{
+    "$schema": "./component.schema.json",
+    "id": "sign-form",
+    "name": "SignForm",
+    "version": "0.1.0",
+    "status": "draft",
+    "category": "input",
+    "description": "Formulario de autenticación: inicio de sesión o registro. Email + contraseña, un botón de envío y un enlace para cambiar entre modos. Compone componentes del sistema; no reinventa inputs ni botones.",
+    "guidance": {
+        "dos": [
+            "Email como primer campo y contraseña como segundo. No añadas más campos: para datos extra (nombre, empresa) usa un segundo paso.",
+            "El botón de envío lleva el verbo del modo: «Iniciar sesión» o «Crear cuenta». No pongas «Enviar» ni «Continuar».",
+            "La contraseña se oculta por defecto; el icono EyeClosed/EyeSolid alterna la visibilidad.",
+            "Errores de validación se muestran bajo cada campo (prop `errorMessage` del TextField), no en un toast.",
+            "El enlace de cambio de modo va al final: «¿No tienes cuenta? Crear cuenta» o «¿Ya tienes cuenta? Iniciar sesión»."
+        ],
+        "donts": [
+            {
+                "case": "«Social sign-in» (Google, Apple) dentro de este contrato",
+                "useInstead": "Añadir un componente SocialAuthButtons encima o debajo del SignForm",
+                "why": "Separar simplifica el A/B testing y el consumidor decide qué proveedores habilita."
+            },
+            {
+                "case": "Validación en vivo mientras se escribe el email",
+                "useInstead": "Validar al perder el foco (blur) o al enviar",
+                "why": "Validar carácter a carácter produce ruido y mensajes falsos cuando el usuario no ha terminado."
+            },
+            {
+                "case": "Autocompletar con `off` para esconder el gestor de contraseñas",
+                "useInstead": "autoComplete=\"email\" y autoComplete=\"current-password\" o \"new-password\"",
+                "why": "El gestor de contraseñas es más seguro que una contraseña inventada por el usuario y acelera el flujo."
+            },
+            {
+                "case": "Un solo campo que acepte email o nombre de usuario",
+                "useInstead": "Dos campos separados o un solo tipo",
+                "why": "Un campo polimórfico impide elegir el autoComplete y confunde al lector de pantalla."
+            }
+        ],
+        "related": [
+            {
+                "component": "TextField",
+                "relation": "contains",
+                "difference": "Los campos email y contraseña son TextField con type email/password."
+            },
+            {
+                "component": "Button",
+                "relation": "contains",
+                "difference": "El envío es un Button type=submit."
+            },
+            {
+                "component": "Link",
+                "relation": "contains",
+                "difference": "El cambio de modo y «Olvidé mi contraseña» son Links."
+            },
+            {
+                "component": "Checkbox",
+                "relation": "contains",
+                "difference": "El «Recuérdame» (opcional, solo en sign-in) es un Checkbox."
+            }
+        ]
+    },
+    "semantics": {
+        "element": "form",
+        "role": null,
+        "refTarget": "root",
+        "elementByProp": null
+    },
+    "props": [
+        {
+            "name": "mode",
+            "type": "'sign-in' | 'sign-up'",
+            "default": "sign-in",
+            "description": "Modo. En sign-in se muestra «Olvidé mi contraseña» y, opcional, un Checkbox «Recuérdame». En sign-up, solo el campo contraseña con autoComplete=\"new-password\" y un texto de política.",
+            "bindings": {
+                "figma": {
+                    "property": "mode",
+                    "type": "VARIANT"
+                }
+            }
+        },
+        {
+            "name": "size",
+            "type": "'1' | '2' | '3'",
+            "default": "2",
+            "description": "Tamaño del formulario. Hereda a los TextField y Button internos: en size 1 TextField=1 Button=1; en 2 ambos a 2; en 3 ambos a 3.",
+            "bindings": {
+                "figma": {
+                    "property": "size",
+                    "type": "VARIANT"
+                }
+            }
+        },
+        {
+            "name": "loading",
+            "type": "boolean",
+            "default": false,
+            "description": "Si está enviando. Deshabilita el Button y los TextField; el Button muestra su estado loading.",
+            "bindings": {
+                "figma": {
+                    "property": "loading",
+                    "type": "BOOLEAN"
+                }
+            },
+            "aria": "aria-busy en el <form> mientras loading=true"
+        },
+        {
+            "name": "error",
+            "type": "string | undefined",
+            "default": null,
+            "description": "Error global (p. ej. «Credenciales incorrectas»). Se muestra encima del formulario, con role=alert.",
+            "bindings": {
+                "figma": {
+                    "property": "showError",
+                    "type": "BOOLEAN",
+                    "value": "true"
+                }
+            }
+        },
+        {
+            "name": "onSubmit",
+            "type": "(data: { email: string; password: string; remember?: boolean }) => void",
+            "required": true,
+            "description": "Handler del envío. Recibe los valores validados.",
+            "bindings": {
+                "figma": null
+            }
+        }
+    ],
+    "states": {
+        "native": [],
+        "controlled": [
+            {
+                "name": "loading",
+                "description": "El formulario está procesando el envío. Deshabilita entradas y botón.",
+                "aria": "aria-busy=\"true\""
+            },
+            {
+                "name": "error",
+                "description": "Hay un error global que no es de validación de un campo (p. ej. credenciales incorrectas, servidor caído).",
+                "aria": "role=\"alert\" en el elemento de error"
+            }
+        ]
+    },
+    "anatomy": {
+        "root": {
+            "element": "form",
+            "description": "Elemento <form> con auto layout vertical.",
+            "figmaLayer": "SignForm"
+        },
+        "header": {
+            "element": "div",
+            "description": "Encabezado con título y descripción. Opcional: si el consumidor ya pone su propio Heading encima, se oculta.",
+            "optional": true,
+            "figmaLayer": "header",
+            "figmaToggle": {
+                "property": "showHeader",
+                "type": "BOOLEAN",
+                "default": true
+            }
+        },
+        "errorBanner": {
+            "element": "div",
+            "description": "Banner de error global con role=alert. Solo visible si `error` está definido.",
+            "optional": true,
+            "figmaLayer": "errorBanner",
+            "figmaToggle": {
+                "property": "showError",
+                "type": "BOOLEAN",
+                "default": false
+            },
+            "content": {
+                "prop": "error"
+            }
+        },
+        "emailField": {
+            "element": "slot",
+            "description": "TextField de email con icono Mail. autoComplete=email, type=email, required.",
+            "figmaLayer": "emailField",
+            "slot": {
+                "key": "emailField",
+                "allowedComponents": [
+                    "TextField"
+                ],
+                "minItems": 1,
+                "maxItems": 1,
+                "mandatory": true,
+                "figmaProp": "emailField"
+            }
+        },
+        "passwordField": {
+            "element": "slot",
+            "description": "TextField de contraseña con icono Lock al inicio y IconButton (EyeClosed/EyeSolid) al final para alternar visibilidad. autoComplete current-password (sign-in) o new-password (sign-up).",
+            "figmaLayer": "passwordField",
+            "slot": {
+                "key": "passwordField",
+                "allowedComponents": [
+                    "TextField"
+                ],
+                "minItems": 1,
+                "maxItems": 1,
+                "mandatory": true,
+                "figmaProp": "passwordField"
+            }
+        },
+        "rememberRow": {
+            "element": "div",
+            "description": "Fila entre contraseña y botón: Checkbox «Recuérdame» a la izquierda, Link «Olvidé mi contraseña» a la derecha. Solo en mode=sign-in.",
+            "optional": true,
+            "figmaLayer": "rememberRow",
+            "figmaToggle": {
+                "property": "mode",
+                "type": "VARIANT",
+                "default": "sign-in"
+            }
+        },
+        "submitButton": {
+            "element": "slot",
+            "description": "Button type=submit. Texto: «Iniciar sesión» o «Crear cuenta» según mode. Ancho fill.",
+            "figmaLayer": "submitButton",
+            "slot": {
+                "key": "submitButton",
+                "allowedComponents": [
+                    "Button"
+                ],
+                "minItems": 1,
+                "maxItems": 1,
+                "mandatory": true,
+                "figmaProp": "submitButton"
+            }
+        },
+        "policyText": {
+            "element": "p",
+            "description": "Texto de política (sign-up): «Al crear una cuenta aceptas los Términos y la Política de privacidad». Lleva Links a cada documento.",
+            "optional": true,
+            "figmaLayer": "policyText",
+            "figmaToggle": {
+                "property": "mode",
+                "type": "VARIANT",
+                "default": "sign-up"
+            }
+        },
+        "modeSwitch": {
+            "element": "p",
+            "description": "Línea final con Link para cambiar de modo. En sign-in: «¿No tienes cuenta? Crear cuenta». En sign-up: «¿Ya tienes cuenta? Iniciar sesión».",
+            "figmaLayer": "modeSwitch"
+        }
+    },
+    "composition": {
+        "allowedChildren": [
+            "TextField",
+            "Button",
+            "Link",
+            "Checkbox"
+        ],
+        "forbiddenChildren": [
+            "SignForm",
+            "NavBar",
+            "form"
+        ],
+        "nestedComponents": [
+            {
+                "part": "emailField",
+                "component": "TextField",
+                "fixedProps": {
+                    "type": "email",
+                    "autoComplete": "email",
+                    "required": true,
+                    "iconStart": "Mail"
+                }
+            },
+            {
+                "part": "passwordField",
+                "component": "TextField",
+                "fixedProps": {
+                    "type": "password",
+                    "required": true,
+                    "iconStart": "Lock"
+                }
+            },
+            {
+                "part": "submitButton",
+                "component": "Button",
+                "fixedProps": {
+                    "type": "submit",
+                    "variant": "solid",
+                    "color": "accent"
+                }
+            }
+        ],
+        "asChild": false
+    },
+    "layout": {
+        "width": {
+            "default": "fixed",
+            "modes": {
+                "fixed": "Ancho fijo por tamaño: 320 / 360 / 400 px. En móvil (< 480 px) pasa a fill con padding del padre."
+            },
+            "min": 280,
+            "max": 440,
+            "note": "Pensado para una tarjeta centrada, no para ocupar toda la página."
+        },
+        "autoLayout": {
+            "direction": "VERTICAL",
+            "sizingHorizontal": "FIXED",
+            "sizingVertical": "HUG",
+            "alignMain": "MIN",
+            "alignCross": "STRETCH",
+            "gap": "spacing.4 entre bloques (header, errorBanner, campos, rememberRow, submitButton, policyText, modeSwitch); spacing.3 dentro de rememberRow"
+        }
+    },
+    "tokens": {
+        "policy": {
+            "allowed": [
+                "colors",
+                "tokens.colors",
+                "spacing",
+                "radius",
+                "text-style",
+                "shadows"
+            ],
+            "forbidden": []
+        },
+        "scales": {
+            "1": {
+                "gap": "spacing.3",
+                "textStyle": "text-style.1.regular"
+            },
+            "2": {
+                "gap": "spacing.4",
+                "textStyle": "text-style.2.regular"
+            },
+            "3": {
+                "gap": "spacing.5",
+                "textStyle": "text-style.3.regular"
+            }
+        },
+        "bindings": {
+            "base": {
+                "background": "tokens.colors.surface",
+                "text": "colors.neutral.neutral.12",
+                "radius": "radius.3",
+                "shadow": "shadows.shadow-1"
+            },
+            "bySize": {
+                "1": {
+                    "gap": "{size.gap}",
+                    "textStyle": "{size.textStyle}"
+                },
+                "2": {
+                    "gap": "{size.gap}",
+                    "textStyle": "{size.textStyle}"
+                },
+                "3": {
+                    "gap": "{size.gap}",
+                    "textStyle": "{size.textStyle}"
+                }
+            },
+            "byState": {
+                "error": {
+                    "errorBannerBackground": "colors.semantic.error-alpha.3",
+                    "errorBannerText": "colors.semantic.error.11",
+                    "errorBannerBorder": "colors.semantic.error-alpha.6"
+                }
+            }
+        }
+    },
+    "events": [
+        {
+            "name": "onSubmit",
+            "trigger": "Submit del <form> (Enter dentro de un campo o click en submitButton)",
+            "payload": "{ email: string; password: string; remember?: boolean }",
+            "blockedWhen": [
+                "loading=true",
+                "validación de email falla",
+                "contraseña vacía"
+            ]
+        }
+    ],
+    "a11y": {
+        "role": "form (implícito; el consumidor puede añadir aria-label=\"Iniciar sesión\" o similar)",
+        "name": "aria-label en el <form> con el nombre del flujo (p. ej. «Iniciar sesión»).",
+        "keyboard": [
+            "Tab — avanza email → contraseña → mostrar/ocultar → recuérdame → submit → cambiar modo",
+            "Enter dentro de un campo — envía el formulario si todos los campos son válidos",
+            "Shift+Tab — retrocede"
+        ],
+        "focusIndicator": "Hereda del TextField/Button/Link/Checkbox: 2 px outline con colors.accent.accent-alpha.8.",
+        "minTarget": "Submit Button cumple su propio mínimo (36/40/44 px según size).",
+        "contrastNote": "Texto principal ≥ 4.5:1, textos secundarios (modeSwitch) ≥ 4.5:1 también.",
+        "wcag": [
+            "1.3.1 Información y relaciones",
+            "1.3.5 Identificar el propósito de entrada (autoComplete)",
+            "3.3.1 Identificación de errores",
+            "3.3.3 Sugerencia ante errores",
+            "4.1.3 Mensajes de estado (role=alert en errorBanner)"
+        ]
+    },
+    "content": {
+        "label": {
+            "maxLength": 48,
+            "casing": "sentence",
+            "voice": "Verbos del modo: «Iniciar sesión», «Crear cuenta». Preguntas corteses: «¿No tienes cuenta?»"
+        }
+    },
+    "behavior": {
+        "loading": {
+            "indicator": "Button muestra su estado loading; el <form> lleva aria-busy=true.",
+            "blocksInput": true
+        },
+        "overflow": "wrap",
+        "motion": [
+            {
+                "on": "error",
+                "property": "shake",
+                "reducedMotion": "instant"
+            }
+        ],
+        "responsive": [
+            "< 480 px: el ancho fijo pasa a fill, con padding horizontal del contenedor padre."
+        ]
+    },
+    "form": {
+        "submitOnEnter": true,
+        "validation": "Nativa del navegador + mensajes personalizados en errorMessage de cada TextField. Email: type=email. Contraseña: pattern mínimo del consumidor (p. ej. 8+ caracteres en sign-up)."
+    },
+    "theming": {
+        "modes": [
+            "light",
+            "dark"
+        ],
+        "density": null
+    },
+    "i18n": {
+        "rtl": "El layout vertical no cambia; el icono dentro de los TextField pasa al lado opuesto automáticamente.",
+        "textExpansion": "Los textos del Button y modeSwitch admiten hasta un 40 % más (alemán); el Button se ensancha, modeSwitch envuelve."
+    },
+    "testing": {
+        "cases": [
+            "mode=sign-in muestra rememberRow y oculta policyText",
+            "mode=sign-up muestra policyText y oculta rememberRow",
+            "contraseña oculta por defecto; IconButton alterna EyeClosed/EyeSolid y type=password/text",
+            "Enter dentro de un campo con todos los campos válidos dispara onSubmit",
+            "loading=true deshabilita todos los campos y el Button, y añade aria-busy al form",
+            "error=string muestra errorBanner con role=alert",
+            "autoComplete=\"email\" en email; \"current-password\" (sign-in) o \"new-password\" (sign-up) en contraseña"
+        ]
+    },
+    "anchors": {
+        "figma": {
+            "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
+            "node": "2:157 (sign-in) / 2:187 (sign-up)"
+        },
+        "code": {
+            "importPath": "@/components/sign-form/sign-form",
+            "export": "SignForm"
+        }
+    },
+    "meta": {
+        "source": "manual",
+        "derivableFromSource": [
+            "props.type",
+            "props.default",
+            "layout",
+            "composition.nestedComponents"
+        ],
+        "needsReview": [
+            "Primer formulario compuesto. Revisar si el consumidor prefiere pasar los TextField como children (más flexible) o como props con valores (más controlado). Este contrato opta por slots.",
+            "El Checkbox «Recuérdame» aún no tiene contrato en el sistema. Hay un Checkbox genérico pero no un patrón «Checkbox + Link en una fila».",
+            "La fuerza mínima de la contraseña depende del consumidor; no se fija aquí para no imponer una política sobre el repo.",
+            "El icono EyeClosed/EyeSolid viene del nuevo registry de Iconoir (v0.2.0 de IconLibrary).",
+            "El error global se muestra encima del formulario (role=alert). Verificar que no entra en conflicto con la validación por campo del TextField."
+        ]
+    }
+}

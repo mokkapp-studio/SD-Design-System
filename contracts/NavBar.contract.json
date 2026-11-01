@@ -1,0 +1,346 @@
+{
+    "$schema": "./component.schema.json",
+    "id": "nav-bar",
+    "name": "NavBar",
+    "version": "0.1.0",
+    "status": "draft",
+    "category": "navigation",
+    "description": "Barra de navegación superior fija: marca a la izquierda, enlaces principales en el centro-izquierda, acciones a la derecha (sesión, menú móvil). Orienta al usuario y lleva a las secciones principales del producto.",
+    "guidance": {
+        "dos": [
+            "Mantén 3–5 enlaces principales. Si necesitas más, agrúpalos o muévelos a un menú lateral.",
+            "El enlace de la sección actual lleva `aria-current=\"page\"`.",
+            "La marca a la izquierda es siempre un `Link` a la raíz. Puede ser logotipo (imagen) o texto; no las dos cosas.",
+            "En móvil (< 768 px), oculta los enlaces y muestra un `IconButton` con el icono `Menu` que abre un menú (fuera del contrato: lo decide el consumidor)."
+        ],
+        "donts": [
+            {
+                "case": "Más de 5 enlaces principales en escritorio",
+                "useInstead": "Agrupa en un menú desplegable o mueve a un sidebar",
+                "why": "Más de 5 opciones compiten entre sí y se escanean peor."
+            },
+            {
+                "case": "Dos barras de navegación en la misma página",
+                "useInstead": "Una NavBar más secciones (`Tabs` o similares) dentro de la página",
+                "why": "El usuario pierde el sentido de ubicación si hay varias barras principales."
+            },
+            {
+                "case": "Botones destructivos (eliminar, cerrar sesión) sueltos en la barra",
+                "useInstead": "Un menú de usuario con esas acciones",
+                "why": "Las acciones de alto riesgo necesitan contexto y confirmación, no deben estar a un clic."
+            },
+            {
+                "case": "Enlaces que no son navegación (acciones)",
+                "useInstead": "`Button` en la zona de acciones",
+                "why": "Un `Link` navega; un `Button` ejecuta. Mezclarlos confunde al lector de pantalla."
+            }
+        ],
+        "related": [
+            {
+                "component": "Link",
+                "relation": "contains",
+                "difference": "Cada ítem del centro es un Link; el logo también."
+            },
+            {
+                "component": "Button",
+                "relation": "contains",
+                "difference": "La acción de la derecha (p. ej. «Iniciar sesión») es un Button."
+            },
+            {
+                "component": "IconButton",
+                "relation": "contains",
+                "difference": "El disparador del menú móvil es un IconButton."
+            }
+        ]
+    },
+    "semantics": {
+        "element": "nav",
+        "role": "navigation",
+        "refTarget": "root",
+        "elementByProp": null
+    },
+    "props": [
+        {
+            "name": "variant",
+            "type": "'surface' | 'ghost'",
+            "default": "surface",
+            "description": "Fondo. `surface` tiene fondo propio y borde inferior; `ghost` es transparente, pensado para pegarse al hero.",
+            "bindings": {
+                "figma": {
+                    "property": "variant",
+                    "type": "VARIANT"
+                }
+            }
+        },
+        {
+            "name": "size",
+            "type": "'1' | '2'",
+            "default": "2",
+            "description": "Alto de la barra: 48 px (1) o 64 px (2). 1 para apps densas, 2 para marketing.",
+            "bindings": {
+                "figma": {
+                    "property": "size",
+                    "type": "VARIANT"
+                }
+            }
+        },
+        {
+            "name": "sticky",
+            "type": "boolean",
+            "default": true,
+            "description": "Si queda fija al hacer scroll. Visualmente no cambia el componente; se refleja con position: sticky en el consumidor.",
+            "bindings": {
+                "figma": null
+            }
+        }
+    ],
+    "states": {
+        "native": [],
+        "controlled": []
+    },
+    "anatomy": {
+        "root": {
+            "element": "nav",
+            "description": "Contenedor con role=navigation. Auto layout horizontal con tres zonas (marca | enlaces | acciones).",
+            "figmaLayer": "NavBar"
+        },
+        "brand": {
+            "element": "slot",
+            "description": "Marca a la izquierda (logotipo o texto). Siempre un Link al home.",
+            "figmaLayer": "brand",
+            "slot": {
+                "key": "brand",
+                "allowedComponents": [
+                    "Link"
+                ],
+                "minItems": 1,
+                "maxItems": 1,
+                "mandatory": true,
+                "figmaProp": "brand"
+            }
+        },
+        "items": {
+            "element": "slot",
+            "description": "Enlaces principales. Entre 1 y 5. En móvil se ocultan y aparece el disparador de menú.",
+            "figmaLayer": "items",
+            "slot": {
+                "key": "items",
+                "allowedComponents": [
+                    "Link"
+                ],
+                "minItems": 1,
+                "maxItems": 5,
+                "mandatory": true,
+                "figmaProp": "items"
+            }
+        },
+        "actions": {
+            "element": "slot",
+            "description": "Hueco a la derecha para acciones. Pensado para 1–2 Buttons (p. ej. «Iniciar sesión» + «Crear cuenta») o un IconButton de perfil.",
+            "optional": true,
+            "figmaLayer": "actions",
+            "slot": {
+                "key": "actions",
+                "allowedComponents": [
+                    "Button",
+                    "IconButton",
+                    "Badge"
+                ],
+                "minItems": 0,
+                "maxItems": 3,
+                "mandatory": false,
+                "figmaProp": "actions"
+            }
+        },
+        "menuTrigger": {
+            "element": "slot",
+            "description": "IconButton con icono Menu que aparece solo en móvil (< 768 px). El menú que abre vive fuera del componente.",
+            "optional": true,
+            "figmaLayer": "menuTrigger",
+            "figmaToggle": {
+                "property": "mobile",
+                "type": "BOOLEAN",
+                "default": false
+            },
+            "slot": {
+                "key": "menuTrigger",
+                "allowedComponents": [
+                    "IconButton"
+                ],
+                "minItems": 0,
+                "maxItems": 1,
+                "mandatory": false,
+                "figmaProp": "menuTrigger"
+            }
+        }
+    },
+    "composition": {
+        "allowedChildren": [
+            "Link",
+            "Button",
+            "IconButton",
+            "Badge"
+        ],
+        "forbiddenChildren": [
+            "NavBar",
+            "input",
+            "form"
+        ],
+        "nestedComponents": [],
+        "asChild": false
+    },
+    "layout": {
+        "height": {
+            "mode": "fixed",
+            "values": {
+                "1": 48,
+                "2": 64
+            },
+            "unit": "px",
+            "token": null,
+            "note": "Alto por size."
+        },
+        "width": {
+            "default": "fill",
+            "modes": {
+                "fill": "Ocupa el ancho del contenedor padre. En Figma se marca FILL en horizontal."
+            },
+            "min": null,
+            "max": null,
+            "note": "No limita el ancho; el contenedor interno sí (max 1280 px recomendado para marketing, fluido en app)."
+        },
+        "autoLayout": {
+            "direction": "HORIZONTAL",
+            "sizingHorizontal": "FILL",
+            "sizingVertical": "FIXED",
+            "alignMain": "SPACE_BETWEEN",
+            "alignCross": "CENTER",
+            "gap": "spacing.4 entre zonas; spacing.3 entre items dentro de cada zona."
+        },
+        "padding": {
+            "values": {
+                "1": "0 spacing.4",
+                "2": "0 spacing.5"
+            },
+            "unit": "token",
+            "note": "Padding vertical 0 (lo da el alto fijo). Padding horizontal por size."
+        }
+    },
+    "tokens": {
+        "policy": {
+            "allowed": [
+                "colors",
+                "tokens.colors",
+                "spacing",
+                "radius",
+                "text-style",
+                "shadows"
+            ],
+            "forbidden": []
+        },
+        "bindings": {
+            "base": {
+                "paddingY": 0,
+                "gap": "spacing.4",
+                "textStyle": "text-style.2.medium"
+            },
+            "byVariant": {
+                "surface": {
+                    "background": "tokens.colors.surface",
+                    "borderBottom": "colors.neutral.neutral-alpha.6",
+                    "text": "colors.neutral.neutral.12"
+                },
+                "ghost": {
+                    "background": null,
+                    "borderBottom": null,
+                    "text": "colors.neutral.neutral.12"
+                }
+            },
+            "bySize": {
+                "1": {
+                    "paddingX": "spacing.4"
+                },
+                "2": {
+                    "paddingX": "spacing.5"
+                }
+            }
+        }
+    },
+    "a11y": {
+        "role": "navigation (nativo del elemento <nav>). Si hay varias <nav> en la página, cada una necesita aria-label.",
+        "name": "Añade aria-label=\"Principal\" (o similar) si hay otra <nav>; si no, basta el rol implícito.",
+        "keyboard": [
+            "Tab — avanza por marca → enlaces → acciones → menú móvil",
+            "Shift+Tab — retrocede",
+            "Enter / Space — activa el enlace o botón enfocado"
+        ],
+        "focusIndicator": "Hereda del Link / Button / IconButton: 2 px outline con colors.accent.accent-alpha.8, offset 2 px.",
+        "minTarget": "Cada hijo cumple su propio mínimo (24×24 para IconButton, 36×36 para Button tamaño 1).",
+        "contrastNote": "Texto sobre fondo ≥ 4.5:1 (WCAG 1.4.3). En variant=ghost el contraste depende del hero: comprobar en el consumidor.",
+        "wcag": [
+            "1.3.1 Información y relaciones",
+            "2.4.1 Evitar bloques (necesita «Saltar al contenido» en la página, no en este componente)",
+            "2.4.3 Orden del foco"
+        ]
+    },
+    "behavior": {
+        "overflow": "nowrap",
+        "motion": [
+            {
+                "on": "scroll",
+                "property": "shadow",
+                "reducedMotion": "instant"
+            }
+        ],
+        "responsive": [
+            "< 768 px: oculta `items`, muestra `menuTrigger`.",
+            "≥ 768 px: muestra `items`, oculta `menuTrigger`."
+        ]
+    },
+    "theming": {
+        "modes": [
+            "light",
+            "dark"
+        ],
+        "density": null
+    },
+    "i18n": {
+        "rtl": "Se invierten las zonas: marca pasa a la derecha, acciones a la izquierda.",
+        "textExpansion": "Los enlaces se truncan a una línea con ellipsis si no caben; a partir de ahí, se ocultan y pasan al menú móvil."
+    },
+    "testing": {
+        "cases": [
+            "role=navigation en el <nav>",
+            "aria-current=\"page\" se puede aplicar al Link activo (lo pasa el consumidor)",
+            "Tab recorre marca → items → actions en ese orden",
+            "en < 768 px los items están ocultos y menuTrigger visible",
+            "en ≥ 768 px pasa al revés",
+            "variant=surface muestra fondo y borde inferior; ghost no muestra ninguno",
+            "sticky no cambia el aspecto, solo la posición en el consumidor"
+        ]
+    },
+    "anchors": {
+        "figma": {
+            "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
+            "node": "2:136 (desktop) / 2:149 (mobile)"
+        },
+        "code": {
+            "importPath": "@/components/nav-bar/nav-bar",
+            "export": "NavBar"
+        }
+    },
+    "meta": {
+        "source": "manual",
+        "derivableFromSource": [
+            "props.type",
+            "props.default",
+            "layout"
+        ],
+        "needsReview": [
+            "Primer contrato del sistema que compone varios primitivos (Link, Button, IconButton). Revisar que las reglas de slot (minItems/maxItems) encajen con cómo se usa en marketing vs app.",
+            "El breakpoint de 768 px es una suposición típica; verificar con el consumidor (Next.js).",
+            "`sticky` no tiene propiedad en Figma: es solo código. Si se quiere reflejar la sombra que aparece al hacer scroll, hay que crear una variante en Figma.",
+            "El contrato no define el menú móvil que abre menuTrigger: ese es un componente aparte (`DropdownMenu` o `Sheet`), aún sin contrato."
+        ]
+    }
+}
