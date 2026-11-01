@@ -2,10 +2,10 @@
   "$schema": "./component.schema.json",
   "id": "icon",
   "name": "Icon",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "status": "draft",
   "category": "media",
-  "description": "Dibuja un icono de la librería del sistema (Lucide) con tamaño y accesibilidad coherentes. Hereda el color del texto.",
+  "description": "Dibuja un icono de la librería del sistema (Iconoir) con tamaño y accesibilidad coherentes. Hereda el color del texto.",
   "guidance": {
     "dos": [
       "Usa solo iconos de `icons/registry.json`. Si falta uno, añádelo al registry antes de usarlo.",
@@ -57,9 +57,9 @@
   "props": [
     {
       "name": "icon",
-      "type": "LucideIcon",
+      "type": "IconComponent",
       "required": true,
-      "description": "El componente de icono, importado del archivo generado a partir de icons/registry.json.",
+      "description": "El componente de icono (de iconoir-react), importado del archivo generado a partir de icons/registry.json.",
       "usage": "Icon con icon={Plus}",
       "bindings": {
         "figma": null
@@ -137,7 +137,7 @@
     },
     "bindings": {
       "base": {
-        "strokeWidth": 2
+        "strokeWidth": 1.5
       }
     }
   },
@@ -159,7 +159,7 @@
   },
   "anchors": {
     "figma": {
-      "file": "https://www.figma.com/design/pTGbM1i9PKc6858ef7498a/Radix-Themes--Community-",
+      "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
       "node": "—"
     },
     "code": {
@@ -174,10 +174,10 @@
       "props.default"
     ],
     "needsReview": [
-      "Figma de Radix usa sus propios iconos (instance swap por defecto «Design / blending-mode» y similares). El sistema usa Lucide: el aspecto cambia y hay que revisar cada icono en Figma.",
-      "strokeWidth 2 es el valor por defecto de Lucide, no viene de Figma. Radix Icons son de 15px con trazo distinto: decidir si se ajusta a 1.5.",
-      "Los tamaños 14 / 16 / 18 / 20 salen de Button y TextField; no hay token de tamaño de icono.",
-      "El anchor de Figma queda sin nodo: el componente no existe como tal en el archivo."
+      "La librería pasó de lucide-react a iconoir-react (v0.2.0). Revisar que los nombres del registry y los componentes de Figma coincidan.",
+      "strokeWidth 1.5 es el valor por defecto de Iconoir (Lucide usaba 2). Revisar que el trazo encaje visualmente con los demás componentes.",
+      "El tipo `IconComponent` lo genera scripts/build-icons.mjs infiriendo de un export de iconoir-react.",
+      "Los tamaños 14 / 16 / 18 / 20 salen de Button y TextField; no hay token de tamaño de icono."
     ]
   }
 }
