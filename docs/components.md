@@ -19,6 +19,8 @@
 | Divider | `contracts/Divider.contract.json` | contenedor (ejemplo mínimo) | draft | Separar dos grupos de contenido; **el contrato más corto, para empezar** | — |
 | Badge | `contracts/Badge.contract.json` | feedback | draft | Etiqueta corta no interactiva con estado o categoría; 4 variantes × 31 colores × 3 tamaños | Button, Link, Icon |
 | IconLibrary | `contracts/IconLibrary.contract.json` | media (Lucide) | draft | Reglas de la librería de iconos: catálogo completo, nombres, trazo y paso a Figma (no es un componente) | Icon, IconButton |
+| NavbarItem | `contracts/NavbarItem.contract.json` | navegación (Figma SD-Design-v2) | draft | Elemento de texto de una barra de navegación; `active` marca la sección en curso | Link, Button, IconButton |
+| Navbar | `contracts/Navbar.contract.json` | navegación (Figma SD-Design-v2) | draft | Barra superior con marca, secciones y acciones; en móvil, panel desplegable | NavbarItem, Button, IconButton |
 | _siguiente_ | | | pendiente | | |
 
 > Un componente por vez: límpialo en Figma, haz su contrato, llévalo a código y recién entonces el siguiente.
