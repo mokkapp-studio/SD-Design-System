@@ -1,0 +1,278 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "footer-column",
+  "name": "FooterColumn",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "container",
+  "description": "Columna del pie de página: un título de grupo y una lista vertical de enlaces (Link) que llevan a secciones relacionadas. Se agrupa con otras columnas en una fila del footer.",
+  "guidance": {
+    "dos": [
+      "Título corto que agrupe los enlaces: «Producto», «Empresa», «Ayuda». No uses una frase.",
+      "Pon solo Link dentro de la columna, uno por destino. Cada enlace lleva un texto que diga a dónde lleva.",
+      "Usa `size=\"2\"` en los Link, como en Figma, para que la columna tenga el mismo ritmo de texto en todo el footer.",
+      "Agrupa columnas de pocos enlaces (3 a 6). Si un grupo tiene más, divídelo en dos columnas con título propio."
+    ],
+    "donts": [
+      {
+        "case": "Botones o acciones dentro de la columna (suscribirse, cambiar idioma)",
+        "useInstead": "Button o IconButton fuera de la columna, en su propio bloque del footer",
+        "why": "La columna es una lista de navegación. Un botón dentro cambia el sentido del grupo y el orden de tabulación."
+      },
+      {
+        "case": "Un bloque de texto largo o un párrafo",
+        "useInstead": "Texto normal del footer, fuera de las columnas",
+        "why": "FooterColumn solo admite un título y enlaces. Un párrafo no tiene sitio y se lee mal en columna estrecha."
+      },
+      {
+        "case": "Enlaces sociales con icono solo",
+        "useInstead": "Grupo de IconButton con aria-label en su propio bloque",
+        "why": "Un icono sin texto no tiene nombre accesible como Link. Figma no define iconos sociales en esta columna (ver needsReview)."
+      },
+      {
+        "case": "Una columna de navegación principal de la aplicación",
+        "useInstead": "Navbar y NavbarItem",
+        "why": "El footer repite destinos secundarios. La navegación principal va en la barra superior."
+      }
+    ],
+    "related": [
+      {
+        "component": "Link",
+        "relation": "contains",
+        "difference": "Cada enlace de la columna es un Link de tamaño 2."
+      },
+      {
+        "component": "Navbar",
+        "relation": "similar",
+        "difference": "Navbar es la navegación principal al inicio de la página; FooterColumn agrupa enlaces secundarios al final."
+      },
+      {
+        "component": "NavbarItem",
+        "relation": "alternative",
+        "difference": "Elemento de barra con fondo; en el footer se usa Link, en línea y sin fondo."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "div",
+    "role": null,
+    "refTarget": "root",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "default": "Producto",
+      "required": false,
+      "description": "Título del grupo de enlaces. Texto por defecto en Figma: «Producto». Es el único texto propio de la columna; los enlaces son el slot links.",
+      "usage": "title=\"Empresa\"",
+      "bindings": {
+        "figma": {
+          "property": "title#41:0",
+          "type": "TEXT"
+        }
+      }
+    }
+  ],
+  "states": {
+    "native": [],
+    "controlled": []
+  },
+  "anatomy": {
+    "root": {
+      "element": "div",
+      "description": "Elemento raíz. Columna con el título y la lista de enlaces. No tiene fondo ni borde.",
+      "figmaLayer": "Footer/.FooterColumn"
+    },
+    "title": {
+      "element": "h2",
+      "description": "Título del grupo. Texto del prop title. Propuesta: h2, porque el nivel depende de la página; ver needsReview.",
+      "figmaLayer": "title",
+      "content": {
+        "prop": "title"
+      }
+    },
+    "links": {
+      "element": "div",
+      "description": "Lista vertical de enlaces. Separación de 8 px entre ellos. Contiene Link (tamaño 2 en Figma, tres enlaces de ejemplo).",
+      "figmaLayer": "links",
+      "slot": {
+        "key": "links",
+        "allowedComponents": [
+          "Link"
+        ],
+        "minItems": 1,
+        "maxItems": null,
+        "mandatory": true,
+        "figmaProp": null
+      }
+    }
+  },
+  "composition": {
+    "allowedChildren": [
+      "Link"
+    ],
+    "forbiddenChildren": [
+      "Button",
+      "IconButton",
+      "FooterColumn",
+      "Navbar",
+      "NavbarItem",
+      "a",
+      "input"
+    ],
+    "nestedComponents": [],
+    "codeParts": [],
+    "asChild": false
+  },
+  "layout": {
+    "height": {
+      "mode": "hug",
+      "values": {
+        "default": 108
+      },
+      "unit": "px",
+      "token": null,
+      "note": "Alto del ejemplo de Figma con tres enlaces: título 20 px + separación 12 px + lista de 76 px (3 × 20 px + 2 × 8 px). Depende del número de enlaces."
+    },
+    "width": {
+      "default": "hug",
+      "modes": {
+        "hug": "Se ajusta al enlace o título más largo. Figma mide 65 px con «Producto» y «Enlace».",
+        "fill": "No definido en Figma.",
+        "fixed": "No definido en Figma."
+      },
+      "min": null,
+      "max": null,
+      "note": "En Figma el ancho es HUG. El ancho del footer lo decide el contenedor que agrupa las columnas."
+    },
+    "autoLayout": {
+      "direction": "VERTICAL",
+      "sizingHorizontal": "HUG",
+      "sizingVertical": "HUG",
+      "alignMain": "MIN",
+      "alignCross": "MIN",
+      "gap": "spacing.3 (12 px) entre el título y la lista de enlaces."
+    },
+    "linksLayout": {
+      "direction": "VERTICAL",
+      "sizingHorizontal": "HUG",
+      "sizingVertical": "HUG",
+      "alignMain": "MIN",
+      "alignCross": "MIN",
+      "gap": "spacing.2 (8 px) entre enlaces"
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [
+        "colors",
+        "tokens.colors",
+        "spacing",
+        "text-style"
+      ],
+      "forbidden": []
+    },
+    "bindings": {
+      "base": {
+        "gap": "spacing.3",
+        "linksGap": "spacing.2",
+        "titleStyle": "text-style.2.bold",
+        "titleColor": "colors.neutral.neutral.12"
+      }
+    }
+  },
+  "events": [],
+  "a11y": {
+    "role": "Sin rol propio (contenedor genérico). El título es un encabezado (h2).",
+    "name": "El título (title) nombra al grupo. Si la columna es una sección con aria-labelledby, el nombre es el título.",
+    "keyboard": [
+      "Tab — recorre los enlaces de la columna en orden"
+    ],
+    "focusIndicator": "Lo hereda de Link (anillo de foco del enlace). FooterColumn no añade anillo propio.",
+    "minTarget": "Cada Link mide 20 px de alto en Figma (tamaño 2). Por debajo de 24 px: necesita zona pulsable ampliada o espacio suficiente entre enlaces (WCAG 2.5.8). Ver needsReview.",
+    "contrastNote": "Título con neutral.12 sobre el fondo del footer. Enlaces con el color de Link. No medido en Figma.",
+    "wcag": [
+      "1.3.1 Información y relaciones",
+      "1.4.3 Contraste (AA)",
+      "2.1.1 Teclado",
+      "2.4.4 Propósito del enlace (en contexto)",
+      "2.4.6 Encabezados y etiquetas",
+      "2.5.8 Tamaño mínimo del objetivo (AA)"
+    ]
+  },
+  "content": {
+    "label": {
+      "maxLength": null,
+      "casing": "sentence",
+      "voice": "Título corto de grupo: «Producto», «Empresa», «Ayuda». Los enlaces dicen a dónde llevan."
+    }
+  },
+  "behavior": {
+    "loading": null,
+    "overflow": "wrap: el título y los enlaces se envuelven si su texto es largo. Figma no define este caso.",
+    "motion": [],
+    "responsive": []
+  },
+  "form": null,
+  "overlay": null,
+  "data": null,
+  "media": null,
+  "theming": {
+    "modes": [
+      "light",
+      "dark"
+    ],
+    "density": null
+  },
+  "i18n": {
+    "rtl": "La columna se alinea a la izquierda (MIN) en LTR; en RTL pasa a la derecha. El orden de las columnas en el footer lo decide el contenedor.",
+    "textExpansion": "El ancho HUG crece con el texto más largo. Con un título o enlace un 30-40 % más largo, la columna puede ocupar más espacio que las demás del footer."
+  },
+  "testing": {
+    "cases": [
+      "renderiza un div con un h2 (title) y una lista de Link",
+      "title muestra el texto pasado; sin valor, muestra «Producto»",
+      "los enlaces están separados 8 px y el título va 12 px por encima de ellos",
+      "el slot links acepta Link y rechaza Button, IconButton y NavbarItem",
+      "la columna no tiene fondo ni borde",
+      "el ancho se ajusta al texto más largo (HUG)"
+    ]
+  },
+  "governance": null,
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/fi2Yrf8iEUfAq3jDnRsaD9/SD-Design-v2",
+      "node": "41:35"
+    },
+    "code": {
+      "importPath": "@/components/footer-column/footer-column",
+      "export": "FooterColumn"
+    }
+  },
+  "meta": {
+    "source": "figma",
+    "derivableFromSource": [
+      "props.type",
+      "props.default",
+      "layout",
+      "tokens.bindings"
+    ],
+    "needsReview": [
+      "Figma es un COMPONENT (no un set): una sola variante y un solo estado. Nombre en Figma «Footer/.FooterColumn» (carpeta Footer y prefijo de punto, igual que .NavbarItem y .FormField). El nombre del contrato es FooterColumn.",
+      "Propiedad showSocial (BOOLEAN, por defecto true): no está referenciada por ninguna capa del componente. No tiene efecto visual en Figma, así que no se ha añadido como prop. Pregunta: ¿eliminarla de Figma, o falta una capa de iconos sociales que deba mostrar?",
+      "Propiedad title (TEXT, por defecto «Producto»): es la única prop real. Se enlaza con title#41:0.",
+      "Los tres enlaces son instancias fijas de Link (tamaño 2, regular, sin subrayado, highContrast false) con el texto «Enlace» como override de instancia. No hay propiedad de número ni de texto de enlaces. Por eso links es un slot con figmaProp null; el mínimo de 1 y el máximo ilimitado son decisiones propuestas.",
+      "Tamaño de Link: Figma usa Link size 2, pero el contrato de Link tiene el valor por defecto 3. Se recomienda size 2 en guidance, no se fuerza en el contrato (no hay forma de fijarlo sin props extra). Confirmar si la columna debe imponer el tamaño.",
+      "Objetivo táctil: cada Link mide 20 px de alto con 8 px entre enlaces. Figma no define área ampliada. Por WCAG 2.5.8 hace falta un mínimo de 24 px por objetivo o espacio suficiente; con 20 px y 8 px no se cumple en la lista. Decidir: ampliar la zona pulsable del Link en la columna, o subir la separación.",
+      "Elementos HTML: root div y links div según Figma. Propuestas: title h2 y, si se quiere semántica de lista, links como ul con li (requiere que Link se envuelva en li; no está en Figma).",
+      "Ancho: HUG, sin variable. Gaps de 12 px y 8 px ligados a spacing.3 y spacing.2 en Figma. Alto 108 px: derivado de las partes, sin token.",
+      "Estilo del título: text-style.2.bold (14 px, 20 px de línea) con neutral.12, ligados a variable. Estilo de los enlaces: text-style.2.regular, lo define Link.",
+      "Fondo y borde: el root no tiene relleno ni trazo en Figma. La columna es transparente.",
+      "Contenido, guidance, a11y (h2 como título, sin landmark), testing y content: redactados como borrador. No salen de Figma. Decisiones propias: título h2, root div y el uso de Link size 2 como recomendación.",
+      "Contraste no medido. Figma no define estados de foco ni de hover para los enlaces de la columna.",
+      "governance: null, igual que Button. Falta definir responsables del componente."
+    ]
+  }
+}

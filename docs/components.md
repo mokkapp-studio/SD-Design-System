@@ -23,6 +23,8 @@
 | Navbar | `contracts/Navbar.contract.json` | navegación (Figma SD-Design-v2) | draft | Barra superior con marca, secciones y acciones; en móvil, panel desplegable | NavbarItem, Button, IconButton |
 | FormField | `contracts/FormField.contract.json` | campo (Figma SD-Design-v2) | draft | Etiqueta, control TextField y texto de ayuda o error debajo | TextField, TextArea, Icon |
 | Form | `contracts/Form.contract.json` | contenedor (Figma SD-Design-v2) | draft | Formulario completo: cabecera, campos FormField, casilla de privacidad y botón; estados error, submitting y success | FormField, Checkbox, Button, Badge |
+| FooterColumn | `contracts/FooterColumn.contract.json` | contenedor (Figma SD-Design-v2) | draft | Columna del pie: título de grupo y lista vertical de enlaces Link | Link, Navbar, NavbarItem |
+| Footer | `contracts/Footer.contract.json` | contenedor (Figma SD-Design-v2) | draft | Pie de página: versión simple (barra inferior) o completa (marca, columnas y separador); redes sociales opcionales | FooterColumn, IconButton, Divider, Navbar |
 | _siguiente_ | | | pendiente | | |
 
 > Un componente por vez: límpialo en Figma, haz su contrato, llévalo a código y recién entonces el siguiente.
