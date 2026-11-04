@@ -21,6 +21,8 @@
 | IconLibrary | `contracts/IconLibrary.contract.json` | media (Lucide) | draft | Reglas de la librería de iconos: catálogo completo, nombres, trazo y paso a Figma (no es un componente) | Icon, IconButton |
 | NavbarItem | `contracts/NavbarItem.contract.json` | navegación (Figma SD-Design-v2) | draft | Elemento de texto de una barra de navegación; `active` marca la sección en curso | Link, Button, IconButton |
 | Navbar | `contracts/Navbar.contract.json` | navegación (Figma SD-Design-v2) | draft | Barra superior con marca, secciones y acciones; en móvil, panel desplegable | NavbarItem, Button, IconButton |
+| FormField | `contracts/FormField.contract.json` | campo (Figma SD-Design-v2) | draft | Etiqueta, control TextField y texto de ayuda o error debajo | TextField, TextArea, Icon |
+| Form | `contracts/Form.contract.json` | contenedor (Figma SD-Design-v2) | draft | Formulario completo: cabecera, campos FormField, casilla de privacidad y botón; estados error, submitting y success | FormField, Checkbox, Button, Badge |
 | _siguiente_ | | | pendiente | | |
 
 > Un componente por vez: límpialo en Figma, haz su contrato, llévalo a código y recién entonces el siguiente.
