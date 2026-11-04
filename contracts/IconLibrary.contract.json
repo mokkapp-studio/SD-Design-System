@@ -2,7 +2,7 @@
     "$schema": "./component.schema.json",
     "id": "icon-library",
     "name": "IconLibrary",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "status": "draft",
     "category": "media",
     "description": "Reglas de la librería de iconos del sistema (Lucide): qué iconos existen, cómo se llaman, cómo se dibujan y cómo se llevan a Figma. No es un componente: lo que se pinta en pantalla es Icon.",
@@ -45,6 +45,11 @@
                 "component": "IconButton",
                 "relation": "similar",
                 "difference": "Botón cuyo único contenido es un icono; exige aria-label."
+            },
+            {
+                "component": "PhosphorIconLibrary",
+                "relation": "alternative",
+                "difference": "Librería Phosphor: rejilla de 16 px, formas con relleno y pesos regular / fill. Se elige una de las dos por proyecto."
             }
         ]
     },

@@ -126,35 +126,40 @@ for (const f of files) {
   for (const s of strings(c.tokens?.bindings ?? {})) for (const t of expand(s)) checkTok(t);
 }
 
-// 3. Iconos: registry válido
-const regPath = path.join(root, 'icons', 'registry.json');
-if (fs.existsSync(regPath)) {
+// 3. Iconos: registry válido, por librería (Lucide en icons/, Phosphor en icons/phosphor/)
+const checkIcons = (dir, lib) => {
+  const regRel = `${dir}/registry.json`, catRel = `${dir}/catalog.json`;
+  const regPath = path.join(root, regRel);
+  if (!fs.existsSync(regPath)) return;
   const reg = readJson(regPath);
   const ns = (reg?.icons ?? []).map((i) => i.name);
-  for (const n of ns) if (!/^[A-Z][A-Za-z0-9]*$/.test(n)) err('icons/registry.json', `nombre no válido «${n}» (PascalCase, como en ${reg.library})`);
-  if (new Set(ns).size !== ns.length) err('icons/registry.json', 'nombres duplicados');
-  for (const i of reg?.icons ?? []) if (!i.use) err('icons/registry.json', `«${i.name}» sin campo use`);
+  for (const n of ns) if (!/^[A-Z][A-Za-z0-9]*$/.test(n)) err(regRel, `nombre no válido «${n}» (PascalCase, como en ${reg.library})`);
+  if (new Set(ns).size !== ns.length) err(regRel, 'nombres duplicados');
+  for (const i of reg?.icons ?? []) if (!i.use) err(regRel, `«${i.name}» sin campo use`);
 
   // 4. Catálogo completo (opcional): coherente, y el registry es un subconjunto suyo
-  const catPath = path.join(root, 'icons', 'catalog.json');
+  const catPath = path.join(root, catRel);
   if (fs.existsSync(catPath)) {
     const cat = readJson(catPath);
     const ci = cat?.icons ?? [];
     const kebab = ci.map((i) => i.name);
-    if (new Set(kebab).size !== kebab.length) err('icons/catalog.json', 'nombres duplicados');
-    if (cat.count !== ci.length) err('icons/catalog.json', `count (${cat.count}) no coincide con los iconos (${ci.length})`);
+    if (new Set(kebab).size !== kebab.length) err(catRel, 'nombres duplicados');
+    if (cat.count !== ci.length) err(catRel, `count (${cat.count}) no coincide con los iconos (${ci.length})`);
     const cats = new Set((cat.categories ?? []).map((c) => c.id));
-    for (const i of ci) for (const c of i.categories ?? []) if (!cats.has(c)) err('icons/catalog.json', `«${i.name}»: categoría sin definir «${c}»`);
+    for (const i of ci) for (const c of i.categories ?? []) if (!cats.has(c)) err(catRel, `«${i.name}»: categoría sin definir «${c}»`);
+    for (const w of reg?.weights ?? []) if (!(cat.weights ?? []).includes(w)) err(regRel, `peso «${w}» no existe en ${catRel}`);
     const pas = (n) => n.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join('');
     const canon = new Set(ci.map((i) => i.pascal));
     const alias = new Map(ci.flatMap((i) => (i.aliases ?? []).map((a) => [pas(a), i.pascal])));
     for (const n of ns) {
       if (canon.has(n)) continue;
-      if (alias.has(n)) warnings.push(`icons/registry.json: «${n}» es un alias antiguo de Lucide; el nombre actual es «${alias.get(n)}»`);
-      else err('icons/registry.json', `«${n}» no existe en icons/catalog.json`);
+      if (alias.has(n)) warnings.push(`${regRel}: «${n}» es un alias antiguo de ${lib}; el nombre actual es «${alias.get(n)}»`);
+      else err(regRel, `«${n}» no existe en ${catRel}`);
     }
   }
-}
+};
+checkIcons('icons', 'Lucide');
+checkIcons('icons/phosphor', 'Phosphor');
 
 for (const w of warnings) console.log('aviso  ', w);
 for (const e of errors) console.log('ERROR  ', e);
