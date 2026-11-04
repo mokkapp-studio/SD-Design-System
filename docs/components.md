@@ -11,6 +11,7 @@
 | IconButton | `contracts/IconButton.contract.json` | acción (Radix Themes) | draft | Acción solo con icono; `aria-label` obligatorio | Button, Icon, TextField |
 | AlertDialog | `contracts/AlertDialog.contract.json` | capa (Radix Themes) | draft | Confirmar una acción que interrumpe | Dialog |
 | TextField | `contracts/TextField.contract.json` | campo (Radix Themes) | draft | Texto de una línea (usa IconButton como botón final) | TextArea, Select, IconButton |
+| TextArea | `contracts/TextArea.contract.json` | campo (Radix Themes) | draft | Texto de varias líneas con scroll vertical | TextField, Select |
 | Checkbox | `contracts/Checkbox.contract.json` | campo (Radix Themes) | draft | Opción independiente, con estado indeterminado | CheckboxGroup, RadioGroup, Switch |
 | RadioGroup | `contracts/RadioGroup.contract.json` | campo (Radix Themes) | draft | Elegir una opción entre pocas | Checkbox, Select, Switch |
 | Switch | `contracts/Switch.contract.json` | campo (Radix Themes) | draft | Ajuste con efecto inmediato | Checkbox, RadioGroup, Button |
