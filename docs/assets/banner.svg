@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="460" viewBox="0 0 1200 460" role="img" aria-labelledby="t d">
+  <title id="t">Sistema de diseño: de Figma al código con contratos</title>
+  <desc id="d">Flujo: Figma y variables, tokens.json, contratos JSON, componentes en Next.js. Un agente de IA lee los contratos y las skills.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#162032"/>
+    </linearGradient>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#a5b4fc"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="460" rx="24" fill="url(#bg)"/>
+
+  <!-- Cabecera -->
+  <text x="60" y="78" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="40" font-weight="700" fill="#f8fafc">Sistema de diseño</text>
+  <text x="60" y="112" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="20" fill="#94a3b8">Una sola fuente de verdad para personas y agentes de IA</text>
+
+  <!-- Flujo principal -->
+  <g font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+    <g>
+      <rect x="60" y="160" width="220" height="110" rx="16" fill="url(#card)" stroke="#334155"/>
+      <text x="170" y="203" text-anchor="middle" font-size="22" font-weight="600" fill="#f8fafc">Figma</text>
+      <text x="170" y="236" text-anchor="middle" font-size="16" fill="#94a3b8">componentes y variables</text>
+    </g>
+    <g>
+      <rect x="340" y="160" width="220" height="110" rx="16" fill="url(#card)" stroke="#334155"/>
+      <text x="450" y="203" text-anchor="middle" font-size="22" font-weight="600" fill="#f8fafc">Tokens</text>
+      <text x="450" y="236" text-anchor="middle" font-size="16" fill="#94a3b8">tokens.json → CSS</text>
+    </g>
+    <g>
+      <rect x="620" y="160" width="220" height="110" rx="16" fill="url(#card)" stroke="#6366f1" stroke-width="2"/>
+      <text x="730" y="203" text-anchor="middle" font-size="22" font-weight="600" fill="#c7d2fe">Contratos</text>
+      <text x="730" y="236" text-anchor="middle" font-size="16" fill="#94a3b8">*.contract.json</text>
+    </g>
+    <g>
+      <rect x="900" y="160" width="240" height="110" rx="16" fill="url(#card)" stroke="#334155"/>
+      <text x="1020" y="203" text-anchor="middle" font-size="22" font-weight="600" fill="#f8fafc">Código</text>
+      <text x="1020" y="236" text-anchor="middle" font-size="16" fill="#94a3b8">React / Next.js</text>
+    </g>
+  </g>
+  <g stroke="#a5b4fc" stroke-width="2.5" fill="none" marker-end="url(#arr)">
+    <line x1="284" y1="215" x2="336" y2="215"/>
+    <line x1="564" y1="215" x2="616" y2="215"/>
+    <line x1="844" y1="215" x2="896" y2="215"/>
+  </g>
+
+  <!-- Capa de agentes -->
+  <g font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+    <rect x="60" y="308" width="1080" height="96" rx="16" fill="none" stroke="#334155" stroke-dasharray="6 6"/>
+    <text x="84" y="346" font-size="18" font-weight="600" fill="#c7d2fe">Agente de IA</text>
+    <text x="84" y="374" font-size="16" fill="#94a3b8">lee AGENTS.md, contratos y tokens · usa las skills · comprueba con check.mjs</text>
+    <g font-size="15" fill="#e2e8f0" text-anchor="middle">
+      <rect x="740" y="326" width="200" height="40" rx="20" fill="#312e81"/>
+      <text x="840" y="351">ui-contract-builder</text>
+      <rect x="956" y="326" width="200" height="40" rx="20" fill="#312e81"/>
+      <text x="1056" y="351">contract-to-component</text>
+    </g>
+  </g>
+</svg>
