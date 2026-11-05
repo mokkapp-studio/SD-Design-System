@@ -1,0 +1,311 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "navbar-item",
+  "name": "NavbarItem",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "navigation",
+  "description": "Elemento de texto de una barra de navegación que lleva a una sección de la aplicación. Muestra si es la página o sección en curso y responde al cursor con un fondo suave. Solo texto: no lleva icono.",
+  "guidance": {
+    "dos": [
+      "Etiqueta corta, de una o dos palabras, que diga a dónde lleva: «Inicio», «Proyectos».",
+      "Marca `active` solo en el elemento de la sección en curso, para que la persona sepa dónde está. Solo puede haber uno activo a la vez.",
+      "Agrúpalos en una lista de navegación (`nav` con lista) y deja el orden y el espaciado al contenedor.",
+      "El cambio de fondo al pasar el cursor lo resuelve el navegador con `:hover`: no lo fuerces con una prop."
+    ],
+    "donts": [
+      {
+        "case": "Ejecutar una acción que no navega (abrir un menú, guardar, cerrar sesión)",
+        "useInstead": "Button",
+        "why": "Un elemento de navegación lleva a otra parte; un botón ejecuta. Se anuncian distinto y se activan con teclas distintas."
+      },
+      {
+        "case": "Enlace dentro de un párrafo o de un texto corrido",
+        "useInstead": "Link",
+        "why": "Link está pensado para el texto corrido, con subrayado y el mismo tamaño que el texto que lo rodea. NavbarItem tiene fondo y altura de barra."
+      },
+      {
+        "case": "Acción solo con icono en la barra (buscar, perfil, notificaciones)",
+        "useInstead": "IconButton",
+        "why": "NavbarItem solo admite texto. Sin etiqueta visible, el elemento no tiene nombre accesible."
+      },
+      {
+        "case": "Etiqueta de varias frases o que no cabe en la barra",
+        "useInstead": "Etiqueta más corta",
+        "why": "El elemento no envuelve el texto (Figma: ancho automático). Una frase larga rompe la barra y no se lee como opción de menú."
+      }
+    ],
+    "related": [
+      {
+        "component": "Link",
+        "relation": "similar",
+        "difference": "Link es texto en línea dentro de un párrafo; NavbarItem es un elemento de barra con fondo y altura fija."
+      },
+      {
+        "component": "Button",
+        "relation": "alternative",
+        "difference": "Ejecuta una acción; NavbarItem navega a una sección."
+      },
+      {
+        "component": "IconButton",
+        "relation": "alternative",
+        "difference": "Botón solo con icono para acciones de la barra; NavbarItem solo tiene texto."
+      },
+      {
+        "component": "Navbar",
+        "relation": "contained-by",
+        "difference": "La barra Navbar agrupa los NavbarItem en su lista de navegación."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "a",
+    "role": null,
+    "refTarget": "root",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "Inicio",
+      "required": false,
+      "description": "Texto del elemento. Es el único contenido: no admite iconos ni otros componentes. Texto por defecto en Figma: «Inicio».",
+      "usage": "label=\"Proyectos\" dentro de un elemento con href=\"/proyectos\" (por asChild)",
+      "bindings": {
+        "figma": {
+          "property": "label#29:0",
+          "type": "TEXT"
+        }
+      }
+    },
+    {
+      "name": "active",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true, marca el elemento como la página o sección en curso: fondo accent-alpha.3 y texto accent.11. En Figma es el valor «active» de la propiedad state; el valor «default» equivale a false.",
+      "usage": "active con label=\"Inicio\" para la sección en curso",
+      "bindings": {
+        "figma": {
+          "property": "state",
+          "type": "VARIANT",
+          "value": "active"
+        }
+      }
+    }
+  ],
+  "states": {
+    "native": [
+      "hover",
+      "focus-visible",
+      "active"
+    ],
+    "controlled": [
+      {
+        "name": "active",
+        "description": "Sección en curso. Se pinta con el fondo y el texto de acento y se anuncia como ubicación actual.",
+        "aria": "aria-current=\"page\""
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "a",
+      "description": "Elemento raíz. Es un `<a>` que recibe el destino por `asChild` (ver composition.asChild). Ocupa la altura de la barra y se ajusta al texto en ancho.",
+      "figmaLayer": ".NavbarItem (cada variante del component set)"
+    },
+    "label": {
+      "element": "span",
+      "description": "Texto del elemento. Una sola línea, sin envolver.",
+      "figmaLayer": "label",
+      "content": {
+        "prop": "label"
+      }
+    }
+  },
+  "composition": {
+    "allowedChildren": [
+      "texto"
+    ],
+    "forbiddenChildren": [
+      "a",
+      "Link",
+      "Button",
+      "IconButton",
+      "input"
+    ],
+    "nestedComponents": [],
+    "asChild": true
+  },
+  "layout": {
+    "height": {
+      "mode": "fixed",
+      "values": {
+        "default": 32
+      },
+      "unit": "px",
+      "token": "tokens.space.menu-item-height-2",
+      "note": "Un solo tamaño. En Figma, el alto es la variable tokens/space/menu-item-height-2 (32 px)."
+    },
+    "width": {
+      "default": "hug",
+      "modes": {
+        "hug": "Se ajusta al texto más 12 px de padding a cada lado (61 px con «Inicio»).",
+        "fill": "No definido en Figma.",
+        "fixed": "No definido en Figma."
+      },
+      "min": null,
+      "max": null,
+      "note": "En Figma el ancho es automático (HUG). Si la barra necesita elementos de igual ancho, no lo resuelve este componente."
+    },
+    "autoLayout": {
+      "direction": "HORIZONTAL",
+      "sizingHorizontal": "HUG",
+      "sizingVertical": "FIXED",
+      "alignMain": "CENTER",
+      "alignCross": "CENTER",
+      "gap": "No aplica: un solo hijo (itemSpacing 0 en Figma)."
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [
+        "colors",
+        "tokens.space",
+        "spacing",
+        "radius",
+        "text-style"
+      ],
+      "forbidden": []
+    },
+    "bindings": {
+      "base": {
+        "height": "tokens.space.menu-item-height-2",
+        "paddingX": "spacing.3",
+        "radius": "radius.2",
+        "textStyle": "text-style.2.medium",
+        "focusRingOuter": {
+          "color": "colors.accent.accent-alpha.8",
+          "width": 4
+        },
+        "focusRingInner": {
+          "color": "colors.accent.accent.3",
+          "width": 2
+        }
+      },
+      "byActive": {
+        "false": {
+          "default": {
+            "background": null,
+            "text": "colors.neutral.neutral.11"
+          },
+          "hover": {
+            "background": "colors.neutral.neutral-alpha.3",
+            "text": "colors.neutral.neutral.12"
+          }
+        },
+        "true": {
+          "default": {
+            "background": "colors.accent.accent-alpha.3",
+            "text": "colors.accent.accent.11"
+          }
+        }
+      }
+    }
+  },
+  "events": [],
+  "a11y": {
+    "role": "link (implícito por el elemento a con href, que pasa el consumidor con asChild)",
+    "name": "El texto de label. Debe tener sentido fuera de la barra.",
+    "keyboard": [
+      "Tab — mueve el foco al elemento",
+      "Enter — sigue el enlace"
+    ],
+    "focusIndicator": "Anillo doble con :focus-visible: exterior de 4px con colors.accent.accent-alpha.8 e interior de 2px con colors.accent.accent.3. No está en Figma: copiado del anillo de Button.",
+    "minTarget": "32 px de alto (menu-item-height-2), por encima de 24×24 px (WCAG 2.5.8). El ancho depende del texto.",
+    "contrastNote": "Texto neutral.11 sobre el fondo de la barra en reposo; neutral.12 en hover; accent.11 sobre accent-alpha.3 en activo. ≥ 4.5:1 en texto normal. No medido en Figma.",
+    "wcag": [
+      "1.4.3 Contraste (AA)",
+      "2.1.1 Teclado",
+      "2.4.7 Foco visible",
+      "2.5.8 Tamaño mínimo del objetivo (AA)",
+      "4.1.2 Nombre, función, valor"
+    ]
+  },
+  "content": {
+    "label": {
+      "maxLength": 20,
+      "casing": "sentence",
+      "voice": "Corto y directo, dice a dónde lleva: «Inicio», «Proyectos», «Ajustes»."
+    }
+  },
+  "behavior": {
+    "loading": null,
+    "overflow": "nowrap: el texto no se corta ni se envuelve. En Figma, el ancho es automático.",
+    "motion": [],
+    "responsive": []
+  },
+  "form": null,
+  "overlay": null,
+  "data": null,
+  "media": null,
+  "theming": {
+    "modes": [
+      "light",
+      "dark"
+    ],
+    "density": null
+  },
+  "i18n": {
+    "rtl": "El padding es simétrico y el texto va centrado: no cambia en RTL. El orden de los elementos lo decide el contenedor.",
+    "textExpansion": "Con un texto un 30-40 % más largo, el elemento crece en ancho (HUG). Puede empujar a otros elementos de la barra: el contenedor debe prever el espacio."
+  },
+  "testing": {
+    "cases": [
+      "renderiza un `<a>` que recibe el href por asChild; sin href no es un enlace",
+      "active=true aplica aria-current=\"page\" y los tokens de byActive.true",
+      "active=false no lleva aria-current y usa los tokens de byActive.false",
+      "hover (solo con active=false) usa colors.neutral.neutral-alpha.3 y colors.neutral.neutral.12",
+      "el texto no se envuelve: el ancho crece con el contenido",
+      "la altura es 32 px con tokens.space.menu-item-height-2 y el padding horizontal es spacing.3",
+      "el foco visible usa el anillo doble de tokens.bindings.base"
+    ]
+  },
+  "governance": null,
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/fi2Yrf8iEUfAq3jDnRsaD9/SD-Design-v2",
+      "node": "29:1408"
+    },
+    "code": {
+      "importPath": "@/components/navbar-item/navbar-item",
+      "export": "NavbarItem"
+    }
+  },
+  "meta": {
+    "source": "figma",
+    "derivableFromSource": [
+      "props.type",
+      "props.default",
+      "layout",
+      "tokens.bindings"
+    ],
+    "needsReview": [
+      "Figma tiene 3 variantes (state=default, hover, active) y ningún otro eje. Se leyeron las 3: fondo, texto, alto, padding y radio enlazados a variable en todas.",
+      "state=hover no es una prop: el hover es nativo (:hover) y se resuelve con CSS. Decisión propuesta: no añadir prop para hover, así se respeta AGENTS.md (estados nativos con CSS). Si el diseño necesita el hover fijo para documentación, decidirlo aquí.",
+      "state=active se expone como prop booleana `active` (aria-current=\"page\"). Decisión propuesta: el nombre `active` en vez de `state`, porque es un estado controlado de uso (sección en curso).",
+      "Elemento raíz `a` con href por asChild. Figma no dice si el elemento navega o ejecuta algo, ni qué elemento usar. Decisión propuesta: `a`, porque es un elemento de navegación. Si en el producto es un botón que abre algo, cambiar semantics y los dont's.",
+      "Sin variable en Figma: ninguna. Todas las medidas y colores de las 3 variantes están enlazados a variable (tokens/space/menu-item-height-2, spacing/3, radius/2, colors/*, text-style/2/medium).",
+      "Estado :active (pulsado) listado en states.native, pero no está diseñado en Figma. Se pinta con el mismo estilo que hover o no se pinta: decidir.",
+      "Estado active con hover no está diseñado: byActive.true solo define default. Con el :hover nativo, el elemento activo puede cambiar de fondo al pasar el cursor: decidir si debe mantener el fondo de activo.",
+      "Anillo de foco (focusRingOuter / focusRingInner): no está en Figma. Copiado del anillo de Button (accent-alpha.8 de 4 px y accent.3 de 2 px). Verificar a mano.",
+      "Valor por defecto del label: «Inicio» (texto por defecto en Figma). Decisión propuesta: mantenerlo, pero en código un label vacío sería un error de uso; valorar `required: true`.",
+      "content.label.maxLength: 20 es una decisión propuesta, no leída en Figma. El texto de las 3 variantes es «Inicio» (37 px de ancho).",
+      "behavior.overflow: no hay truncado en Figma (ancho automático). Se dejó nowrap. Si la barra necesita truncar en móvil, definirlo.",
+      "Contraste no medido. Figma no tiene estados disabled ni loading: no se documentaron.",
+      "Descripciones, guidance, a11y, testing y content: redactados como borrador, no salen de Figma. Decisiones tomadas por mí: no envolver el texto, sin icono, dont's de Button/Link/IconButton, anchors.figma.node apunta al COMPONENT_SET (29:1408), no a una variante.",
+      "governance: null, igual que Button. Falta definir responsables del componente.",
+      "No se han añadido props de código sin equivalente en Figma (p. ej. href, onClick). El destino se pasa por asChild para no añadir props que el contrato no tiene."
+    ]
+  }
+}

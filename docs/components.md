@@ -11,6 +11,7 @@
 | IconButton | `contracts/IconButton.contract.json` | acción (Radix Themes) | draft | Acción solo con icono; `aria-label` obligatorio | Button, Icon, TextField |
 | AlertDialog | `contracts/AlertDialog.contract.json` | capa (Radix Themes) | draft | Confirmar una acción que interrumpe | Dialog |
 | TextField | `contracts/TextField.contract.json` | campo (Radix Themes) | draft | Texto de una línea (usa IconButton como botón final) | TextArea, Select, IconButton |
+| TextArea | `contracts/TextArea.contract.json` | campo (Radix Themes) | draft | Texto de varias líneas con scroll vertical | TextField, Select |
 | Checkbox | `contracts/Checkbox.contract.json` | campo (Radix Themes) | draft | Opción independiente, con estado indeterminado | CheckboxGroup, RadioGroup, Switch |
 | RadioGroup | `contracts/RadioGroup.contract.json` | campo (Radix Themes) | draft | Elegir una opción entre pocas | Checkbox, Select, Switch |
 | Switch | `contracts/Switch.contract.json` | campo (Radix Themes) | draft | Ajuste con efecto inmediato | Checkbox, RadioGroup, Button |
@@ -19,6 +20,12 @@
 | PhosphorIconLibrary | `contracts/PhosphorIconLibrary.contract.json` | media (Phosphor) | draft | Alternativa a IconLibrary con Phosphor: catálogo, pesos regular / fill, nombres y paso a Figma. Un proyecto usa una librería u otra (no es un componente) | IconLibrary, Icon, IconButton |
 | Badge | `contracts/Badge.contract.json` | feedback | draft | Etiqueta corta no interactiva con estado o categoría; 4 variantes × 31 colores × 3 tamaños | Button, Link, Icon |
 | IconLibrary | `contracts/IconLibrary.contract.json` | media (Lucide) | draft | Reglas de la librería de iconos: catálogo completo, nombres, trazo y paso a Figma (no es un componente) | Icon, IconButton |
+| NavbarItem | `contracts/NavbarItem.contract.json` | navegación (Figma SD-Design-v2) | draft | Elemento de texto de una barra de navegación; `active` marca la sección en curso | Link, Button, IconButton |
+| Navbar | `contracts/Navbar.contract.json` | navegación (Figma SD-Design-v2) | draft | Barra superior con marca, secciones y acciones; en móvil, panel desplegable | NavbarItem, Button, IconButton |
+| FormField | `contracts/FormField.contract.json` | campo (Figma SD-Design-v2) | draft | Etiqueta, control TextField y texto de ayuda o error debajo | TextField, TextArea, Icon |
+| Form | `contracts/Form.contract.json` | contenedor (Figma SD-Design-v2) | draft | Formulario completo: cabecera, campos FormField, casilla de privacidad y botón; estados error, submitting y success | FormField, Checkbox, Button, Badge |
+| FooterColumn | `contracts/FooterColumn.contract.json` | contenedor (Figma SD-Design-v2) | draft | Columna del pie: título de grupo y lista vertical de enlaces Link | Link, Navbar, NavbarItem |
+| Footer | `contracts/Footer.contract.json` | contenedor (Figma SD-Design-v2) | draft | Pie de página: versión simple (barra inferior) o completa (marca, columnas y separador); redes sociales opcionales | FooterColumn, IconButton, Divider, Navbar |
 | _siguiente_ | | | pendiente | | |
 
 > Un componente por vez: límpialo en Figma, haz su contrato, llévalo a código y recién entonces el siguiente.

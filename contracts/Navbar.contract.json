@@ -1,0 +1,418 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "navbar",
+  "name": "Navbar",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "navigation",
+  "description": "Barra superior de navegación de la aplicación: marca a la izquierda, una lista de NavbarItem en el centro y acciones a la derecha. En móvil, las secciones se abren en un panel desplegable desde un botón de menú.",
+  "guidance": {
+    "dos": [
+      "Ocupa el ancho de la página y va al inicio del documento, dentro de `header`. Solo una barra de navegación principal por página.",
+      "Pon en la lista solo elementos `NavbarItem`. Marca `active` en el de la sección en curso.",
+      "Usa `variant=\"subtle\"` cuando la barra vaya sobre una superficie ya tintada; `solid` (por defecto) sobre el fondo de la página.",
+      "Usa `showActions={false}` cuando la página no necesite acciones (p. ej. una pantalla de registro) y así la barra no muestra botones vacíos."
+    ],
+    "donts": [
+      {
+        "case": "Menú de navegación dentro del contenido de la página, o un menú lateral",
+        "useInstead": "Tabs o una lista de enlaces dentro del contenido",
+        "why": "La barra es la navegación global de la aplicación. Repetirla o usarla para una sección interna confunde el orden de navegación."
+      },
+      {
+        "case": "Poner enlaces de texto o botones sueltos dentro de la barra, fuera de la lista de navegación o de las acciones",
+        "useInstead": "NavbarItem para secciones; Button para acciones",
+        "why": "Así cada elemento tiene el estilo, el foco y el estado de la barra. Un Link suelto rompe la altura y los espacios."
+      },
+      {
+        "case": "Más de dos acciones en la barra",
+        "useInstead": "Un menú de acciones (desplegable) dentro de la página",
+        "why": "Figma define dos acciones (una secundaria y una principal). Con más, la barra no cabe en móvil."
+      },
+      {
+        "case": "Una barra de pestañas para cambiar vistas de un mismo contenido",
+        "useInstead": "Tabs",
+        "why": "Navbar navega entre secciones de la aplicación; Tabs cambia de vista dentro de una página."
+      }
+    ],
+    "related": [
+      {
+        "component": "NavbarItem",
+        "relation": "contains",
+        "difference": "Cada elemento de la lista de navegación es un NavbarItem."
+      },
+      {
+        "component": "Button",
+        "relation": "contains",
+        "difference": "Las acciones de la barra son Button (una secundaria y una principal)."
+      },
+      {
+        "component": "IconButton",
+        "relation": "contains",
+        "difference": "El botón de menú en móvil es un IconButton ghost."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "header",
+    "role": null,
+    "refTarget": "root",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "'solid' | 'subtle'",
+      "default": "solid",
+      "description": "Fondo de la barra. solid = fondo de la página (page-background); subtle = superficie neutral.2. En Figma, el valor por defecto del component set es solid.",
+      "bindings": {
+        "figma": {
+          "property": "variant",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "default": false,
+      "description": "Solo móvil. Si es true, despliega el panel con la lista de NavbarItem y las acciones, y cambia el icono del botón de menú a «x». En escritorio no cambia nada: en Figma, open=true y open=false se ven igual.",
+      "bindings": {
+        "figma": {
+          "property": "open",
+          "type": "VARIANT",
+          "value": "true"
+        }
+      }
+    },
+    {
+      "name": "showActions",
+      "type": "boolean",
+      "default": true,
+      "description": "Si es true, muestra el grupo de acciones (dos Button). Si es false, el grupo no se renderiza ni en escritorio ni en el panel móvil.",
+      "bindings": {
+        "figma": {
+          "property": "showActions#29:4",
+          "type": "BOOLEAN"
+        }
+      }
+    }
+  ],
+  "states": {
+    "native": [],
+    "controlled": [
+      {
+        "name": "open",
+        "description": "Panel de menú móvil desplegado. El botón de menú lleva aria-expanded=\"true\" y su icono pasa a «x».",
+        "aria": "aria-expanded en el botón de menú (menuToggle)"
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "header",
+      "description": "Elemento raíz. Contiene la barra y, en móvil con open=true, el panel de menú.",
+      "figmaLayer": "root"
+    },
+    "bar": {
+      "element": "div",
+      "description": "Fila con la marca a la izquierda y los grupos de navegación y acciones a la derecha (en móvil, el botón de menú).",
+      "figmaLayer": "bar"
+    },
+    "brand": {
+      "element": "div",
+      "description": "Marca: logo y nombre. Alto mínimo de 40 px.",
+      "figmaLayer": "brand"
+    },
+    "logo": {
+      "element": "span",
+      "description": "Logo de 20 × 20 px. En Figma es un marco vacío: no hay imagen ni icono definido.",
+      "figmaLayer": "logo"
+    },
+    "name": {
+      "element": "span",
+      "description": "Nombre de la marca, texto fijo «Mokkapp» en Figma. No es una propiedad del componente.",
+      "figmaLayer": "name"
+    },
+    "nav": {
+      "element": "nav",
+      "description": "Lista de secciones de la aplicación en escritorio. Contiene NavbarItem.",
+      "figmaLayer": "nav",
+      "slot": {
+        "key": "items",
+        "allowedComponents": [
+          "NavbarItem"
+        ],
+        "minItems": 1,
+        "maxItems": null,
+        "mandatory": true,
+        "figmaProp": null
+      }
+    },
+    "actions": {
+      "element": "div",
+      "description": "Grupo de acciones: en escritorio, a la derecha de la barra; en móvil, dentro del panel. Visible solo con showActions=true.",
+      "optional": true,
+      "figmaLayer": "actions",
+      "slot": {
+        "key": "actions",
+        "allowedComponents": [
+          "Button"
+        ],
+        "minItems": 0,
+        "maxItems": 2,
+        "mandatory": false,
+        "figmaProp": null
+      }
+    },
+    "menuToggle": {
+      "element": "button",
+      "description": "Botón de menú, solo móvil. Es un IconButton ghost neutral de tamaño 3 (40 × 40 px). Su icono es «menu» con open=false y «x» con open=true. Lleva aria-expanded y aria-controls.",
+      "optional": true,
+      "figmaLayer": "menuToggle"
+    },
+    "menu": {
+      "element": "div",
+      "description": "Panel de menú móvil. Solo con open=true. Lista de NavbarItem a ancho completo y acciones a ancho completo debajo.",
+      "optional": true,
+      "figmaLayer": "menu"
+    }
+  },
+  "composition": {
+    "allowedChildren": [
+      "brand",
+      "NavbarItem",
+      "Button",
+      "IconButton"
+    ],
+    "forbiddenChildren": [
+      "Navbar",
+      "header",
+      "nav",
+      "Link"
+    ],
+    "nestedComponents": [
+      {
+        "part": "menuToggle",
+        "component": "IconButton",
+        "fixedProps": {
+          "variant": "ghost",
+          "color": "neutral",
+          "size": "3",
+          "highContrast": false
+        }
+      }
+    ],
+    "codeParts": [],
+    "asChild": false
+  },
+  "layout": {
+    "height": {
+      "mode": "hug",
+      "values": {
+        "desktop": 64,
+        "mobile": 64,
+        "mobileOpen": 320
+      },
+      "unit": "px",
+      "token": null,
+      "note": "Alto de la barra: 64 px = padding vertical de 12 px + 40 px del brand/botón de menú. En móvil con open=true, la altura sube a 320 px (barra 64 + panel 256)."
+    },
+    "width": {
+      "default": "fill",
+      "modes": {
+        "fill": "Ancho completo de la página (FILL).",
+        "hug": "No definido en Figma.",
+        "fixed": "No definido en Figma."
+      },
+      "min": null,
+      "max": null,
+      "note": "En Figma, el root ocupa 1280 px en escritorio y 375 px en móvil, con el ancho de su viewport."
+    },
+    "autoLayout": {
+      "direction": "VERTICAL",
+      "sizingHorizontal": "FILL",
+      "sizingVertical": "HUG",
+      "alignMain": "MIN",
+      "alignCross": "MIN",
+      "gap": "Sin separación en el root. La barra (bar) es HORIZONTAL, SPACE_BETWEEN, centrada en cruz, y su ancho es FILL."
+    },
+    "barLayout": {
+      "direction": "HORIZONTAL",
+      "alignMain": "SPACE_BETWEEN",
+      "alignCross": "CENTER",
+      "sizingHorizontal": "FILL",
+      "sizingVertical": "HUG"
+    },
+    "groupGaps": {
+      "brandToName": "spacing.2",
+      "navItems": "spacing.1",
+      "actions": "spacing.3",
+      "menuItems": "spacing.1",
+      "menuPadding": "spacing.4",
+      "menuActions": "spacing.2"
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [
+        "colors",
+        "tokens.colors",
+        "tokens.space",
+        "spacing",
+        "radius",
+        "text-style"
+      ],
+      "forbidden": []
+    },
+    "bindings": {
+      "base": {
+        "paddingY": "spacing.3",
+        "brandMinHeight": "tokens.space.button-height-3",
+        "menuToggleSize": "tokens.space.button-height-3",
+        "border": {
+          "color": "colors.neutral.neutral-alpha.6",
+          "width": 1
+        },
+        "brandNameStyle": "text-style.4.bold",
+        "brandNameColor": "colors.neutral.neutral.12"
+      },
+      "byVariant": {
+        "solid": {
+          "background": "tokens.colors.page-background"
+        },
+        "subtle": {
+          "background": "colors.neutral.neutral.2"
+        }
+      },
+      "byBreakpoint": {
+        "desktop": {
+          "paddingX": "spacing.6"
+        },
+        "mobile": {
+          "paddingX": "spacing.4"
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "name": "onOpenChange",
+      "trigger": "Pulsar el botón de menú en móvil (abrir o cerrar el panel). No está en Figma: necesario para controlar `open`.",
+      "payload": "(open: boolean) => void",
+      "blockedWhen": []
+    }
+  ],
+  "a11y": {
+    "role": "banner (implícito por header fuera de main); la lista de secciones es navigation (nav)",
+    "name": "El header no necesita nombre. El nav, si hay más de uno en la página, necesita aria-label. El botón de menú necesita aria-label (lo exige IconButton).",
+    "keyboard": [
+      "Tab — recorre marca, secciones y acciones en orden",
+      "Enter / Space — en el botón de menú, abre o cierra el panel",
+      "Escape — cierra el panel móvil y devuelve el foco al botón de menú (propuesta, no está en Figma)"
+    ],
+    "focusIndicator": "Lo heredan NavbarItem, Button e IconButton de sus contratos. La barra no añade anillo propio.",
+    "minTarget": "Botón de menú 40 × 40 px; elementos de la lista 32 px de alto; el ancho depende del texto. Todos ≥ 24 × 24 px (WCAG 2.5.8).",
+    "contrastNote": "Texto de marca neutral.12 sobre el fondo de la barra (page-background o neutral.2). No medido en Figma.",
+    "wcag": [
+      "1.3.1 Información y relaciones",
+      "1.4.3 Contraste (AA)",
+      "2.1.1 Teclado",
+      "2.4.1 Evitar bloques (la barra va al inicio del documento)",
+      "2.4.7 Foco visible",
+      "2.5.8 Tamaño mínimo del objetivo (AA)",
+      "4.1.2 Nombre, función, valor"
+    ]
+  },
+  "content": {
+    "label": {
+      "maxLength": null,
+      "casing": "sentence",
+      "voice": "Solo el nombre de marca («Mokkapp») es fijo en Figma. Los textos de navegación son de NavbarItem y las etiquetas de acción son de Button."
+    }
+  },
+  "behavior": {
+    "loading": null,
+    "overflow": "nowrap en la barra: los textos no se envuelven. Con muchas secciones en escritorio, no hay truncado definido en Figma.",
+    "motion": [],
+    "responsive": [
+      {
+        "figmaProperty": "breakpoint",
+        "values": [
+          "desktop",
+          "mobile"
+        ],
+        "default": "desktop",
+        "desktop": "Lista de NavbarItem en la barra, acciones a la derecha, sin botón de menú. Padding horizontal 32 px.",
+        "mobile": "Marca a la izquierda, botón de menú a la derecha (40 × 40 px). Al abrir, panel con NavbarItem y acciones a ancho completo. Padding horizontal 16 px."
+      }
+    ]
+  },
+  "form": null,
+  "overlay": null,
+  "data": null,
+  "media": null,
+  "theming": {
+    "modes": [
+      "light",
+      "dark"
+    ],
+    "density": null
+  },
+  "i18n": {
+    "rtl": "La barra usa SPACE_BETWEEN: en RTL la marca pasa a la derecha. El botón de menú también cambia de lado. Revisar que el orden de las secciones siga el idioma.",
+    "textExpansion": "El nombre de marca y cada NavbarItem crecen en ancho. En móvil, el panel debe seguir cabiendo; en escritorio, la lista puede empujar a las acciones fuera de la barra."
+  },
+  "testing": {
+    "cases": [
+      "renderiza un header con una barra y una lista nav de NavbarItem",
+      "variant=solid usa tokens.colors.page-background; variant=subtle usa colors.neutral.neutral.2",
+      "showActions=false no renderiza el grupo actions ni en escritorio ni en el panel móvil",
+      "open=true en móvil muestra el panel y el icono «x»; en escritorio no cambia el layout",
+      "el botón de menú tiene aria-expanded que coincide con open",
+      "la altura es 64 px; con open=true en móvil, 320 px",
+      "el padding horizontal es spacing.6 en escritorio y spacing.4 en móvil",
+      "Tab recorre marca, secciones y acciones en el orden del DOM",
+      "Escape cierra el panel móvil y devuelve el foco al botón de menú"
+    ]
+  },
+  "governance": null,
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/fi2Yrf8iEUfAq3jDnRsaD9/SD-Design-v2",
+      "node": "29:1465"
+    },
+    "code": {
+      "importPath": "@/components/navbar/navbar",
+      "export": "Navbar"
+    }
+  },
+  "meta": {
+    "source": "figma",
+    "derivableFromSource": [
+      "props.type",
+      "props.default",
+      "layout",
+      "tokens.bindings"
+    ],
+    "needsReview": [
+      "El component set tiene 8 variantes: breakpoint (desktop, mobile) × variant (solid, subtle) × open (false, true). Todas leídas. Mismas capas en todas, salvo el panel de menú (solo mobile open=true) y el botón de menú (solo mobile).",
+      "Propiedad `breakpoint` (desktop/mobile): no es prop. Se documenta en behavior.responsive, porque en código es un media query, no una prop. Decisión propuesta: no exponerla como prop. Si el diseño necesita forzar el móvil para documentación, decidirlo aquí. El punto de corte entre desktop (1280 px) y mobile (375 px) no está definido en Figma.",
+      "Propiedad `open` (false/true): se expone como prop controlada `open`. En escritorio no tiene efecto visual en Figma.",
+      "Propiedad `showActions` (BOOLEAN, por defecto true): controla el grupo actions tanto en escritorio como en el panel móvil. Se expone como prop showActions.",
+      "Logo: marco de 20 × 20 px vacío en Figma (sin imagen, sin relleno ni icono). Falta definir qué va ahí: imagen, icono o slot. Hasta entonces, el logo no tiene contenido en el contrato.",
+      "Nombre de marca «Mokkapp»: texto fijo en Figma, no es propiedad. Decisión pendiente: texto fijo del componente, o añadir una propiedad de texto (o slot `brand`) en Figma. No se ha añadido prop en código.",
+      "Lista de secciones y acciones: en Figma son instancias fijas (4 NavbarItem y 2 Button), sin propiedad de slot ni instance swap. El contrato las modela como slots con figmaProp null. minItems de la lista (1) y mandatory (true) son decisiones propuestas.",
+      "Los NavbarItem aparecen dos veces en Figma: en la barra (escritorio) y en el panel (móvil). Decisión propuesta: en código, una sola lista que se reorganiza con CSS, para no duplicar nodos. Si se quiere dos listas, cambiar anatomy.",
+      "Icono del botón de menú: es un swap de instancia que cambia según open (menu → x). Se resuelve en código con la prop open; no hay prop de icono en el contrato. El botón de menú es IconButton (ghost, neutral, size 3, highContrast false) con su contrato. aria-label del botón no está en Figma: pendiente de definir el texto (p. ej. «Abrir menú» / «Cerrar menú»).",
+      "Los dos botones de acción son Button (variant soft y solid, color accent, size 2) con textos «Entrar» y «Empezar». Los textos son overrides de instancia, no propiedades del Navbar. Se dejan como contenido del slot actions.",
+      "Medidas sin variable en Figma: logo 20 × 20 px; alto del root 64 px y 320 px abierto (resultado de padding + alto de brand); el panel móvil 256 px de alto; padding de bar 12 px vertical y gap entre marca y nombre. La mayoría de ellas coinciden con tokens existentes (spacing.*, tokens.space.button-height-3), pero solo por valor, no por variable. Los tamaños del panel no tienen token.",
+      "Trazo del root: neutral-alpha.6 con opacidad de 0.15 sobre el propio trazo. El token de color está ligado, pero la opacidad 0.15 no tiene token y la posición del trazo (interior/exterior, borde inferior) no se pudo leer. Se documenta el color y el ancho de 1 px; verificar a mano.",
+      "Fondo de solid: tokens.colors.page-background (ligado en Figma). Fondo de subtle: colors.neutral.neutral.2 (ligado).",
+      "Texto de marca: text-style.4.bold (18 px, 26 px de alto, -0.04 px de letter spacing) ligado a variables. Color neutral.12.",
+      "Contenido de producto redactado como borrador, no sale de Figma: description, guidance, a11y (incl. Escape para cerrar el panel, que no está en Figma), events (onOpenChange), testing, content y los dont's. Decisiones tomadas por mí: header como elemento raíz, nav para la lista, `subtle` como variante de superficie, y showActions=false como caso de uso.",
+      "Nombre del elemento de marca: el contrato lo modela como div (brand) sin enlace. Figma no dice si el logo + nombre llevan a la portada: decidir si el brand es un enlace.",
+      "governance: null, igual que Button. Falta definir responsables del componente."
+    ]
+  }
+}
