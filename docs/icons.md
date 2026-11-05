@@ -104,6 +104,36 @@ Importar siempre desde `icons.ts` y nunca `import * as` de `lucide-react`: solo 
 - No pinta ni dimensiona el icono por su cuenta.
 - Después de añadir uno: `icons:build` y `check`.
 
+## 6. Alternativa: Phosphor
+
+El sistema ofrece [Phosphor](https://phosphoricons.com) como segunda librería. **Un proyecto elige una de las dos y no las mezcla.** Las reglas están en `contracts/PhosphorIconLibrary.contract.json`; el circuito es el mismo que con Lucide, en `icons/phosphor/`:
+
+| Pieza | Lucide | Phosphor |
+| --- | --- | --- |
+| Catálogo (generado) | `icons/catalog.json` · `npm run icons:catalog` | `icons/phosphor/catalog.json` · `npm run phosphor:catalog` (1.512 iconos, desde `phosphor-icons/core`) |
+| Registry (fuente de verdad) | `icons/registry.json` | `icons/phosphor/registry.json` |
+| Reexportación | `npm run icons:build` | `npm run phosphor:build` |
+| Figma | `npm run icons:figma` → `.cache/figma/` | `npm run phosphor:figma` → `.cache/figma-phosphor/` (lotes + `entry.js`) |
+| Contrato | `IconLibrary` | `PhosphorIconLibrary` |
+
+Diferencias que importan:
+
+- **Pesos:** Phosphor tiene 6; el sistema permite **regular** (por defecto) y **fill** (solo para el estado activo o seleccionado del mismo icono). En Figma, cada icono es un component set con la propiedad `Weight` (Regular / Fill).
+- **Figma, un solo componente para todo:** se inserta siempre **«Phosphor Icon»**. En su panel eliges el icono (propiedad `Icon`, con buscador sobre todo el catálogo; los del registry salen primero) y el peso (`Weight`). Al cambiar de icono se conserva el peso. Orden: primero los lotes `batch-NNN.js`, al final `entry.js`, que se puede repetir cuando añadas iconos.
+- **Nombres:** el paquete exporta `MagnifyingGlassIcon`; el registry y `icons.ts` usan `MagnifyingGlass`. Así los componentes importan igual con las dos librerías.
+- **Dibujo:** rejilla de 16 px (viewBox 256) y formas con relleno, no trazo. En Figma, el color va en el relleno (`--fill-variable`).
+- **Next.js:** `icons.ts` importa desde `@phosphor-icons/react/ssr` (sin contexto, sirve en Server y Client Components). Opcional: añade `@phosphor-icons/react` a `experimental.optimizePackageImports`.
+- **Equivalencias del registry inicial:** ChevronDown → CaretDown, EyeOff → EyeSlash, Search → MagnifyingGlass, Trash2 → Trash; el resto se llama igual.
+
+En el proyecto Next.js que use Phosphor:
+
+```bash
+npm install @phosphor-icons/react
+node design-system/scripts/build-phosphor-icons.mjs src/components/icon/icons.ts
+```
+
+Pendiente: `Icon.contract.json` está escrito para Lucide (tipo `LucideIcon`, sin `weight`). Para usar fill a través de `Icon`, primero hay que cambiar ese contrato.
+
 ## Para revisar
 
 - **Figma:** los componentes de Radix usan sus propios iconos (por defecto, «Design / blending-mode»). Con Lucide el aspecto cambia: revisa cada instance swap en Figma.

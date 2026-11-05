@@ -34,6 +34,8 @@ mi-sistema-de-diseno/
 ├── scripts/build-figma-icons.mjs   lotes de código para crear los iconos en Figma
 ├── icons/catalog.json              TODO Lucide: 1.903 iconos con tags y categorías (generado)
 ├── icons/registry.json             iconos permitidos en código (subconjunto del catálogo)
+├── icons/phosphor/                 ALTERNATIVA a Lucide: catalog.json (1.512 iconos), registry.json, icons.ts
+├── scripts/build-phosphor-*.mjs    catálogo, icons.ts y lotes de Figma de Phosphor (npm run phosphor:*)
 ├── package.json                    scripts "check" y "tokens:build"
 ├── tokens/
 │   ├── tokens.json                 FUENTE ÚNICA: todas las variables de Figma Radix Themes, con modos
@@ -52,6 +54,7 @@ mi-sistema-de-diseno/
 │   ├── Divider.contract.json       EJEMPLO MÍNIMO: el contrato más corto, para empezar
 │   ├── Icon.contract.json          icono con tamaño y accesibilidad (Lucide)
 │   ├── IconLibrary.contract.json   reglas de la librería de iconos y su paso a Figma
+│   ├── PhosphorIconLibrary.contract.json  lo mismo con Phosphor (pesos regular y fill)
 │   └── Badge.contract.json         etiqueta no interactiva
 └── docs/
     ├── contract-guide.md           cómo funciona, rellenar, ejecutar y documentar
