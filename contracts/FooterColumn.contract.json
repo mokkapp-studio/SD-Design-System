@@ -1,0 +1,287 @@
+{
+    "$schema": "./component.schema.json",
+    "id": "footer-column",
+    "name": "FooterColumn",
+    "version": "0.1.0",
+    "status": "draft",
+    "category": "layout",
+    "description": "Footer de sección completa organizado en columnas: una columna de marca (logo, tagline, iconos sociales) a la izquierda y N columnas de enlaces a la derecha. Barra inferior con copyright y enlaces legales. Patrón MVPBlocks compatible con shadcn/ui y Tailwind. Dependencia: lucide-react para iconos sociales.",
+    "guidance": {
+        "dos": [
+            "Mantén 3–4 columnas de enlaces. Más de 4 no caben en tablet sin scroll horizontal.",
+            "El campo copyright debe incluir el año actual. Genéralo dinámicamente: `© ${new Date().getFullYear()} Acme`.",
+            "Proporciona aria-label en cada enlace social: el icono no es suficiente para lectores de pantalla.",
+            "Usa la columna de marca para el logotipo real del producto, no solo texto."
+        ],
+        "donts": [
+            {
+                "case": "Más de 7–8 enlaces por columna",
+                "useInstead": "Divide en dos columnas o añade una sección secundaria",
+                "why": "Las columnas muy largas rompen el balance visual y ocultan los enlaces más importantes."
+            },
+            {
+                "case": "Incluir acciones destructivas (eliminar cuenta, etc.) en el footer",
+                "useInstead": "Settings o dashboard",
+                "why": "El footer es para navegación informativa, no para acciones de riesgo."
+            }
+        ],
+        "related": [
+            {
+                "component": "NavBar",
+                "relation": "sibling",
+                "difference": "NavBar es el wrapper de navegación superior; FooterColumn cierra la página."
+            },
+            {
+                "component": "Link",
+                "relation": "contains",
+                "difference": "Cada enlace de columna es un Link."
+            }
+        ]
+    },
+    "semantics": {
+        "element": "footer",
+        "role": "contentinfo",
+        "refTarget": "root",
+        "elementByProp": null
+    },
+    "props": [
+        {
+            "name": "brand",
+            "type": "{ name: string; tagline?: string; logo?: React.ReactNode }",
+            "default": null,
+            "required": true,
+            "description": "Datos de la columna de marca. `logo` acepta cualquier ReactNode (img, SVG, component).",
+            "bindings": {
+                "figma": {
+                    "property": "brand",
+                    "type": "TEXT"
+                }
+            }
+        },
+        {
+            "name": "columns",
+            "type": "Array<{ title: string; links: Array<{ label: string; href: string; external?: boolean }> }>",
+            "default": "[]",
+            "required": true,
+            "description": "Columnas de enlaces. Entre 1 y 4 columnas. Cada columna tiene título y lista de enlaces.",
+            "bindings": {
+                "figma": null
+            }
+        },
+        {
+            "name": "socials",
+            "type": "Array<{ label: string; href: string; icon: React.ReactNode }>",
+            "default": "[]",
+            "description": "Iconos de redes sociales. Se muestran debajo del tagline en la columna de marca.",
+            "bindings": {
+                "figma": null
+            }
+        },
+        {
+            "name": "copyright",
+            "type": "string",
+            "default": null,
+            "required": true,
+            "description": "Texto de copyright para la barra inferior. Ejemplo: `© 2026 MOKKAPP. All rights reserved.`",
+            "bindings": {
+                "figma": {
+                    "property": "copyright",
+                    "type": "TEXT"
+                }
+            }
+        },
+        {
+            "name": "bottomLinks",
+            "type": "Array<{ label: string; href: string }>",
+            "default": "[]",
+            "description": "Enlaces legales en la barra inferior (Privacy Policy, Terms, Cookies).",
+            "bindings": {
+                "figma": null
+            }
+        },
+        {
+            "name": "theme",
+            "type": "'light' | 'dark'",
+            "default": "light",
+            "description": "Esquema de color. Dark: fondo #0d0d0d, texto #fff. Light: fondo #fff, texto #111.",
+            "bindings": {
+                "figma": {
+                    "property": "theme",
+                    "type": "VARIANT"
+                }
+            }
+        }
+    ],
+    "states": {
+        "native": [],
+        "controlled": []
+    },
+    "anatomy": {
+        "root": {
+            "element": "footer",
+            "description": "Contenedor full-width. role=contentinfo implícito del elemento footer. Fondo según theme.",
+            "figmaLayer": "FooterColumn"
+        },
+        "inner": {
+            "element": "div",
+            "description": "Wrapper con max-width (1280px) y padding horizontal. Centrado con margin auto.",
+            "figmaLayer": "inner"
+        },
+        "grid": {
+            "element": "div",
+            "description": "Grid de columnas: brand (1 columna) + link columns (N columnas). CSS grid con gap.",
+            "figmaLayer": "grid"
+        },
+        "brandColumn": {
+            "element": "div",
+            "description": "Primera columna: logo/nombre, tagline, iconos sociales. Span de 1 columna.",
+            "figmaLayer": "brandColumn"
+        },
+        "brandName": {
+            "element": "span o img",
+            "description": "Logo o nombre de la marca. Si logo es ReactNode, lo renderiza; si no, usa brand.name como texto.",
+            "figmaLayer": "brandColumn/name"
+        },
+        "brandTagline": {
+            "element": "p",
+            "description": "Texto descriptivo breve debajo del logo. Opcional.",
+            "figmaLayer": "brandColumn/tagline"
+        },
+        "socialRow": {
+            "element": "div",
+            "description": "Fila de iconos sociales con gap uniforme. Cada icono es un <a> con aria-label.",
+            "figmaLayer": "brandColumn/socials"
+        },
+        "linkColumn": {
+            "element": "div",
+            "description": "Columna de enlaces. Título (semibold) + lista de enlaces (regular). Se repite por cada item en columns[].",
+            "figmaLayer": "linkColumn-{i}"
+        },
+        "linkColumnTitle": {
+            "element": "h3",
+            "description": "Cabecera de la columna. font-size 0.75rem, semibold, uppercase, letter-spacing amplio.",
+            "figmaLayer": "linkColumn-{i}/title"
+        },
+        "linkList": {
+            "element": "ul",
+            "description": "Lista de enlaces. list-style: none; display: flex; flex-direction: column; gap.",
+            "figmaLayer": "linkColumn-{i}/links"
+        },
+        "divider": {
+            "element": "hr",
+            "description": "Separador horizontal entre el grid de columnas y la barra inferior.",
+            "figmaLayer": "divider"
+        },
+        "bottomBar": {
+            "element": "div",
+            "description": "Barra inferior: copyright a la izquierda, enlaces legales a la derecha.",
+            "figmaLayer": "bottomBar"
+        }
+    },
+    "composition": {
+        "allowedChildren": [],
+        "forbiddenChildren": ["NavBar", "footer"],
+        "nestedComponents": ["Link"],
+        "asChild": false
+    },
+    "layout": {
+        "width": { "default": "fill", "max": "1280px" },
+        "padding": {
+            "values": {
+                "section": "80px 24px (top/bottom 80, horizontal 24 → escalado con breakpoints)"
+            }
+        },
+        "grid": {
+            "template": "1fr repeat(N, 1fr) donde N = columns.length",
+            "gap": "48px entre columnas, 16px entre filas",
+            "note": "En mobile (<768px): columnas en stack vertical (grid-template-columns: 1fr)."
+        }
+    },
+    "tokens": {
+        "policy": {
+            "allowed": ["colors", "text-style", "spacing", "radius"],
+            "forbidden": []
+        },
+        "bindings": {
+            "byTheme": {
+                "light": {
+                    "background": "#ffffff",
+                    "text": "#111111",
+                    "textMuted": "#6b7280",
+                    "border": "#e5e7eb",
+                    "linkHover": "#111111"
+                },
+                "dark": {
+                    "background": "#0d0d0d",
+                    "text": "#f9fafb",
+                    "textMuted": "#9ca3af",
+                    "border": "#1f2937",
+                    "linkHover": "#ffffff"
+                }
+            }
+        }
+    },
+    "a11y": {
+        "role": "contentinfo (nativo del elemento <footer>). Solo debe haber un <footer> con este rol por página.",
+        "keyboard": [
+            "Tab — recorre todos los enlaces de marca → columnas → barra inferior",
+            "Shift+Tab — retrocede"
+        ],
+        "socialIcons": "Cada <a> de red social debe tener aria-label explícito (ej: aria-label='Twitter de MOKKAPP'). El icono tiene aria-hidden=true.",
+        "externalLinks": "Los enlaces con external=true abren en _blank y deben tener rel='noopener noreferrer'.",
+        "wcag": ["2.4.1 Evitar bloques (el footer está tras el contenido principal)", "1.3.1 Información y relaciones"]
+    },
+    "behavior": {
+        "responsive": [
+            "< 768px: todas las columnas apiladas verticalmente",
+            "768px–1024px: brand ocupa toda la fila, luego columnas de enlaces en 2–3 col",
+            "≥ 1024px: layout completo brand + columnas en una fila"
+        ],
+        "linkHover": "opacity 0.75 o color shift, transición 0.15s ease",
+        "overflow": "El footer nunca tiene scroll horizontal; los textos se truncan o envuelven"
+    },
+    "theming": {
+        "modes": ["light", "dark"],
+        "density": null
+    },
+    "i18n": {
+        "rtl": "En RTL la columna de marca va a la derecha y las columnas de enlaces a la izquierda.",
+        "textExpansion": "Los títulos de columna se truncan a una línea."
+    },
+    "testing": {
+        "cases": [
+            "role=contentinfo en el <footer>",
+            "Todos los enlaces sociales tienen aria-label",
+            "Los enlaces con external=true tienen rel=noopener noreferrer y target=_blank",
+            "En < 768px el layout cambia a columna única",
+            "theme=dark aplica el fondo oscuro y los colores correctos",
+            "El texto de copyright se renderiza en el bottomBar",
+            "Con 0 socials, la fila de iconos no se renderiza"
+        ]
+    },
+    "anchors": {
+        "figma": {
+            "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
+            "node": "pending"
+        },
+        "code": {
+            "importPath": "@/components/footer-column/FooterColumn",
+            "export": "FooterColumn"
+        },
+        "reference": {
+            "source": "21st.dev / MVPBlocks",
+            "url": "https://21st.dev/r/mvp_Subha/footer-column",
+            "note": "Built from scratch — MVPBlocks pattern. Requires lucide-react for social icons."
+        }
+    },
+    "meta": {
+        "source": "manual",
+        "derivableFromSource": ["props.brand.name", "props.copyright", "props.theme"],
+        "needsReview": [
+            "El número máximo de columnas (4) es una estimación; medir en tablet.",
+            "El grid 1fr+Nfr puede necesitar ajuste si las columnas de enlaces tienen títulos muy largos.",
+            "Los colores de theme=dark son los de MOKKAPP; el consumidor puede sobreescribirlos.",
+            "Verificar que lucide-react está instalado antes de pasar iconos sociales."
+        ]
+    }
+}
