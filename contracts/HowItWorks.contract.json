@@ -1,0 +1,314 @@
+{
+    "$schema": "./component.schema.json",
+    "id": "how-it-works",
+    "name": "HowItWorks",
+    "version": "0.1.0",
+    "status": "draft",
+    "category": "marketing",
+    "description": "Sección de marketing que explica el funcionamiento del producto en N pasos numerados. Cada paso tiene un número, título y descripción. Soporta layout horizontal (1×N), 2 columnas con imagen central, o vertical (acordeón visual). Totalmente sin dependencias externas excepto React.",
+    "guidance": {
+        "dos": [
+            "Limita a 3–5 pasos. Con más de 5 el usuario pierde el hilo.",
+            "Escribe el título de cada paso como acción en infinitivo ('Regístrate', 'Conecta tu banco', 'Revisa tu análisis').",
+            "Proporciona un stepIcon para cada paso si el diseño lo permite; refuerza la lectura visual.",
+            "Usa variant='numbered' para flujos secuenciales (el orden importa) y variant='cards' para características en paralelo (el orden no importa)."
+        ],
+        "donts": [
+            {
+                "case": "Pasar más de 5 pasos con variant='numbered' sin paginación",
+                "useInstead": "Agrupa los pasos en fases o usa un acordeón",
+                "why": "Visualmente rompe el layout en móvil y dilata la sección innecesariamente."
+            },
+            {
+                "case": "Usar stepIcon como único indicador del orden",
+                "useInstead": "Añade stepNumber además del icono",
+                "why": "Los iconos no comunican secuencia; sin número el usuario no sabe cuál va primero."
+            },
+            {
+                "case": "Incluir CTA por debajo de cada paso individual",
+                "useInstead": "Un único ctaLabel / ctaHref al final de la sección",
+                "why": "Múltiples CTAs en una sección compiten entre sí y reducen la conversión."
+            }
+        ],
+        "related": [
+            {
+                "component": "Hero32",
+                "relation": "sibling",
+                "difference": "Hero32 es el primer impacto above-the-fold; HowItWorks va inmediatamente después para resolver el '¿cómo funciona esto?'."
+            },
+            {
+                "component": "FooterColumn",
+                "relation": "sibling",
+                "difference": "FooterColumn cierra la página; HowItWorks va en el cuerpo central de la landing."
+            }
+        ]
+    },
+    "semantics": {
+        "element": "section",
+        "role": null,
+        "refTarget": "root",
+        "elementByProp": null
+    },
+    "props": [
+        {
+            "name": "heading",
+            "type": "string",
+            "default": "'How it works'",
+            "description": "Titular de la sección. Aparece centrado sobre los pasos.",
+            "bindings": { "figma": { "property": "heading", "type": "TEXT" } }
+        },
+        {
+            "name": "subheading",
+            "type": "string",
+            "default": null,
+            "description": "Subtítulo opcional bajo el heading. 1–2 frases.",
+            "bindings": { "figma": { "property": "subheading", "type": "TEXT" } }
+        },
+        {
+            "name": "steps",
+            "type": "Array<{ title: string; description: string; icon?: React.ReactNode }>",
+            "default": "[]",
+            "required": true,
+            "description": "Lista de pasos. Entre 2 y 5. Cada paso tiene título, descripción y opcionalmente un icono o imagen.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "variant",
+            "type": "'numbered' | 'cards' | 'timeline'",
+            "default": "'numbered'",
+            "description": "Estilo de presentación. numbered = pasos con círculo numerado. cards = tarjetas en grid. timeline = línea vertical con puntos.",
+            "bindings": {
+                "figma": {
+                    "property": "variant",
+                    "type": "VARIANT",
+                    "valueMap": {
+                        "numbered": "numbered",
+                        "cards": "cards",
+                        "timeline": "timeline"
+                    }
+                }
+            }
+        },
+        {
+            "name": "theme",
+            "type": "'light' | 'dark'",
+            "default": "'light'",
+            "description": "Esquema de color de la sección. Dark: fondo oscuro, texto claro. Light: fondo claro, texto oscuro.",
+            "bindings": {
+                "figma": {
+                    "property": "theme",
+                    "type": "VARIANT"
+                }
+            }
+        },
+        {
+            "name": "accentColor",
+            "type": "string",
+            "default": "'#111111'",
+            "description": "Color de los números de paso y la línea del timeline. Usar el color primario de la marca.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "showConnectors",
+            "type": "boolean",
+            "default": true,
+            "description": "Si true (variant=numbered), muestra la línea horizontal que conecta los pasos.",
+            "bindings": {
+                "figma": {
+                    "property": "showConnectors",
+                    "type": "BOOLEAN"
+                }
+            }
+        },
+        {
+            "name": "ctaLabel",
+            "type": "string",
+            "default": null,
+            "description": "Texto del botón CTA bajo los pasos. Si null, no se renderiza el botón.",
+            "bindings": { "figma": { "property": "ctaLabel", "type": "TEXT" } }
+        },
+        {
+            "name": "ctaHref",
+            "type": "string",
+            "default": "'#'",
+            "description": "URL de destino del CTA.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "columns",
+            "type": "2 | 3 | 4",
+            "default": null,
+            "description": "Número de columnas del grid para variant='cards'. Si null, usa steps.length (máx 4).",
+            "bindings": { "figma": null }
+        }
+    ],
+    "states": {
+        "native": [],
+        "controlled": []
+    },
+    "anatomy": {
+        "root": {
+            "element": "section",
+            "description": "Contenedor full-width de la sección. Fondo según theme. Padding vertical 80px.",
+            "figmaLayer": "HowItWorks"
+        },
+        "inner": {
+            "element": "div",
+            "description": "Wrapper con max-width 1280px y padding horizontal 24px. Centrado con margin auto.",
+            "figmaLayer": "inner"
+        },
+        "header": {
+            "element": "div",
+            "description": "Bloque centrado con heading y subheading. Margen inferior 56px.",
+            "figmaLayer": "header"
+        },
+        "heading": {
+            "element": "h2",
+            "description": "Titular de sección. font-size clamp(1.75rem, 3vw, 2.5rem). font-weight 700.",
+            "figmaLayer": "header/heading"
+        },
+        "subheading": {
+            "element": "p",
+            "description": "Subtítulo opcional. font-size 1rem. color muted.",
+            "figmaLayer": "header/subheading"
+        },
+        "stepsGrid": {
+            "element": "ol | div",
+            "description": "Grid de pasos. ol con list-style none para variant=numbered (orden semántico). div para cards/timeline.",
+            "figmaLayer": "stepsGrid"
+        },
+        "step": {
+            "element": "li | div",
+            "description": "Contenedor de un paso individual. flex-direction: column. gap 12px.",
+            "figmaLayer": "step-{i}"
+        },
+        "stepNumber": {
+            "element": "div",
+            "description": "Círculo con el número del paso. 40×40px. border-radius 50%. background accentColor. color white. font monospace.",
+            "figmaLayer": "step-{i}/number"
+        },
+        "stepIcon": {
+            "element": "div",
+            "description": "Icono opcional del paso. Sustituye o acompaña al número. 24×24px.",
+            "figmaLayer": "step-{i}/icon"
+        },
+        "connector": {
+            "element": "div",
+            "description": "Línea horizontal entre pasos (variant=numbered, showConnectors=true). height 1px. background border.",
+            "figmaLayer": "connector-{i}"
+        },
+        "stepTitle": {
+            "element": "h3",
+            "description": "Título del paso. font-size 1.0625rem. font-weight 600.",
+            "figmaLayer": "step-{i}/title"
+        },
+        "stepDescription": {
+            "element": "p",
+            "description": "Descripción del paso. font-size 0.875rem. color muted. line-height 1.6.",
+            "figmaLayer": "step-{i}/description"
+        },
+        "cta": {
+            "element": "a",
+            "description": "Botón CTA centrado bajo el grid de pasos. Visible solo si ctaLabel no es null.",
+            "figmaLayer": "cta"
+        }
+    },
+    "composition": {
+        "allowedChildren": [],
+        "forbiddenChildren": ["Hero32", "FooterColumn"],
+        "nestedComponents": [],
+        "asChild": false
+    },
+    "layout": {
+        "width": { "default": "fill", "max": "1280px" },
+        "padding": {
+            "values": {
+                "section": "80px 24px (top/bottom 80, horizontal 24)"
+            }
+        },
+        "grid": {
+            "template": "repeat(N, 1fr) donde N = columns ?? steps.length (máx 4)",
+            "gap": "32px entre columnas",
+            "note": "En mobile (<768px): columnas apiladas verticalmente (grid-template-columns: 1fr)."
+        }
+    },
+    "tokens": {
+        "policy": {
+            "allowed": ["colors", "text-style", "spacing", "radius"],
+            "forbidden": []
+        },
+        "bindings": {
+            "byTheme": {
+                "light": {
+                    "background": "#ffffff",
+                    "text": "#111111",
+                    "textMuted": "#6b7280",
+                    "border": "#e5e7eb",
+                    "numberBg": "accentColor"
+                },
+                "dark": {
+                    "background": "#0d0d0d",
+                    "text": "#f9fafb",
+                    "textMuted": "#9ca3af",
+                    "border": "#1f2937",
+                    "numberBg": "accentColor"
+                }
+            }
+        }
+    },
+    "a11y": {
+        "role": "section sin role adicional. El heading h2 define el landmark implícitamente.",
+        "semantics": "variant=numbered usa <ol> para comunicar el orden semántico. variant=cards usa <div> (no hay orden implícito).",
+        "keyboard": [
+            "Tab — recorre los pasos si tienen enlaces internos",
+            "El CTA es el único elemento interactivo fuera de los pasos"
+        ],
+        "wcag": [
+            "1.3.1 Información y relaciones (ol para pasos ordenados)",
+            "2.4.6 Encabezados y etiquetas (h2 de sección, h3 por paso)"
+        ]
+    },
+    "behavior": {
+        "responsive": [
+            "< 768px: pasos en columna única, números alineados a la izquierda, connectors ocultos",
+            "768px–1024px: 2 columnas si steps.length >= 4",
+            "≥ 1024px: layout completo N columnas"
+        ],
+        "connectors": "Las líneas entre pasos se ocultan en mobile (display:none) para evitar artefactos visuales.",
+        "icons": "Si un paso tiene icon, se muestra sobre o junto al stepNumber. Si no tiene, el número se centra solo."
+    },
+    "theming": {
+        "modes": ["light", "dark"],
+        "density": null
+    },
+    "testing": {
+        "cases": [
+            "Renderiza el número de <li>/<div> correcto según steps.length",
+            "variant='numbered' usa <ol>; variant='cards' usa <div>",
+            "showConnectors=false oculta las líneas entre pasos",
+            "ctaLabel=null no renderiza el botón CTA",
+            "theme=dark aplica el fondo oscuro y los colores correctos",
+            "En < 768px el layout cambia a columna única"
+        ]
+    },
+    "anchors": {
+        "figma": {
+            "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
+            "node": "14:516 (SPEC_BLOCK con código fuente — no es un componente visual. ComponentSet pendiente de crear.)"
+        },
+        "code": {
+            "importPath": "@/components/how-it-works/HowItWorks",
+            "export": "HowItWorks"
+        }
+    },
+    "meta": {
+        "source": "manual",
+        "derivableFromSource": ["props.steps", "props.variant", "props.theme"],
+        "needsReview": [
+            "El número máximo de pasos (5) es una recomendación visual; medir en mobile real.",
+            "variant='timeline' no está implementado en el TSX inicial; añadir como segunda iteración.",
+            "accentColor se pasa como prop pero debería venir del token primario del sistema.",
+            "El ComponentSet en Figma está pendiente de crear."
+        ]
+    }
+}

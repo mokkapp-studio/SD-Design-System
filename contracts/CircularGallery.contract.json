@@ -1,0 +1,375 @@
+{
+    "$schema": "./component.schema.json",
+    "id": "circular-gallery",
+    "name": "CircularGallery",
+    "version": "0.1.0",
+    "status": "draft",
+    "category": "media",
+    "description": "Galería de imágenes renderizada en WebGL2. Los ítems se disponen en un cilindro virtual curvo (bend), arrastrable horizontalmente con inercia y snap. Al hacer clic en un ítem se abre con caption. Soporta intro animada, autoScroll, grayscale, ring highlight, edge fade y sombras WebGL. Requiere 'use client' (Next.js). Sin dependencias externas excepto React.",
+    "guidance": {
+        "dos": [
+            "Envuelve el componente en un contenedor con alto fijo (p. ej. height: 500px). CircularGallery ocupa el 100% del alto del padre.",
+            "Proporciona items con imágenes de la misma relación de aspecto que itemAspect (default 0.78 ≈ 4:5). Mezclar aspectos distorsiona las tarjetas.",
+            "Usa fontUrl para cargar Figtree u otra fuente desde Google Fonts; el sistema resuelve las @font-face automáticamente.",
+            "Para reducir motion, pasa autoScroll=0 e intro=false. El drag sigue funcionando."
+        ],
+        "donts": [
+            {
+                "case": "Usar en entornos sin soporte WebGL2 sin fallback",
+                "useInstead": "Detectar gl support antes de renderizar y mostrar una galería CSS estándar si falla",
+                "why": "WebGL2 no está disponible en algunos navegadores corporativos o SSR."
+            },
+            {
+                "case": "Pasar más de 50 ítems con imágenes HD sin lazy loading",
+                "useInstead": "Cargar imágenes bajo demanda o usar thumbnails",
+                "why": "El motor precarga todas las texturas al montar; con muchas imágenes HD bloquea el hilo."
+            },
+            {
+                "case": "Cambiar itemAspect dinámicamente",
+                "useInstead": "Definir el aspecto antes de montar y no cambiarlo",
+                "why": "El motor calcula la geometría al montar; cambiar el aspecto requiere reconstruir el buffer."
+            }
+        ],
+        "related": [
+            {
+                "component": "DominoLettering",
+                "relation": "sibling",
+                "difference": "Ambos son componentes canvas/motion. DominoLettering es texto; CircularGallery es galería de imágenes."
+            }
+        ]
+    },
+    "semantics": {
+        "element": "div",
+        "role": "region",
+        "refTarget": "root",
+        "elementByProp": null
+    },
+    "props": [
+        {
+            "name": "items",
+            "type": "Array<{ image: string; text?: string; alt?: string; description?: string }>",
+            "default": "DEFAULT_ITEMS (12 imágenes de picsum)",
+            "required": false,
+            "description": "Lista de ítems de la galería. image = URL de la imagen. text = etiqueta visible en el canvas. alt = texto alternativo para lector de pantalla. description = caption al abrir el ítem.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "bend",
+            "type": "number",
+            "default": 3,
+            "description": "Curvatura del cilindro virtual. 0 = plano, valores altos = curva pronunciada.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "textColor",
+            "type": "string",
+            "default": "'#ffffff'",
+            "description": "Color del texto de las etiquetas y controles sobre el canvas.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "borderRadius",
+            "type": "number",
+            "default": 0.05,
+            "description": "Radio de esquina de las tarjetas como fracción del alto del ítem (0 = recto, 0.5 = círculo).",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "font",
+            "type": "string",
+            "default": "'bold 30px Figtree'",
+            "description": "String de fuente CSS para las etiquetas (p. ej. 'bold 30px Inter'). Se carga desde fontUrl si se proporciona.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "fontUrl",
+            "type": "string",
+            "default": "URL de Google Fonts para Figtree",
+            "description": "URL de hoja de estilos Google Fonts o de archivo de fuente (.woff2, .ttf). El motor resuelve las @font-face y recarga el canvas.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "scrollSpeed",
+            "type": "number",
+            "default": 2,
+            "description": "Multiplicador de velocidad del drag. 1 = natural, 2 = doble velocidad.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "scrollEase",
+            "type": "number",
+            "default": 0.05,
+            "description": "Factor de suavizado de la inercia (lerp). 0.001 = muy suave, 1 = sin inercia.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "itemSize",
+            "type": "number",
+            "default": 1,
+            "description": "Tamaño de las tarjetas relativo al alto del contenedor. 1 = ocupa el alto completo.",
+            "bindings": {
+                "figma": {
+                    "property": "size",
+                    "type": "VARIANT",
+                    "valueMap": { "0.6": "compact", "1": "default", "1.4": "large" }
+                }
+            }
+        },
+        {
+            "name": "itemAspect",
+            "type": "number",
+            "default": 0.78,
+            "description": "Relación ancho/alto de las tarjetas. 0.78 ≈ 4:5 (vertical). No cambiar tras el montaje.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "gap",
+            "type": "number",
+            "default": 0.26,
+            "description": "Espaciado entre tarjetas como fracción del ancho de tarjeta.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "wave",
+            "type": "number",
+            "default": 1,
+            "description": "Intensidad del efecto ondulatorio 3D en el plano de las tarjetas. 0 = desactivado.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "fadeEdges",
+            "type": "number",
+            "default": 0.12,
+            "description": "Fracción del ancho del canvas en que las tarjetas se desvanecen en los bordes (0–0.5).",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "shadow",
+            "type": "number",
+            "default": 0.25,
+            "description": "Opacidad de la sombra bajo las tarjetas (0 = sin sombra, 1 = sombra máxima).",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "grayscale",
+            "type": "boolean",
+            "default": false,
+            "description": "Si true, todas las imágenes se renderizan en escala de grises.",
+            "bindings": {
+                "figma": {
+                    "property": "grayscale",
+                    "type": "BOOLEAN"
+                }
+            }
+        },
+        {
+            "name": "showTitles",
+            "type": "boolean",
+            "default": true,
+            "description": "Muestra las etiquetas de texto (item.text) sobre el canvas.",
+            "bindings": {
+                "figma": {
+                    "property": "showTitles",
+                    "type": "BOOLEAN"
+                }
+            }
+        },
+        {
+            "name": "snap",
+            "type": "boolean",
+            "default": true,
+            "description": "Si true, el scroll hace snap al ítem más cercano al soltar.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "autoScroll",
+            "type": "number",
+            "default": 0,
+            "description": "Velocidad de scroll automático en unidades por segundo. 0 = desactivado. Se pausa al hacer hover.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "openOnClick",
+            "type": "boolean",
+            "default": true,
+            "description": "Si true, clicar un ítem lo expande y muestra description como caption.",
+            "bindings": {
+                "figma": {
+                    "property": "state",
+                    "type": "VARIANT",
+                    "valueMap": { "true+open": "open" }
+                }
+            }
+        },
+        {
+            "name": "intro",
+            "type": "boolean",
+            "default": true,
+            "description": "Reproduce la animación de entrada (1.4s) al montar. Desactivar si prefers-reduced-motion.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "onItemClick",
+            "type": "(index: number, item: GalleryItem) => void",
+            "default": null,
+            "description": "Callback cuando el usuario hace clic en un ítem (antes de la apertura interna).",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "onActiveChange",
+            "type": "(index: number) => void",
+            "default": null,
+            "description": "Callback cuando cambia el ítem activo/centrado.",
+            "bindings": { "figma": null }
+        },
+        {
+            "name": "dpr",
+            "type": "number",
+            "default": "window.devicePixelRatio",
+            "description": "Device pixel ratio para el canvas WebGL. Sobreescribe el valor del sistema.",
+            "bindings": { "figma": null }
+        }
+    ],
+    "states": {
+        "native": [],
+        "controlled": [
+            {
+                "name": "idle",
+                "description": "Galería mostrando todos los ítems en el cilindro. El cursor es grab.",
+                "figmaVariant": "state=idle"
+            },
+            {
+                "name": "dragging",
+                "description": "El usuario está arrastrando. El cursor es grabbing.",
+                "figmaVariant": "state=idle"
+            },
+            {
+                "name": "open",
+                "description": "Un ítem está expandido. Se muestra el caption (description) y el botón de cerrar.",
+                "figmaVariant": "state=open"
+            }
+        ]
+    },
+    "anatomy": {
+        "root": {
+            "element": "div",
+            "description": "Contenedor con role=region y aria-label='Image gallery'. position: relative; width: 100%; height: 100%; overflow: hidden; cursor: grab.",
+            "figmaLayer": "CircularGallery"
+        },
+        "canvas": {
+            "element": "canvas",
+            "description": "Canvas WebGL2. Ocupa el 100% del contenedor. aria-hidden=true (el contenido semántico está en el list oculto).",
+            "figmaLayer": "canvas"
+        },
+        "labels": {
+            "element": "div",
+            "description": "Capa de etiquetas de texto renderizadas en DOM sobre el canvas. pointer-events: none.",
+            "figmaLayer": "labels"
+        },
+        "caption": {
+            "element": "div",
+            "description": "Panel con la description del ítem abierto. Centrado en la parte superior. Visible solo en state=open.",
+            "figmaLayer": "caption"
+        },
+        "closeButton": {
+            "element": "button",
+            "description": "Botón X para cerrar el ítem expandido. Aparece en state=open en la esquina superior derecha.",
+            "figmaLayer": "closeButton"
+        },
+        "hiddenList": {
+            "element": "ul",
+            "description": "Lista de botones accesibles (visually hidden). Permite navegación por teclado y lectura de pantalla sin exponer el canvas.",
+            "figmaLayer": null
+        },
+        "liveRegion": {
+            "element": "div",
+            "description": "aria-live=polite. Anuncia al lector de pantalla cuando un ítem se abre.",
+            "figmaLayer": null
+        }
+    },
+    "composition": {
+        "allowedChildren": [],
+        "forbiddenChildren": [],
+        "nestedComponents": [],
+        "asChild": false,
+        "note": "El contenido de los ítems es completamente gestionado internamente por el motor WebGL. No admite children."
+    },
+    "layout": {
+        "width": { "default": "fill", "note": "Ocupa el 100% del padre. El padre debe tener ancho explícito." },
+        "height": { "mode": "fill", "note": "Ocupa el 100% del padre. El padre DEBE tener alto fijo (ej. height: 500px). Sin alto el canvas tiene 0px." }
+    },
+    "tokens": {
+        "policy": {
+            "allowed": ["colors"],
+            "forbidden": [],
+            "note": "El renderizado es WebGL; los tokens de diseño se pasan como props (textColor), no como CSS variables."
+        },
+        "bindings": {
+            "base": {
+                "textColor": "#ffffff",
+                "shadowColor": "rgba(0,0,0,shadow)",
+                "ringColor": "inherit (blanco por defecto)"
+            }
+        }
+    },
+    "a11y": {
+        "role": "region con aria-label='Image gallery'.",
+        "keyboard": [
+            "ArrowRight / ArrowDown — avanza al siguiente ítem",
+            "ArrowLeft / ArrowUp — retrocede al ítem anterior",
+            "Enter — abre el ítem enfocado (si openOnClick=true)",
+            "Escape — cierra el ítem abierto (manejado por el motor)"
+        ],
+        "hiddenList": "Todos los ítems son botones en un <ul> visually-hidden con tabIndex controlado. Solo el ítem activo tiene tabIndex=0.",
+        "liveRegion": "aria-live='polite' anuncia 'texto opened' cuando un ítem se expande.",
+        "canvas": "aria-hidden=true. El canvas es decorativo; toda la semántica está en el hiddenList.",
+        "motion": "Pasa intro=false y autoScroll=0 cuando prefers-reduced-motion: reduce. El drag no tiene alternativa CSS; es la interacción principal.",
+        "wcag": ["1.1.1 Texto alternativo (item.alt)", "2.1.1 Teclado", "4.1.3 Mensajes de estado (live region)"]
+    },
+    "behavior": {
+        "drag": "Pointer events con capture para drag fuera del elemento. Calcula velocidad de inercia (velocity). scrollEase controla el lerp de frenado.",
+        "snap": "Al soltar con velocity baja, snap al ítem más cercano. Con velocity alta, momentum lleva al siguiente/anterior.",
+        "open": "Clic sin drag (movimiento < threshold) → abre el ítem. El motor anima scale/opacity de las tarjetas adyacentes.",
+        "font": "resolveFont() detecta si fontUrl es CSS (Google Fonts) o archivo y carga las FontFace dinámicamente. Recarga el canvas al resolver.",
+        "webgl": "Motor WebGL2 con 2 passes: shadow + color. Compila los shaders al montar. Falla silenciosamente si WebGL2 no está disponible."
+    },
+    "theming": {
+        "modes": ["light", "dark"],
+        "note": "El canvas siempre tiene fondo transparente; hereda el fondo del contenedor padre."
+    },
+    "testing": {
+        "cases": [
+            "Renderiza el canvas WebGL sin errores en Chrome/Firefox/Safari con WebGL2",
+            "El hiddenList tiene tantos botones como items.length",
+            "Solo el ítem activo tiene tabIndex=0",
+            "ArrowRight avanza el ítem activo",
+            "Clic en ítem activa state=open y muestra description en caption",
+            "El botón de cierre vuelve a state=idle",
+            "grayscale=true renderiza las imágenes en escala de grises",
+            "autoScroll=1 avanza la galería sin interacción del usuario",
+            "fontUrl carga Figtree de Google Fonts y actualiza el canvas"
+        ]
+    },
+    "anchors": {
+        "figma": {
+            "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
+            "node": "14:59 (SPEC_BLOCK con código fuente — no es un componente visual. ComponentSet pendiente de crear.)"
+        },
+        "code": {
+            "importPath": "@/components/circular-gallery/CircularGallery",
+            "export": "CircularGallery",
+            "note": "Requiere 'use client' (Next.js App Router). El CSS companion CircularGallery.css debe importarse en el mismo archivo o en el layout."
+        }
+    },
+    "meta": {
+        "source": "manual",
+        "derivableFromSource": ["props.*", "states", "anatomy"],
+        "needsReview": [
+            "El motor WebGL está embebido en el componente; considerar extraerlo a un módulo separado si crece.",
+            "No hay fallback para navegadores sin WebGL2. Añadir detección y componente alternativo.",
+            "La font se carga cada vez que cambia font/fontUrl; añadir memoization si el padre re-renderiza frecuentemente.",
+            "dpr sin clampar puede ser muy alto en pantallas 4K; considerar Math.min(dpr, 2).",
+            "El ComponentSet en Figma es una representación estática (idle + open); no puede mostrar la curva 3D real."
+        ]
+    }
+}

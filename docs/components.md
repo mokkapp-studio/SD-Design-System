@@ -18,6 +18,13 @@
 | Divider | `contracts/Divider.contract.json` | contenedor (ejemplo mínimo) | draft | Separar dos grupos de contenido; **el contrato más corto, para empezar** | — |
 | Badge | `contracts/Badge.contract.json` | feedback | draft | Etiqueta corta no interactiva con estado o categoría; 4 variantes × 31 colores × 3 tamaños | Button, Link, Icon |
 | IconLibrary | `contracts/IconLibrary.contract.json` | media (Lucide) | draft | Reglas de la librería de iconos: catálogo completo, nombres, trazo y paso a Figma (no es un componente) | Icon, IconButton |
+| NavBar | `contracts/NavBar.contract.json` | navegación | draft | Barra de navegación superior con logo, enlaces y menú móvil hamburger | FooterColumn, Link |
+| SignForm | `contracts/SignForm.contract.json` | autenticación | draft | Formulario de sign-in / sign-up con dos modos | TextField, Button |
+| DominoLettering | `contracts/DominoLettering.contract.json` | motion | draft | Texto con efecto dominó: las letras caen en cascada al interactuar | — |
+| Hero32 | `contracts/Hero32.contract.json` | marketing | draft | Hero section oscuro con rastros de luz y dial de velocidad de obturación arrastrable | HowItWorks |
+| FooterColumn | `contracts/FooterColumn.contract.json` | layout | draft | Footer de columnas: marca + redes sociales + N columnas de enlaces + barra inferior | NavBar, Link |
+| HowItWorks | `contracts/HowItWorks.contract.json` | marketing | draft | Sección de N pasos numerados (numbered / cards / timeline) que explica cómo funciona el producto | Hero32, FooterColumn |
+| CircularGallery | `contracts/CircularGallery.contract.json` | media | draft | Galería WebGL2 en cilindro curvo, arrastrable con inercia, snap, caption y accesibilidad completa | DominoLettering |
 | _siguiente_ | | | pendiente | | |
 
 > Un componente por vez: límpialo en Figma, haz su contrato, llévalo a código y recién entonces el siguiente.
