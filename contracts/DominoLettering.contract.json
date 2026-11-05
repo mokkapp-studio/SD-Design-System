@@ -1,0 +1,212 @@
+{
+    "$schema": "./component.schema.json",
+    "id": "domino-lettering",
+    "name": "DominoLettering",
+    "version": "0.1.0",
+    "status": "draft",
+    "category": "motion",
+    "description": "Texto animado donde las letras caen en cascada como fichas de dominó al dispararse la interacción. Cada letra rota en el eje X de 0° a 90° con un retraso escalonado; al terminar, vuelve al reposo. Pensado para titulares de marketing y momentos de deleite.",
+    "guidance": {
+        "dos": [
+            "Úsalo en titulares cortos (1–4 palabras). Las letras deben ser legibles al reposar.",
+            "El trigger `hover` es el más predecible en desktop; `click` en touch.",
+            "Respeta `prefers-reduced-motion`: cuando esté activo, omite la animación (muestra el texto estático).",
+            "Ajusta `stagger` para que la cascada complete antes de que el usuario vea el final de la animación (stagger × n < 800 ms es una buena regla)."
+        ],
+        "donts": [
+            {
+                "case": "Texto de más de 20 caracteres",
+                "useInstead": "Acorta el texto o usa trigger=mount con stagger bajo",
+                "why": "Con muchas letras la cascada dura demasiado y distrae."
+            },
+            {
+                "case": "Usar en texto de cuerpo o etiquetas de formulario",
+                "useInstead": "Texto estático",
+                "why": "Las animaciones en texto funcional aumentan la carga cognitiva."
+            },
+            {
+                "case": "trigger=mount en páginas con mucho contenido",
+                "useInstead": "trigger=hover o trigger=none",
+                "why": "Las animaciones automáticas al cargar compiten con el contenido principal."
+            }
+        ],
+        "related": [
+            {
+                "component": "TextReveal",
+                "relation": "sibling",
+                "difference": "TextReveal anima el texto completo (blur→visible); DominoLettering anima letra a letra en 3D."
+            }
+        ]
+    },
+    "semantics": {
+        "element": "span",
+        "role": null,
+        "refTarget": "root",
+        "elementByProp": null
+    },
+    "props": [
+        {
+            "name": "text",
+            "type": "string",
+            "default": null,
+            "required": true,
+            "description": "Texto a animar. Cada carácter (incluidos espacios) se envuelve en un <span> individual.",
+            "bindings": {
+                "figma": {
+                    "property": "text",
+                    "type": "TEXT"
+                }
+            }
+        },
+        {
+            "name": "trigger",
+            "type": "'hover' | 'click' | 'mount' | 'none'",
+            "default": "hover",
+            "description": "Qué dispara la animación. `none` deja el control al padre vía la prop `playing`.",
+            "bindings": {
+                "figma": null
+            }
+        },
+        {
+            "name": "speed",
+            "type": "number",
+            "default": 400,
+            "description": "Duración de la animación por letra en ms (de 0° a 90° y vuelta).",
+            "bindings": {
+                "figma": null
+            }
+        },
+        {
+            "name": "stagger",
+            "type": "number",
+            "default": 60,
+            "description": "Retraso entre el inicio de la animación de cada letra, en ms.",
+            "bindings": {
+                "figma": null
+            }
+        },
+        {
+            "name": "direction",
+            "type": "'forward' | 'backward'",
+            "default": "forward",
+            "description": "Dirección de la cascada. `forward` va de izquierda a derecha; `backward` al revés.",
+            "bindings": {
+                "figma": null
+            }
+        },
+        {
+            "name": "playing",
+            "type": "boolean",
+            "default": false,
+            "description": "Control externo del estado de animación. Solo activo cuando trigger=none.",
+            "bindings": {
+                "figma": {
+                    "property": "state",
+                    "type": "VARIANT",
+                    "valueMap": {
+                        "true": "playing",
+                        "false": "idle"
+                    }
+                }
+            }
+        }
+    ],
+    "states": {
+        "native": [],
+        "controlled": [
+            {
+                "name": "idle",
+                "description": "Todas las letras en posición vertical (rotateX=0). Estado por defecto.",
+                "figmaVariant": "state=idle"
+            },
+            {
+                "name": "playing",
+                "description": "Letras en cascada de caída (rotateX 0°→90°). Las letras que ya cayeron vuelven a 0° escalonadamente.",
+                "figmaVariant": "state=playing"
+            }
+        ]
+    },
+    "anatomy": {
+        "root": {
+            "element": "span",
+            "description": "Contenedor inline con perspective para activar el contexto 3D. Recibe los eventos de interacción.",
+            "figmaLayer": "DominoLettering"
+        },
+        "letter": {
+            "element": "span",
+            "description": "Un span por carácter. Aplica transform: rotateX() con transition individual y animation-delay proporcional al índice.",
+            "figmaLayer": "letter-{i}"
+        }
+    },
+    "composition": {
+        "allowedChildren": [],
+        "forbiddenChildren": [],
+        "nestedComponents": [],
+        "asChild": false
+    },
+    "layout": {
+        "display": "inline-block",
+        "overflow": "visible",
+        "note": "El contenedor necesita perspective: 400px. Cada letra usa display: inline-block + transformStyle: preserve-3d."
+    },
+    "tokens": {
+        "policy": {
+            "allowed": ["colors", "text-style"],
+            "forbidden": []
+        },
+        "bindings": {
+            "base": {
+                "color": "inherit",
+                "fontSize": "inherit",
+                "fontFamily": "inherit",
+                "perspective": "400px"
+            }
+        }
+    },
+    "a11y": {
+        "role": "none — el texto sigue siendo accesible como contenido inline.",
+        "keyboard": ["No expone interacciones de teclado por defecto; si trigger=click, el span raíz recibe tabIndex=0 y Enter/Space disparan play()."],
+        "motion": "Cuando prefers-reduced-motion: reduce, saltarse la animación y mostrar el texto estático.",
+        "note": "No usar color como único diferenciador en los estados; la animación es suficiente."
+    },
+    "behavior": {
+        "loop": false,
+        "autoReverse": true,
+        "concurrent": false,
+        "note": "Una animación en curso se cancela si llega un nuevo trigger antes de que termine."
+    },
+    "theming": {
+        "modes": ["light", "dark"],
+        "density": null
+    },
+    "testing": {
+        "cases": [
+            "trigger=hover dispara la animación al hacer mouseenter y no repite hasta que termina",
+            "trigger=click dispara al hacer click",
+            "trigger=mount inicia la animación sin interacción del usuario",
+            "trigger=none no hace nada sin playing=true",
+            "direction=backward empieza por la última letra",
+            "con prefers-reduced-motion activo, no hay transform animado"
+        ]
+    },
+    "anchors": {
+        "figma": {
+            "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
+            "node": "13:53 (ComponentSet) | 13:2 (state=idle) | 13:28 (state=playing)"
+        },
+        "code": {
+            "importPath": "@/components/domino-lettering/DominoLettering",
+            "export": "DominoLettering"
+        }
+    },
+    "meta": {
+        "source": "manual",
+        "derivableFromSource": ["props.text", "props.direction"],
+        "needsReview": [
+            "El stagger y speed por defecto (60ms / 400ms) son estimaciones; ajustar tras verlo en contexto real.",
+            "perspective=400px da un efecto marcado con fonts grandes; puede necesitar ajuste por tamaño.",
+            "La prop playing+trigger=none es el patrón para controlarlo desde fuera (ej: scroll-triggered); validar el API con el consumidor.",
+            "No hay variante Figma para direction=backward; basta con documentarlo en el contrato."
+        ]
+    }
+}

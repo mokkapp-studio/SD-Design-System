@@ -322,7 +322,7 @@
     "anchors": {
         "figma": {
             "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
-            "node": "2:136 (desktop) / 2:149 (mobile)"
+            "node": "12:6 (ComponentSet) | 12:2 (mobile=false) | 12:3 (mobile=true)"
         },
         "code": {
             "importPath": "@/components/nav-bar/nav-bar",

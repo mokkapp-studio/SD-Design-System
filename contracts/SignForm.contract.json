@@ -448,7 +448,7 @@
     "anchors": {
         "figma": {
             "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
-            "node": "2:157 (sign-in) / 2:187 (sign-up)"
+            "node": "12:21 (ComponentSet) | 12:4 (mode=sign-in) | 12:5 (mode=sign-up)"
         },
         "code": {
             "importPath": "@/components/sign-form/sign-form",
