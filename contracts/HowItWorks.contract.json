@@ -294,7 +294,7 @@
     "anchors": {
         "figma": {
             "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
-            "node": "14:516 (SPEC_BLOCK con código fuente — no es un componente visual. ComponentSet pendiente de crear.)"
+            "node": "26:1163 (ComponentSet) | 26:1127 (variant=numbered, theme=light) | 26:1145 (variant=numbered, theme=dark)"
         },
         "code": {
             "importPath": "@/components/how-it-works/HowItWorks",

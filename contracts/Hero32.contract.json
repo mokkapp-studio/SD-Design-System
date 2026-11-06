@@ -234,7 +234,7 @@
     "anchors": {
         "figma": {
             "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
-            "node": "pending"
+            "node": "26:1069 (ComponentSet) | 26:964 (state=fast) | 26:999 (state=medium) | 26:1034 (state=slow)"
         },
         "code": {
             "importPath": "@/components/hero-32/Hero32",

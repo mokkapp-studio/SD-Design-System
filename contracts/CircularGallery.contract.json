@@ -353,7 +353,7 @@
     "anchors": {
         "figma": {
             "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
-            "node": "14:59 (SPEC_BLOCK con código fuente — no es un componente visual. ComponentSet pendiente de crear.)"
+            "node": "26:1124 (ComponentSet) | 26:1083 (state=idle) | 26:1103 (state=open)"
         },
         "code": {
             "importPath": "@/components/circular-gallery/CircularGallery",

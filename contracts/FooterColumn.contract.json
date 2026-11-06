@@ -262,7 +262,7 @@
     "anchors": {
         "figma": {
             "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
-            "node": "pending"
+            "node": "26:1222 (ComponentSet) | 26:1180 (theme=dark) | 26:1201 (theme=light)"
         },
         "code": {
             "importPath": "@/components/footer-column/FooterColumn",
