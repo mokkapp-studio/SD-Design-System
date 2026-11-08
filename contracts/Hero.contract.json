@@ -1,0 +1,171 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "hero",
+  "name": "Hero",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "container",
+  "description": "Full-width landing page hero with headline, subtext, one or two CTAs, and an optional media slot.",
+  "guidance": {
+    "dos": [
+      "Use one Hero per page at the top of the layout, below the NavBar.",
+      "Keep headline under 8 words for maximum impact.",
+      "Pass a Badge above the headline to anchor a campaign or announcement."
+    ],
+    "donts": [
+      { "case": "Using Hero mid-page as a section divider", "useInstead": "A section with a heading and copy", "why": "Hero communicates page-level identity; reusing it mid-page dilutes that signal." },
+      { "case": "Adding more than two CTA buttons", "useInstead": "One primary + one ghost Button", "why": "More than two choices split attention and reduce conversion." }
+    ],
+    "related": [
+      { "component": "NavBar",  "relation": "similar",       "difference": "NavBar sits above Hero; use variant=transparent on NavBar to overlay a dark Hero." },
+      { "component": "Button",  "relation": "contained-by",  "difference": "CTA slots accept Button components." },
+      { "component": "Badge",   "relation": "contained-by",  "difference": "Optional eyebrow badge above the headline." }
+    ]
+  },
+  "semantics": { "element": "section", "role": null, "refTarget": "root", "elementByProp": null },
+  "props": [
+    {
+      "name": "badge",
+      "type": "ReactNode",
+      "default": null,
+      "required": false,
+      "description": "Optional eyebrow label above the headline. Typically a Badge component.",
+      "bindings": { "figma": { "property": "Badge", "type": "INSTANCE_SWAP" } }
+    },
+    {
+      "name": "headline",
+      "type": "string",
+      "default": null,
+      "required": true,
+      "description": "Main heading. Keep under 8 words.",
+      "bindings": { "figma": { "property": "Headline", "type": "TEXT" } }
+    },
+    {
+      "name": "subtext",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "One or two sentence description below the headline.",
+      "bindings": { "figma": { "property": "Subtext", "type": "TEXT" } }
+    },
+    {
+      "name": "primaryCta",
+      "type": "ReactNode",
+      "default": null,
+      "required": false,
+      "description": "Primary call-to-action. Typically a solid Button.",
+      "bindings": { "figma": { "property": "PrimaryCTA", "type": "INSTANCE_SWAP" } }
+    },
+    {
+      "name": "secondaryCta",
+      "type": "ReactNode",
+      "default": null,
+      "required": false,
+      "description": "Secondary call-to-action. Typically a ghost or outline Button.",
+      "bindings": { "figma": { "property": "SecondaryCTA", "type": "INSTANCE_SWAP" } }
+    },
+    {
+      "name": "media",
+      "type": "ReactNode",
+      "default": null,
+      "required": false,
+      "description": "Optional right-side media slot: image, video, or illustration.",
+      "bindings": { "figma": { "property": "Media", "type": "INSTANCE_SWAP" } }
+    },
+    {
+      "name": "variant",
+      "type": "'centered' | 'split'",
+      "default": "centered",
+      "required": false,
+      "description": "centered = text centered, no media. split = text left + media right.",
+      "bindings": { "figma": { "property": "Variant", "type": "VARIANT" } }
+    }
+  ],
+  "states": { "native": [], "controlled": [] },
+  "anatomy": {
+    "root":         { "element": "section",  "description": "Full-width hero container.",                     "figmaLayer": "root" },
+    "inner":        { "element": "div",      "description": "Max-width wrapper centered horizontally.",       "figmaLayer": "inner" },
+    "content":      { "element": "div",      "description": "Text stack: badge, headline, subtext, actions.","figmaLayer": "content" },
+    "badge":        { "element": "div",      "description": "Eyebrow badge slot.",   "optional": true,        "figmaLayer": "badge",    "content": { "prop": "badge" } },
+    "headline":     { "element": "h1",       "description": "Main page heading.",                             "figmaLayer": "headline", "content": { "prop": "headline" } },
+    "subtext":      { "element": "p",        "description": "Supporting description.", "optional": true,      "figmaLayer": "subtext",  "content": { "prop": "subtext" } },
+    "actions":      { "element": "div",      "description": "CTA button row.",                                "figmaLayer": "actions" },
+    "primaryCta":   { "element": "div",      "description": "Primary CTA slot.",     "optional": true,        "figmaLayer": "primary-cta",   "content": { "prop": "primaryCta" } },
+    "secondaryCta": { "element": "div",      "description": "Secondary CTA slot.",   "optional": true,        "figmaLayer": "secondary-cta", "content": { "prop": "secondaryCta" } },
+    "media":        { "element": "div",      "description": "Media slot (split variant only).", "optional": true, "figmaLayer": "media", "content": { "prop": "media" } }
+  },
+  "composition": {
+    "allowedChildren": null,
+    "forbiddenChildren": ["Hero"],
+    "nestedComponents": [
+      { "part": "badge",        "component": "Badge",  "fixedProps": { "variant": "primary" } },
+      { "part": "primaryCta",   "component": "Button", "fixedProps": { "variant": "solid",  "size": "lg" } },
+      { "part": "secondaryCta", "component": "Button", "fixedProps": { "variant": "ghost",  "size": "lg" } }
+    ],
+    "codeParts": [],
+    "asChild": false
+  },
+  "layout": {
+    "height": { "mode": "hug", "values": {}, "unit": "px", "token": null },
+    "width":  { "default": "fill", "modes": { "fill": "100vw" }, "min": null, "max": null, "note": "Inner content max-width: 1200px." },
+    "autoLayout": {
+      "direction": "VERTICAL",
+      "sizingHorizontal": "FILL",
+      "sizingVertical": "HUG",
+      "alignMain": "CENTER",
+      "alignCross": "CENTER",
+      "gap": "spacing.6 between badge / headline / subtext / actions"
+    }
+  },
+  "tokens": {
+    "policy": { "allowed": ["color", "spacing", "radius", "font", "shadow"], "forbidden": ["primitives"] },
+    "bindings": {
+      "base": {
+        "background":      "color.background",
+        "paddingY":        "spacing.16",
+        "headlineSize":    "font.size.4xl",
+        "headlineWeight":  "font.weight.bold",
+        "subtextSize":     "font.size.lg",
+        "subtextColor":    "color.muted-foreground",
+        "gap":             "spacing.6"
+      }
+    }
+  },
+  "events": [],
+  "a11y": {
+    "role": "none — section landmark from element",
+    "name": "Heading h1 provides the accessible name",
+    "keyboard": ["Tab — CTA buttons are focusable"],
+    "focusIndicator": "CTA buttons own their focus indicator",
+    "minTarget": "CTA buttons min 44x44px (WCAG 2.5.8)",
+    "contrastNote": "Headline and subtext on color.background must meet WCAG AA",
+    "wcag": ["1.4.3 Contrast (AA)", "2.1.1 Keyboard", "1.3.1 Info and Relationships"]
+  },
+  "content": {
+    "label": { "maxLength": 60, "casing": "sentence", "voice": "Bold, direct. 'Build faster. Ship better.' No period on headline." }
+  },
+  "behavior": {
+    "loading": null,
+    "overflow": "split layout stacks vertically below 768px",
+    "motion": [],
+    "responsive": ["< 768px: split becomes centered, media moves below content"]
+  },
+  "form": null, "overlay": null, "data": null, "media": null,
+  "theming": { "modes": ["light", "dark"], "density": null },
+  "i18n": { "rtl": "content and media swap sides in split variant", "textExpansion": "Headline may wrap to 3 lines; keep min-height on root." },
+  "testing": {
+    "cases": [
+      "centered variant renders headline + subtext centered",
+      "split variant renders content left + media right",
+      "badge prop absent: badge slot not rendered",
+      "media prop absent in centered variant: no empty space",
+      "below 768px: split stacks to single column"
+    ]
+  },
+  "governance": { "owners": ["mokkapp-studio"], "changelog": "contracts/Hero.contract.json" },
+  "anchors": {
+    "figma": { "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP", "node": null },
+    "code": { "importPath": "@/components/ui/Hero", "export": "Hero" }
+  },
+  "meta": { "source": "manual", "needsReview": ["anchors.figma.node"], "derivableFromSource": ["props", "anatomy", "layout"] }
+}
