@@ -1,0 +1,100 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "badge",
+  "name": "Badge",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "feedback",
+  "description": "Compact pill label that communicates status, category, or count.",
+  "guidance": {
+    "dos": [
+      "Use to annotate items with a short status or category label.",
+      "Keep text under 20 characters."
+    ],
+    "donts": [
+      { "case": "Using Badge as an interactive element", "useInstead": "Button", "why": "Badge has no click or focus affordance." }
+    ],
+    "related": [
+      { "component": "Button", "relation": "alternative", "difference": "Button is interactive; Badge is decorative only." }
+    ]
+  },
+  "semantics": { "element": "span", "role": null, "refTarget": "root", "elementByProp": null },
+  "props": [
+    {
+      "name": "variant",
+      "type": "'default' | 'primary' | 'secondary' | 'outline' | 'destructive'",
+      "default": "default",
+      "required": false,
+      "description": "Color scheme of the badge.",
+      "bindings": { "figma": { "property": "Variant", "type": "VARIANT" } }
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md'",
+      "default": "md",
+      "required": false,
+      "description": "sm = 20px height, md = 24px height.",
+      "bindings": { "figma": { "property": "Size", "type": "VARIANT" } }
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "default": null,
+      "required": true,
+      "description": "Badge label text.",
+      "bindings": { "figma": { "property": "Label", "type": "TEXT" } }
+    }
+  ],
+  "states": { "native": [], "controlled": [] },
+  "anatomy": {
+    "root": { "element": "span", "description": "Badge container.", "figmaLayer": "root" }
+  },
+  "composition": { "allowedChildren": null, "forbiddenChildren": [], "nestedComponents": [], "codeParts": [], "asChild": false },
+  "layout": {
+    "height": { "mode": "hug", "values": { "sm": 20, "md": 24 }, "unit": "px", "token": null },
+    "width": { "default": "hug", "modes": { "hug": "content" }, "min": null, "max": null, "note": null },
+    "autoLayout": { "direction": "HORIZONTAL", "sizingHorizontal": "HUG", "sizingVertical": "HUG", "alignMain": "CENTER", "alignCross": "CENTER", "gap": "spacing.1" }
+  },
+  "tokens": {
+    "policy": { "allowed": ["color", "spacing", "radius", "font"], "forbidden": ["primitives"] },
+    "bindings": {
+      "base": { "radius": "radius.full", "fontWeight": "font.weight.medium" },
+      "byVariant": {
+        "default":     { "background": "color.muted",        "text": "color.foreground",             "border": "color.border" },
+        "primary":     { "background": "color.primary",      "text": "color.primary-foreground",     "border": null },
+        "secondary":   { "background": "color.secondary",    "text": "color.secondary-foreground",   "border": null },
+        "outline":     { "background": null,                 "text": "color.foreground",             "border": "color.border" },
+        "destructive": { "background": "color.destructive",  "text": "color.destructive-foreground", "border": null }
+      }
+    }
+  },
+  "events": [],
+  "a11y": {
+    "role": "none (decorative); use role=status for live regions",
+    "name": "Text content of the badge",
+    "keyboard": [],
+    "focusIndicator": "none — non-interactive",
+    "minTarget": "n/a",
+    "contrastNote": "All variant combinations must meet WCAG AA (4.5:1)",
+    "wcag": ["1.4.3 Contrast (AA)"]
+  },
+  "content": { "label": { "maxLength": 20, "casing": "sentence", "voice": "Short noun. 'New', 'Draft', 'Pro'." } },
+  "behavior": { "loading": null, "overflow": "truncate", "motion": [], "responsive": [] },
+  "form": null, "overlay": null, "data": null, "media": null,
+  "theming": { "modes": ["light", "dark"], "density": null },
+  "i18n": { "rtl": "text direction auto", "textExpansion": "Badge grows horizontally up to max-width." },
+  "testing": {
+    "cases": [
+      "All 5 variants render correct background and text colors",
+      "sm and md sizes render at correct heights (20px / 24px)",
+      "outline variant has transparent background",
+      "destructive variant uses color.destructive"
+    ]
+  },
+  "governance": { "owners": ["mokkapp-studio"], "changelog": "contracts/Badge.contract.json" },
+  "anchors": {
+    "figma": { "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP", "node": null },
+    "code": { "importPath": "@/components/ui/Badge", "export": "Badge" }
+  },
+  "meta": { "source": "manual", "needsReview": ["anchors.figma.node"], "derivableFromSource": ["props", "anatomy", "layout"] }
+}

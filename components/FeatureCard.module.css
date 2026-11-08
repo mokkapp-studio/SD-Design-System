@@ -1,0 +1,47 @@
+/* FeatureCard — tokens/tokens.css */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-6);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+/* ── Variants ───────────────────────────── */
+.accent { border-color: var(--color-primary); }
+
+/* ── Icon ───────────────────────────────── */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-muted);
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.accent .icon {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+/* ── Text ───────────────────────────────── */
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-foreground);
+  margin: 0;
+}
+
+.description {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted-foreground);
+  margin: 0;
+  line-height: 1.6;
+}

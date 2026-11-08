@@ -1,0 +1,108 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "avatar",
+  "name": "Avatar",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "media",
+  "description": "Circular image with an initials fallback for when no image is available.",
+  "guidance": {
+    "dos": [
+      "Always provide alt text or a fallback string.",
+      "Use size=sm inside dense lists; size=lg in profile headers."
+    ],
+    "donts": [
+      { "case": "Using Avatar for logos or brand marks", "useInstead": "An img element directly", "why": "Avatar implies a person; using it for brands adds semantic noise." }
+    ],
+    "related": [
+      { "component": "TestimonialCard", "relation": "contained-by", "difference": "TestimonialCard uses Avatar for the author attribution." }
+    ]
+  },
+  "semantics": { "element": "span", "role": "img", "refTarget": "root", "elementByProp": null },
+  "props": [
+    {
+      "name": "src",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "URL of the avatar image.",
+      "bindings": { "figma": { "property": "Src", "type": "INSTANCE_SWAP" } }
+    },
+    {
+      "name": "alt",
+      "type": "string",
+      "default": "",
+      "required": false,
+      "description": "Accessible label for the image.",
+      "bindings": { "figma": { "property": "Alt", "type": "TEXT" } }
+    },
+    {
+      "name": "fallback",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "1-2 character initials shown when src is absent.",
+      "bindings": { "figma": { "property": "Fallback", "type": "TEXT" } }
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "default": "md",
+      "required": false,
+      "description": "sm=32px, md=40px, lg=56px.",
+      "bindings": { "figma": { "property": "Size", "type": "VARIANT" } }
+    }
+  ],
+  "states": { "native": [], "controlled": [] },
+  "anatomy": {
+    "root":     { "element": "span",  "description": "Circular container.", "figmaLayer": "root" },
+    "image":    { "element": "img",   "description": "Avatar image. Visible when src is set.", "optional": true, "figmaLayer": "image" },
+    "fallback": { "element": "span",  "description": "Initials shown when image is absent.", "optional": true, "figmaLayer": "fallback", "content": { "prop": "fallback" } }
+  },
+  "composition": { "allowedChildren": null, "forbiddenChildren": [], "nestedComponents": [], "codeParts": [], "asChild": false },
+  "layout": {
+    "height": { "mode": "fixed", "values": { "sm": 32, "md": 40, "lg": 56 }, "unit": "px", "token": null },
+    "width":  { "default": "fixed", "modes": { "fixed": "same as height" }, "min": null, "max": null, "note": "Always square; border-radius=full makes it circular." },
+    "autoLayout": { "direction": "HORIZONTAL", "sizingHorizontal": "FIXED", "sizingVertical": "FIXED", "alignMain": "CENTER", "alignCross": "CENTER", "gap": "none" }
+  },
+  "tokens": {
+    "policy": { "allowed": ["color", "radius", "font"], "forbidden": ["primitives"] },
+    "bindings": {
+      "base": {
+        "radius":          "radius.full",
+        "background":      "color.muted",
+        "fallbackText":    "color.muted-foreground",
+        "fallbackWeight":  "font.weight.semibold"
+      }
+    }
+  },
+  "events": [],
+  "a11y": {
+    "role": "img when no image: use aria-label on root with the person's name",
+    "name": "alt prop on img; aria-label on root when showing initials",
+    "keyboard": [],
+    "focusIndicator": "none — non-interactive",
+    "minTarget": "n/a",
+    "contrastNote": "Fallback text on color.muted must meet WCAG AA",
+    "wcag": ["1.1.1 Non-text Content", "1.4.3 Contrast (AA)"]
+  },
+  "content": { "label": { "maxLength": 2, "casing": "upper", "voice": "Initials only. 'JG', 'AB'." } },
+  "behavior": { "loading": null, "overflow": "image is object-fit:cover", "motion": [], "responsive": [] },
+  "form": null, "overlay": null, "data": null, "media": null,
+  "theming": { "modes": ["light", "dark"], "density": null },
+  "i18n": { "rtl": "No change — circular, symmetric.", "textExpansion": "Initials are always 1-2 chars." },
+  "testing": {
+    "cases": [
+      "Shows image when src is provided",
+      "Shows fallback initials when src is absent",
+      "sm/md/lg sizes render at 32/40/56px",
+      "Image covers circle without distortion (object-fit:cover)"
+    ]
+  },
+  "governance": { "owners": ["mokkapp-studio"], "changelog": "contracts/Avatar.contract.json" },
+  "anchors": {
+    "figma": { "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP", "node": null },
+    "code": { "importPath": "@/components/ui/Avatar", "export": "Avatar" }
+  },
+  "meta": { "source": "manual", "needsReview": ["anchors.figma.node"], "derivableFromSource": ["props", "anatomy", "layout"] }
+}

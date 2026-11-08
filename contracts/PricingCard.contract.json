@@ -1,0 +1,172 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "pricing-card",
+  "name": "PricingCard",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "container",
+  "description": "Pricing tier card with tier name, price, feature list, and a call-to-action.",
+  "guidance": {
+    "dos": [
+      "Use highlighted=true on the recommended tier.",
+      "Pass a Button as cta with size='md'.",
+      "Keep features list to 5–8 items."
+    ],
+    "donts": [
+      { "case": "Using PricingCard for product cards with images", "useInstead": "Card with custom children", "why": "PricingCard is designed for pricing tier layouts only." }
+    ],
+    "related": [
+      { "component": "Button", "relation": "contained-by", "difference": "The CTA slot typically contains a Button." },
+      { "component": "Card", "relation": "similar", "difference": "Card is open-ended; PricingCard has a fixed pricing layout." }
+    ]
+  },
+  "semantics": { "element": "div", "role": null, "refTarget": "root", "elementByProp": null },
+  "props": [
+    {
+      "name": "tier",
+      "type": "string",
+      "default": null,
+      "required": true,
+      "description": "Name of the pricing tier. e.g. 'Pro', 'Starter'.",
+      "bindings": { "figma": { "property": "Tier", "type": "TEXT" } }
+    },
+    {
+      "name": "price",
+      "type": "string",
+      "default": null,
+      "required": true,
+      "description": "Price string. e.g. '$29', 'Free'.",
+      "bindings": { "figma": { "property": "Price", "type": "TEXT" } }
+    },
+    {
+      "name": "period",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Billing period. e.g. 'month', 'year'.",
+      "bindings": { "figma": { "property": "Period", "type": "TEXT" } }
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "One-line description of the tier.",
+      "bindings": { "figma": { "property": "Description", "type": "TEXT" } }
+    },
+    {
+      "name": "features",
+      "type": "string[]",
+      "default": "[]",
+      "required": false,
+      "description": "List of feature strings shown with checkmarks.",
+      "bindings": { "figma": { "property": "Features", "type": "SLOT" } }
+    },
+    {
+      "name": "cta",
+      "type": "ReactNode",
+      "default": null,
+      "required": true,
+      "description": "CTA element, typically a Button.",
+      "bindings": { "figma": { "property": "CTA", "type": "INSTANCE_SWAP" } }
+    },
+    {
+      "name": "highlighted",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Visually elevates the card to indicate the recommended tier.",
+      "bindings": { "figma": { "property": "Highlighted", "type": "BOOLEAN" } }
+    },
+    {
+      "name": "badge",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Optional label above the tier name. e.g. 'Most popular'.",
+      "bindings": { "figma": { "property": "Badge", "type": "TEXT" } }
+    }
+  ],
+  "states": {
+    "native": [],
+    "controlled": [
+      { "name": "highlighted", "description": "Inverts card to primary color to signal the recommended tier.", "aria": "aria-label (tier name)" }
+    ]
+  },
+  "anatomy": {
+    "root":     { "element": "div",  "description": "Card surface.",              "figmaLayer": "root" },
+    "badge":    { "element": "span", "description": "Optional top badge label.",  "optional": true, "figmaLayer": "badge" },
+    "header":   { "element": "div",  "description": "Tier name, price, description.", "figmaLayer": "header" },
+    "features": { "element": "ul",   "description": "Feature list.",              "figmaLayer": "features",
+      "slot": { "key": "features", "allowedComponents": ["string"], "minItems": 0, "maxItems": 10, "mandatory": false, "figmaProp": "Features" }
+    },
+    "cta":      { "element": "div",  "description": "CTA slot.",                  "figmaLayer": "cta", "content": { "prop": "cta" } }
+  },
+  "composition": {
+    "allowedChildren": null,
+    "forbiddenChildren": [],
+    "nestedComponents": [
+      { "part": "cta", "component": "Button", "fixedProps": { "size": "md", "fullWidth": true } }
+    ],
+    "codeParts": [],
+    "asChild": false
+  },
+  "layout": {
+    "height": { "mode": "hug", "values": {}, "unit": "px", "token": null },
+    "width":  { "default": "fill", "modes": { "fill": "fills grid cell" }, "min": "260px", "max": "380px", "note": null },
+    "autoLayout": { "direction": "VERTICAL", "sizingHorizontal": "FILL", "sizingVertical": "HUG", "alignMain": "MIN", "alignCross": "MIN", "gap": "spacing.6 between badge/header/features/cta" }
+  },
+  "tokens": {
+    "policy": { "allowed": ["color", "spacing", "radius", "font", "shadow"], "forbidden": ["primitives"] },
+    "bindings": {
+      "base": {
+        "background":  "color.card",
+        "radius":      "radius.xl",
+        "padding":     "spacing.6",
+        "border":      "color.border",
+        "tierWeight":  "font.weight.semibold",
+        "priceSize":   "font.size.4xl",
+        "priceWeight": "font.weight.bold",
+        "checkColor":  "color.primary"
+      },
+      "byState": {
+        "highlighted": {
+          "background": "color.primary",
+          "text":       "color.primary-foreground",
+          "border":     "color.primary",
+          "shadow":     "shadow.md"
+        }
+      }
+    }
+  },
+  "events": [],
+  "a11y": {
+    "role": "none — semantics from heading hierarchy",
+    "name": "Tier name",
+    "keyboard": ["Tab — move to CTA button"],
+    "focusIndicator": "CTA button handles focus indicator",
+    "minTarget": "CTA button min 44x44px",
+    "contrastNote": "highlighted variant: primary-foreground on primary must meet WCAG AA",
+    "wcag": ["1.4.3 Contrast (AA)", "2.1.1 Keyboard", "4.1.2 Name Role Value"]
+  },
+  "content": { "label": { "maxLength": 30, "casing": "title", "voice": "Short tier name. 'Starter', 'Pro', 'Enterprise'." } },
+  "behavior": { "loading": null, "overflow": "features list scrolls if more than 10 items", "motion": [], "responsive": [] },
+  "form": null, "overlay": null, "data": null, "media": null,
+  "theming": { "modes": ["light", "dark"], "density": null },
+  "i18n": { "rtl": "checkmarks flip; layout mirrors", "textExpansion": "Price label grows; ensure min-width is sufficient." },
+  "testing": {
+    "cases": [
+      "Renders tier, price, period, features, CTA",
+      "highlighted=true inverts card to primary colors",
+      "badge prop renders above tier name when provided",
+      "period absent: price renders without period suffix",
+      "CTA receives full width via fullWidth=true"
+    ]
+  },
+  "governance": { "owners": ["mokkapp-studio"], "changelog": "contracts/PricingCard.contract.json" },
+  "anchors": {
+    "figma": { "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP", "node": null },
+    "code": { "importPath": "@/components/ui/PricingCard", "export": "PricingCard" }
+  },
+  "meta": { "source": "manual", "needsReview": ["anchors.figma.node"], "derivableFromSource": ["props", "anatomy", "layout"] }
+}

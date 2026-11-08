@@ -1,0 +1,133 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "testimonial-card",
+  "name": "TestimonialCard",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "container",
+  "description": "Card displaying a customer quote with star rating, author name, and role.",
+  "guidance": {
+    "dos": [
+      "Use in a grid or carousel of 3+ testimonials.",
+      "Keep quote under 180 characters for even card heights."
+    ],
+    "donts": [
+      { "case": "Using TestimonialCard for product reviews with long text", "useInstead": "Card with custom children", "why": "TestimonialCard truncates at a fixed height; long reviews need custom layout." }
+    ],
+    "related": [
+      { "component": "Avatar", "relation": "contained-by", "difference": "TestimonialCard uses Avatar for the author attribution." },
+      { "component": "Card", "relation": "similar", "difference": "Card is open-ended; TestimonialCard has a fixed quote/author layout." }
+    ]
+  },
+  "semantics": { "element": "figure", "role": null, "refTarget": "root", "elementByProp": null },
+  "props": [
+    {
+      "name": "quote",
+      "type": "string",
+      "default": null,
+      "required": true,
+      "description": "The testimonial text. Rendered as a blockquote.",
+      "bindings": { "figma": { "property": "Quote", "type": "TEXT" } }
+    },
+    {
+      "name": "authorName",
+      "type": "string",
+      "default": null,
+      "required": true,
+      "description": "Full name of the person giving the testimonial.",
+      "bindings": { "figma": { "property": "AuthorName", "type": "TEXT" } }
+    },
+    {
+      "name": "authorRole",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "Job title or company of the author.",
+      "bindings": { "figma": { "property": "AuthorRole", "type": "TEXT" } }
+    },
+    {
+      "name": "authorAvatar",
+      "type": "string",
+      "default": null,
+      "required": false,
+      "description": "URL for the author avatar image.",
+      "bindings": { "figma": { "property": "AuthorAvatar", "type": "INSTANCE_SWAP" } }
+    },
+    {
+      "name": "rating",
+      "type": "1 | 2 | 3 | 4 | 5",
+      "default": 5,
+      "required": false,
+      "description": "Star rating shown above the quote.",
+      "bindings": { "figma": { "property": "Rating", "type": "VARIANT" } }
+    }
+  ],
+  "states": { "native": [], "controlled": [] },
+  "anatomy": {
+    "root":   { "element": "figure",      "description": "Card surface wrapping the testimonial.",   "figmaLayer": "root" },
+    "rating": { "element": "div",         "description": "Row of star icons.",                        "optional": true, "figmaLayer": "rating" },
+    "quote":  { "element": "blockquote",  "description": "The testimonial text.",                     "figmaLayer": "quote", "content": { "prop": "quote" } },
+    "author": { "element": "figcaption",  "description": "Avatar + author name and role.",            "figmaLayer": "author" },
+    "meta":   { "element": "div",         "description": "Author name and role text stack.",          "figmaLayer": "meta" }
+  },
+  "composition": {
+    "allowedChildren": null,
+    "forbiddenChildren": [],
+    "nestedComponents": [
+      { "part": "author", "component": "Avatar", "fixedProps": { "size": "sm" } }
+    ],
+    "codeParts": [],
+    "asChild": false
+  },
+  "layout": {
+    "height": { "mode": "hug", "values": {}, "unit": "px", "token": null },
+    "width":  { "default": "fill", "modes": { "fill": "fills grid cell" }, "min": "280px", "max": null, "note": null },
+    "autoLayout": { "direction": "VERTICAL", "sizingHorizontal": "FILL", "sizingVertical": "HUG", "alignMain": "MIN", "alignCross": "MIN", "gap": "spacing.4 between rating/quote/author" }
+  },
+  "tokens": {
+    "policy": { "allowed": ["color", "spacing", "radius", "font"], "forbidden": ["primitives"] },
+    "bindings": {
+      "base": {
+        "background":    "color.card",
+        "radius":        "radius.lg",
+        "padding":       "spacing.6",
+        "border":        "color.border",
+        "stars":         "color.primary",
+        "quoteSize":     "font.size.base",
+        "quoteColor":    "color.foreground",
+        "nameWeight":    "font.weight.semibold",
+        "roleColor":     "color.muted-foreground",
+        "roleSize":      "font.size.sm"
+      }
+    }
+  },
+  "events": [],
+  "a11y": {
+    "role": "figure with figcaption",
+    "name": "Quote text via blockquote; author via figcaption",
+    "keyboard": [],
+    "focusIndicator": "none — non-interactive",
+    "minTarget": "n/a",
+    "contrastNote": "Quote text and author role must meet WCAG AA",
+    "wcag": ["1.4.3 Contrast (AA)"]
+  },
+  "content": { "label": { "maxLength": 180, "casing": "sentence", "voice": "First-person quote. '\"Best tool we ever used.\"'" } },
+  "behavior": { "loading": null, "overflow": "quote truncates with ellipsis at 4 lines", "motion": [], "responsive": [] },
+  "form": null, "overlay": null, "data": null, "media": null,
+  "theming": { "modes": ["light", "dark"], "density": null },
+  "i18n": { "rtl": "layout flips; avatar moves to right", "textExpansion": "Card grows vertically with longer quotes." },
+  "testing": {
+    "cases": [
+      "Renders stars, quote, avatar, name, role",
+      "authorRole is optional — card renders correctly without it",
+      "authorAvatar absent: Avatar shows initials fallback",
+      "rating=5 shows 5 stars"
+    ]
+  },
+  "governance": { "owners": ["mokkapp-studio"], "changelog": "contracts/TestimonialCard.contract.json" },
+  "anchors": {
+    "figma": { "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP", "node": null },
+    "code": { "importPath": "@/components/ui/TestimonialCard", "export": "TestimonialCard" }
+  },
+  "meta": { "source": "manual", "needsReview": ["anchors.figma.node"], "derivableFromSource": ["props", "anatomy", "layout"] }
+}
