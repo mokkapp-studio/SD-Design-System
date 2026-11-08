@@ -1,0 +1,164 @@
+{
+  "$description": "shadcn/ui (zinc base) design tokens — light/dark modes. Compatible with the SD-Design-System contract format. Run: node scripts/build-tokens.mjs tokens-shadcn.json",
+
+  "color": {
+    "background": {
+      "$type": "color",
+      "$value": "#ffffff",
+      "$extensions": { "modes": { "dark": "#09090b" } }
+    },
+    "foreground": {
+      "$type": "color",
+      "$value": "#09090b",
+      "$extensions": { "modes": { "dark": "#fafafa" } }
+    },
+    "card": {
+      "$type": "color",
+      "$value": "#ffffff",
+      "$extensions": { "modes": { "dark": "#09090b" } }
+    },
+    "card-foreground": {
+      "$type": "color",
+      "$value": "#09090b",
+      "$extensions": { "modes": { "dark": "#fafafa" } }
+    },
+    "popover": {
+      "$type": "color",
+      "$value": "#ffffff",
+      "$extensions": { "modes": { "dark": "#09090b" } }
+    },
+    "popover-foreground": {
+      "$type": "color",
+      "$value": "#09090b",
+      "$extensions": { "modes": { "dark": "#fafafa" } }
+    },
+    "primary": {
+      "$type": "color",
+      "$value": "#18181b",
+      "$extensions": { "modes": { "dark": "#fafafa" } }
+    },
+    "primary-foreground": {
+      "$type": "color",
+      "$value": "#fafafa",
+      "$extensions": { "modes": { "dark": "#18181b" } }
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "#f4f4f5",
+      "$extensions": { "modes": { "dark": "#27272a" } }
+    },
+    "secondary-foreground": {
+      "$type": "color",
+      "$value": "#18181b",
+      "$extensions": { "modes": { "dark": "#fafafa" } }
+    },
+    "muted": {
+      "$type": "color",
+      "$value": "#f4f4f5",
+      "$extensions": { "modes": { "dark": "#27272a" } }
+    },
+    "muted-foreground": {
+      "$type": "color",
+      "$value": "#71717a",
+      "$extensions": { "modes": { "dark": "#a1a1aa" } }
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "#f4f4f5",
+      "$extensions": { "modes": { "dark": "#27272a" } }
+    },
+    "accent-foreground": {
+      "$type": "color",
+      "$value": "#18181b",
+      "$extensions": { "modes": { "dark": "#fafafa" } }
+    },
+    "destructive": {
+      "$type": "color",
+      "$value": "#ef4444",
+      "$extensions": { "modes": { "dark": "#7f1d1d" } }
+    },
+    "destructive-foreground": {
+      "$type": "color",
+      "$value": "#fafafa",
+      "$extensions": { "modes": { "dark": "#fafafa" } }
+    },
+    "border": {
+      "$type": "color",
+      "$value": "#e4e4e7",
+      "$extensions": { "modes": { "dark": "#27272a" } }
+    },
+    "input": {
+      "$type": "color",
+      "$value": "#e4e4e7",
+      "$extensions": { "modes": { "dark": "#27272a" } }
+    },
+    "ring": {
+      "$type": "color",
+      "$value": "#18181b",
+      "$extensions": { "modes": { "dark": "#d4d4d8" } }
+    }
+  },
+
+  "radius": {
+    "sm":  { "$type": "dimension", "$value": "0.125rem" },
+    "md":  { "$type": "dimension", "$value": "0.375rem" },
+    "lg":  { "$type": "dimension", "$value": "0.5rem" },
+    "xl":  { "$type": "dimension", "$value": "0.75rem" },
+    "2xl": { "$type": "dimension", "$value": "1rem" },
+    "full": { "$type": "dimension", "$value": "9999px" }
+  },
+
+  "spacing": {
+    "1":  { "$type": "dimension", "$value": "0.25rem" },
+    "2":  { "$type": "dimension", "$value": "0.5rem" },
+    "3":  { "$type": "dimension", "$value": "0.75rem" },
+    "4":  { "$type": "dimension", "$value": "1rem" },
+    "5":  { "$type": "dimension", "$value": "1.25rem" },
+    "6":  { "$type": "dimension", "$value": "1.5rem" },
+    "8":  { "$type": "dimension", "$value": "2rem" },
+    "10": { "$type": "dimension", "$value": "2.5rem" },
+    "12": { "$type": "dimension", "$value": "3rem" },
+    "16": { "$type": "dimension", "$value": "4rem" }
+  },
+
+  "font": {
+    "sans": {
+      "$type": "fontFamily",
+      "$value": "ui-sans-serif, system-ui, -apple-system, sans-serif"
+    },
+    "mono": {
+      "$type": "fontFamily",
+      "$value": "ui-monospace, SFMono-Regular, Menlo, monospace"
+    },
+    "size": {
+      "xs":   { "$type": "dimension", "$value": "0.75rem" },
+      "sm":   { "$type": "dimension", "$value": "0.875rem" },
+      "base": { "$type": "dimension", "$value": "1rem" },
+      "lg":   { "$type": "dimension", "$value": "1.125rem" },
+      "xl":   { "$type": "dimension", "$value": "1.25rem" },
+      "2xl":  { "$type": "dimension", "$value": "1.5rem" },
+      "3xl":  { "$type": "dimension", "$value": "1.875rem" },
+      "4xl":  { "$type": "dimension", "$value": "2.25rem" }
+    },
+    "weight": {
+      "normal":   { "$type": "fontWeight", "$value": 400 },
+      "medium":   { "$type": "fontWeight", "$value": 500 },
+      "semibold": { "$type": "fontWeight", "$value": 600 },
+      "bold":     { "$type": "fontWeight", "$value": 700 }
+    },
+    "leading": {
+      "none":    { "$type": "dimension", "$value": "1" },
+      "tight":   { "$type": "dimension", "$value": "1.25" },
+      "snug":    { "$type": "dimension", "$value": "1.375" },
+      "normal":  { "$type": "dimension", "$value": "1.5" },
+      "relaxed": { "$type": "dimension", "$value": "1.625" }
+    }
+  },
+
+  "shadow": {
+    "sm":  { "$type": "shadow", "$value": "0 1px 2px 0 rgb(0 0 0 / 0.05)" },
+    "md":  { "$type": "shadow", "$value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)" },
+    "lg":  { "$type": "shadow", "$value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)" },
+    "xl":  { "$type": "shadow", "$value": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" }
+  }
+}

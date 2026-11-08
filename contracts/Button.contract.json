@@ -2,60 +2,38 @@
   "$schema": "./component.schema.json",
   "id": "button",
   "name": "Button",
-  "version": "2.0.0",
+  "version": "0.1.0",
   "status": "draft",
   "category": "action",
-  "description": "Lanza una acción cuando la persona lo pulsa. Se elige el énfasis con `variant`, el significado con `color` y se puede reforzar el contraste con `highContrast`.",
+  "description": "Triggers an action or navigates to a destination when pressed.",
   "guidance": {
     "dos": [
-      "Una sola acción principal por vista: `variant=\"solid\"` (o `classic`) con `color=\"accent\"`.",
-      "Etiqueta con un verbo y un objeto: «Guardar cambios», no «Aceptar».",
-      "Usa `color=\"error\"` solo para acciones destructivas y pide confirmación si no se pueden deshacer.",
-      "Usa `highContrast` cuando necesites más contraste que el que da el color de acento.",
-      "Jerarquía de énfasis de mayor a menor: solid/classic → soft/surface → outline → ghost."
+      "Use a single verb label that describes the action: 'Save', 'Send', 'Delete'.",
+      "Use variant=solid for the primary action on a surface; use at most one per area.",
+      "Use variant=outline or ghost for secondary and tertiary actions."
     ],
     "donts": [
       {
-        "case": "Navegación pura entre páginas",
+        "case": "Navigating to an external URL as a styled link",
         "useInstead": "Link",
-        "why": "Un enlace se puede abrir en pestaña nueva, copiar y lo anuncia el lector de pantalla como enlace."
+        "why": "A <button> has no href; screen readers announce it as a button, not a link."
       },
       {
-        "case": "Estado que persiste (activado / desactivado)",
-        "useInstead": "Toggle o Checkbox",
-        "why": "Un botón ejecuta, no mantiene estado."
-      },
-      {
-        "case": "Botón solo con icono",
-        "useInstead": "IconButton",
-        "why": "Exige nombre accesible y tiene medidas propias; el Button de Figma siempre lleva etiqueta."
-      },
-      {
-        "case": "Dos botones solid/classic con color accent en la misma vista",
-        "useInstead": "Uno solid y el resto soft, outline o ghost",
-        "why": "Si todo destaca, nada destaca."
-      },
-      {
-        "case": "Enviar un formulario sin declararlo",
-        "useInstead": "type='submit' explícito",
-        "why": "El valor por defecto es type='button' para evitar envíos accidentales."
+        "case": "Destructive action without confirmation step",
+        "useInstead": "Button inside a confirmation Dialog",
+        "why": "Accidental irreversible actions are a UX and legal risk."
       }
     ],
     "related": [
       {
-        "component": "Link",
-        "relation": "similar",
-        "difference": "Navega a otra página o recurso; el botón ejecuta una acción."
-      },
-      {
-        "component": "Toggle",
-        "relation": "similar",
-        "difference": "Mantiene estado pulsado (aria-pressed)."
-      },
-      {
         "component": "IconButton",
         "relation": "alternative",
-        "difference": "Solo icono; exige nombre accesible."
+        "difference": "No label — icon only. Use when space is very constrained and the icon is universally understood."
+      },
+      {
+        "component": "Link",
+        "relation": "alternative",
+        "difference": "Renders an <a> tag with href. Use for navigation, not actions."
       }
     ]
   },
@@ -68,261 +46,156 @@
   "props": [
     {
       "name": "variant",
-      "type": "'classic' | 'solid' | 'soft' | 'surface' | 'outline' | 'ghost'",
+      "type": "'solid' | 'outline' | 'ghost'",
       "default": "solid",
-      "description": "Énfasis visual. solid = relleno pleno; classic = relleno con degradado y borde; soft = relleno tenue; surface = borde con fondo suave; outline = solo borde; ghost = sin relleno ni borde hasta hover.",
+      "required": false,
+      "description": "Visual style. solid = filled primary background. outline = border, transparent background. ghost = no border, no background.",
       "bindings": {
-        "figma": {
-          "property": "variant",
-          "type": "VARIANT"
-        }
-      }
-    },
-    {
-      "name": "color",
-      "type": "'accent' | 'neutral' | 'error'",
-      "default": "accent",
-      "description": "Significado cromático. accent = color de marca; neutral = gris; error = acción destructiva.",
-      "bindings": {
-        "figma": {
-          "property": "color",
-          "type": "VARIANT"
-        }
+        "figma": { "property": "Variant", "type": "VARIANT" }
       }
     },
     {
       "name": "size",
-      "type": "'1' | '2' | '3' | '4'",
-      "default": "2",
-      "description": "Tamaño físico: altura 24 / 32 / 40 / 48 px, y con ello padding, texto, gap y radio. El 2 es el valor por defecto.",
+      "type": "'sm' | 'md' | 'lg'",
+      "default": "md",
+      "required": false,
+      "description": "Height and padding scale. sm=32px md=40px lg=48px.",
       "bindings": {
-        "figma": {
-          "property": "size",
-          "type": "VARIANT"
-        }
-      }
-    },
-    {
-      "name": "highContrast",
-      "type": "boolean",
-      "default": false,
-      "description": "Si es true, refuerza el contraste: usa el paso 12 de la escala en lugar del 9/11. En Figma el eje se llama «highConstrast» (errata del archivo).",
-      "bindings": {
-        "figma": {
-          "property": "highConstrast",
-          "type": "VARIANT",
-          "value": "true"
-        }
-      }
-    },
-    {
-      "name": "loading",
-      "type": "boolean",
-      "default": false,
-      "description": "Si es true, la acción está en curso: un spinner sustituye a icono y etiqueta, el ancho no cambia y no se puede pulsar.",
-      "bindings": {
-        "figma": {
-          "property": "loading",
-          "type": "VARIANT",
-          "value": "true"
-        }
+        "figma": { "property": "Size", "type": "VARIANT" }
       }
     },
     {
       "name": "disabled",
       "type": "boolean",
       "default": false,
-      "description": "Si es true, el botón no es interactivo. En Figma es el valor «disable» del eje `state`.",
+      "required": false,
+      "description": "Prevents interaction. Applies disabled token set, not opacity.",
       "bindings": {
-        "figma": {
-          "property": "state",
-          "type": "VARIANT",
-          "value": "disable"
-        }
+        "figma": { "property": "Disabled", "type": "BOOLEAN" }
       }
     },
     {
-      "name": "icon",
-      "type": "ReactNode | undefined",
-      "default": null,
-      "description": "Icono inicial (en Figma, iconStart). Tamaño por size: 16 / 16 / 18 / 20 px. aria-hidden porque la etiqueta ya describe la acción.",
-      "usage": "icon={<Plus />}",
+      "name": "loading",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Shows spinner and hides label. Also disables interaction.",
       "bindings": {
-        "figma": {
-          "property": "⮑ 🔄 iconStart",
-          "type": "INSTANCE_SWAP"
-        }
-      }
-    },
-    {
-      "name": "iconEnd",
-      "type": "ReactNode | undefined",
-      "default": null,
-      "description": "Icono final. Mismos tamaños que icon.",
-      "usage": "iconEnd={<ArrowRight />}",
-      "bindings": {
-        "figma": {
-          "property": "⮑ 🔄 iconEnd",
-          "type": "INSTANCE_SWAP"
-        }
-      }
-    },
-    {
-      "name": "type",
-      "type": "'button' | 'submit' | 'reset'",
-      "default": "button",
-      "description": "Tipo nativo del botón. Solo de código. Usa 'submit' de forma explícita para enviar formularios.",
-      "bindings": {
-        "figma": null
+        "figma": { "property": "Loading", "type": "BOOLEAN" }
       }
     },
     {
       "name": "children",
       "type": "ReactNode",
+      "default": null,
       "required": true,
-      "description": "Contenido de la etiqueta. Texto por defecto en Figma: «Button».",
+      "description": "Button label text.",
       "bindings": {
-        "figma": {
-          "property": "✏️ text",
-          "type": "TEXT"
-        }
+        "figma": { "property": "Label", "type": "TEXT" }
       }
     },
     {
-      "name": "onPress",
-      "type": "(event: MouseEvent<HTMLButtonElement>) => void",
+      "name": "iconStart",
+      "type": "ReactNode",
       "default": null,
-      "description": "Manejador de pulsación (ratón, teclado o toque). Solo de código.",
+      "required": false,
+      "description": "Icon placed before the label.",
       "bindings": {
-        "figma": null
+        "figma": { "property": "Icon start", "type": "INSTANCE_SWAP" }
+      }
+    },
+    {
+      "name": "iconEnd",
+      "type": "ReactNode",
+      "default": null,
+      "required": false,
+      "description": "Icon placed after the label.",
+      "bindings": {
+        "figma": { "property": "Icon end", "type": "INSTANCE_SWAP" }
+      }
+    },
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Stretches button to fill its container width.",
+      "bindings": {
+        "figma": { "property": "Full width", "type": "BOOLEAN" }
       }
     }
   ],
   "states": {
-    "native": [
-      "hover",
-      "focus-visible",
-      "active"
-    ],
+    "native": ["hover", "focus-visible", "active"],
     "controlled": [
       {
-        "name": "loading",
-        "description": "La acción lanzada está en curso. No es interactivo y muestra un spinner en lugar del contenido.",
-        "aria": "aria-busy='true'"
+        "name": "disabled",
+        "description": "Component is non-interactive. Visually dimmed using disabled tokens, not opacity.",
+        "aria": "aria-disabled"
       },
       {
-        "name": "disabled",
-        "description": "No es interactivo. La opción existe pero ahora no está disponible. Se pinta con tokens neutros (neutral-alpha), nunca con opacity.",
-        "aria": "disabled (atributo HTML nativo)"
+        "name": "loading",
+        "description": "Action is in progress. Spinner replaces label. Button is non-interactive.",
+        "aria": "aria-busy"
       }
     ]
   },
   "anatomy": {
     "root": {
       "element": "button",
-      "description": "Elemento interactivo raíz. Siempre un <button> nativo.",
-      "figmaLayer": "Button (cada variante del component set)"
+      "description": "Root interactive element.",
+      "figmaLayer": "root"
     },
-    "focusRing": {
-      "element": "css",
-      "description": "No es un elemento: se pinta con :focus-visible. En Figma es una capa que se muestra con el boolean focusRing: borde exterior de 4px e interior de 2px.",
+    "iconStart": {
+      "element": "span",
+      "description": "Optional icon before label.",
       "optional": true,
-      "figmaLayer": "focus-ring",
-      "figmaToggle": {
-        "property": "focusRing",
-        "type": "BOOLEAN",
-        "default": false
-      }
-    },
-    "icon": {
-      "element": "slot",
-      "description": "Hueco para el icono inicial. Se oculta si no hay icono.",
-      "optional": true,
-      "figmaLayer": "Design / blending-mode (primera instancia)",
-      "figmaToggle": {
-        "property": "iconStart",
-        "type": "BOOLEAN",
-        "default": false
-      },
-      "slot": {
-        "key": "icon",
-        "allowedComponents": [
-          "Icon"
-        ],
-        "minItems": 0,
-        "maxItems": 1,
-        "mandatory": false,
-        "figmaProp": "⮑ 🔄 iconStart"
-      }
+      "figmaLayer": "icon-start",
+      "figmaToggle": { "property": "Icon start", "type": "BOOLEAN", "default": false }
     },
     "label": {
       "element": "span",
-      "description": "Texto de la etiqueta.",
-      "figmaLayer": "Button (capa de texto)",
-      "content": {
-        "prop": "children"
-      }
+      "description": "Button label text.",
+      "figmaLayer": "label",
+      "content": { "prop": "children" }
     },
     "iconEnd": {
-      "element": "slot",
-      "description": "Hueco para el icono final.",
+      "element": "span",
+      "description": "Optional icon after label.",
       "optional": true,
-      "figmaLayer": "Design / blending-mode (segunda instancia)",
-      "figmaToggle": {
-        "property": "iconEnd",
-        "type": "BOOLEAN",
-        "default": false
-      },
-      "slot": {
-        "key": "iconEnd",
-        "allowedComponents": [
-          "Icon"
-        ],
-        "minItems": 0,
-        "maxItems": 1,
-        "mandatory": false,
-        "figmaProp": "⮑ 🔄 iconEnd"
-      }
+      "figmaLayer": "icon-end",
+      "figmaToggle": { "property": "Icon end", "type": "BOOLEAN", "default": false }
     },
     "spinner": {
-      "element": "svg",
-      "description": "Spinner de 8 hojas. Solo con loading=true; sustituye a icono y etiqueta.",
+      "element": "span",
+      "description": "Loading indicator. Visible only when loading=true.",
       "optional": true,
-      "figmaLayer": "Spinner"
+      "figmaLayer": "spinner"
     }
   },
   "composition": {
     "allowedChildren": null,
-    "forbiddenChildren": [
-      "Button",
-      "a",
-      "input"
-    ],
+    "forbiddenChildren": ["Button", "IconButton"],
     "nestedComponents": [],
+    "codeParts": [],
     "asChild": false
   },
   "layout": {
     "height": {
       "mode": "fixed",
-      "values": {
-        "1": 24,
-        "2": 32,
-        "3": 40,
-        "4": 48
-      },
+      "values": { "sm": 32, "md": 40, "lg": 48 },
       "unit": "px",
-      "token": "tokens.space.button-height-{size}"
+      "token": "spacing.{size}"
     },
     "width": {
       "default": "hug",
       "modes": {
-        "hug": "El ancho se ajusta al contenido más el padding horizontal. Por defecto.",
-        "fill": "Lo decide quien usa el componente con su layout; no hay prop.",
-        "fixed": "Valor explícito de quien consume el componente. Sin token del sistema."
+        "hug": "default — wraps content",
+        "fill": "when fullWidth=true"
       },
       "min": null,
       "max": null,
-      "note": "En Figma, loading=true conserva el ancho (verificado en size 2: 70px con y sin loading)."
+      "note": null
     },
     "autoLayout": {
       "direction": "HORIZONTAL",
@@ -330,453 +203,137 @@
       "sizingVertical": "FIXED",
       "alignMain": "CENTER",
       "alignCross": "CENTER",
-      "gap": "Por size: spacing.1 / 2 / 3 / 3, entre icono y etiqueta"
-    },
-    "iconSize": {
-      "values": {
-        "1": 16,
-        "2": 16,
-        "3": 18,
-        "4": 20
-      },
-      "unit": "px"
+      "gap": "spacing.2 between iconStart, label, iconEnd"
     }
   },
   "tokens": {
     "policy": {
-      "allowed": [
-        "colors",
-        "tokens.colors",
-        "tokens.space",
-        "spacing",
-        "radius",
-        "text-style",
-        "shadows",
-        "overlays"
-      ],
-      "forbidden": []
-    },
-    "scales": {
-      "accent": {
-        "step": "colors.accent.accent",
-        "alpha": "colors.accent.accent-alpha",
-        "surface": "tokens.colors.accent-surface",
-        "onSolid": "tokens.colors.accent-contrast",
-        "onSolidHigh": "colors.neutral.neutral.1",
-        "fg": "colors.accent.accent-alpha.11",
-        "fgHigh": "colors.accent.accent.12",
-        "strokeHigh": "colors.neutral.neutral-alpha.11",
-        "hcShadow": "accent"
-      },
-      "neutral": {
-        "step": "colors.neutral.neutral",
-        "alpha": "colors.neutral.neutral-alpha",
-        "surface": null,
-        "onSolid": "tokens.colors.white-contrast",
-        "onSolidHigh": "colors.neutral.neutral.1",
-        "fg": "colors.neutral.neutral.11",
-        "fgHigh": "colors.neutral.neutral.12",
-        "strokeHigh": "colors.neutral.neutral-alpha.11",
-        "hcShadow": "neutral"
-      },
-      "error": {
-        "step": "colors.semantic.error",
-        "alpha": "colors.semantic.error-alpha",
-        "surface": null,
-        "onSolid": "tokens.colors.white-contrast",
-        "onSolidHigh": "colors.semantic.error.1",
-        "fg": "colors.semantic.error.11",
-        "fgHigh": "colors.semantic.error.12",
-        "strokeHigh": "colors.semantic.error.11",
-        "hcShadow": "accent"
-      }
+      "allowed": ["color", "spacing", "radius", "font", "shadow"],
+      "forbidden": ["primitives"]
     },
     "bindings": {
       "base": {
-        "textStyle": "text-style.{size}.medium",
-        "focusRingOuter": {
-          "color": "colors.accent.accent-alpha.8",
-          "width": 4
-        },
-        "focusRingInner": {
-          "color": "colors.accent.accent.3",
-          "width": 2
-        }
-      },
-      "bySize": {
-        "1": {
-          "height": "tokens.space.button-height-1",
-          "paddingX": "spacing.2",
-          "gap": "spacing.1",
-          "radius": "radius.1-max"
-        },
-        "2": {
-          "height": "tokens.space.button-height-2",
-          "paddingX": "spacing.3",
-          "gap": "spacing.2",
-          "radius": "radius.2-max"
-        },
-        "3": {
-          "height": "tokens.space.button-height-3",
-          "paddingX": "spacing.4",
-          "gap": "spacing.3",
-          "radius": "radius.3-max"
-        },
-        "4": {
-          "height": "tokens.space.button-height-4",
-          "paddingX": "spacing.5",
-          "gap": "spacing.3",
-          "radius": "radius.4-max"
-        }
+        "radius": "radius.full",
+        "paddingX": "spacing.4",
+        "fontSize": "font.size.sm",
+        "fontWeight": "font.weight.medium",
+        "gap": "spacing.2"
       },
       "byVariant": {
-        "classic": {
-          "default": {
-            "background": "{color.step}.9",
-            "text": "{color.onSolid}",
-            "border": "{color.step}.9",
-            "borderWidth": 1,
-            "shadow": "shadows.button-classic.button-classic-{color}"
-          },
-          "hover": {
-            "background": "{color.step}.10",
-            "text": "{color.onSolid}",
-            "border": "{color.step}.9",
-            "borderWidth": 1,
-            "shadow": "shadows.button-classic.button-classic-{color}"
-          },
-          "active": {
-            "background": "{color.step}.9",
-            "text": "{color.onSolid}",
-            "border": "{color.step}.9",
-            "borderWidth": 1,
-            "shadow": "shadows.button-classic.button-classic-{color}-active"
-          }
-        },
         "solid": {
-          "default": {
-            "background": "{color.step}.9",
-            "text": "{color.onSolid}",
-            "border": null
-          },
-          "hover": {
-            "background": "{color.step}.10",
-            "text": "{color.onSolid}",
-            "border": null
-          },
-          "active": {
-            "background": "{color.step}.10",
-            "text": "{color.onSolid}",
-            "border": null,
-            "opacity": 0.92
-          }
-        },
-        "soft": {
-          "default": {
-            "background": "{color.alpha}.3",
-            "text": "{color.fg}",
-            "border": null
-          },
-          "hover": {
-            "background": "{color.alpha}.4",
-            "text": "{color.fg}",
-            "border": null
-          },
-          "active": {
-            "background": "{color.alpha}.5",
-            "text": "{color.fg}",
-            "border": null,
-            "opacity": 0.92
-          }
-        },
-        "surface": {
-          "default": {
-            "background": "{color.surface}",
-            "text": "{color.fg}",
-            "border": "{color.alpha}.7",
-            "borderWidth": 1
-          },
-          "hover": {
-            "background": "{color.surface}",
-            "text": "{color.fg}",
-            "border": "{color.alpha}.8",
-            "borderWidth": 1
-          },
-          "active": {
-            "background": "{color.alpha}.3",
-            "text": "{color.fg}",
-            "border": "{color.alpha}.8",
-            "borderWidth": 1,
-            "opacity": 0.92
-          }
+          "background": "color.primary",
+          "text": "color.primary-foreground",
+          "border": null
         },
         "outline": {
-          "default": {
-            "background": null,
-            "text": "{color.fg}",
-            "border": "{color.alpha}.8",
-            "borderWidth": 1
-          },
-          "hover": {
-            "background": "{color.alpha}.2",
-            "text": "{color.fg}",
-            "border": "{color.alpha}.8",
-            "borderWidth": 1
-          },
-          "active": {
-            "background": "{color.alpha}.3",
-            "text": "{color.fg}",
-            "border": "{color.alpha}.8",
-            "borderWidth": 1,
-            "opacity": 0.92
-          }
+          "background": "color.background",
+          "text": "color.foreground",
+          "border": "color.border"
         },
         "ghost": {
-          "textStyle": "text-style.{size}.regular",
-          "default": {
-            "background": null,
-            "text": "{color.fg}",
-            "border": null
-          },
-          "hover": {
-            "background": "{color.alpha}.3",
-            "text": "{color.fg}",
-            "border": null
-          },
-          "active": {
-            "background": "{color.alpha}.4",
-            "text": "{color.fg}",
-            "border": null,
-            "opacity": 0.92
-          }
-        }
-      },
-      "byHighContrast": {
-        "classic": {
-          "default": {
-            "background": "{color.step}.12",
-            "text": "{color.onSolidHigh}",
-            "border": "{color.step}.12",
-            "shadow": "shadows.button-classic.button-classic-{color.hcShadow}"
-          },
-          "hover": {
-            "background": "{color.step}.12",
-            "text": "{color.onSolidHigh}",
-            "border": "{color.step}.12",
-            "shadow": "shadows.button-classic.button-classic-{color.hcShadow}",
-            "opacity": 0.88
-          },
-          "active": {
-            "background": "{color.step}.12",
-            "text": "{color.onSolidHigh}",
-            "border": "{color.step}.12",
-            "shadow": "shadows.button-classic.button-classic-{color.hcShadow}-active"
-          }
-        },
-        "solid": {
-          "default": {
-            "background": "{color.step}.12",
-            "text": "{color.onSolidHigh}"
-          },
-          "hover": {
-            "background": "{color.step}.12",
-            "text": "{color.onSolidHigh}",
-            "opacity": 0.88
-          },
-          "active": {
-            "background": "{color.step}.12",
-            "text": "{color.onSolidHigh}",
-            "opacity": 0.82
-          }
-        },
-        "soft": {
-          "default": {
-            "text": "{color.fgHigh}"
-          },
-          "hover": {
-            "text": "{color.fgHigh}",
-            "opacity": 0.88
-          },
-          "active": {
-            "text": "{color.fgHigh}",
-            "opacity": 0.82
-          }
-        },
-        "surface": {
-          "default": {
-            "text": "{color.fgHigh}"
-          },
-          "hover": {
-            "text": "{color.fgHigh}",
-            "opacity": 0.88
-          },
-          "active": {
-            "text": "{color.fgHigh}",
-            "opacity": 0.82
-          }
-        },
-        "outline": {
-          "default": {
-            "text": "{color.fgHigh}",
-            "border": "{color.strokeHigh}"
-          },
-          "hover": {
-            "text": "{color.fgHigh}",
-            "border": "{color.strokeHigh}",
-            "opacity": 0.88
-          },
-          "active": {
-            "text": "{color.fgHigh}",
-            "border": "{color.strokeHigh}",
-            "opacity": 0.82
-          }
-        },
-        "ghost": {
-          "default": {
-            "text": "{color.fgHigh}"
-          },
-          "hover": {
-            "text": "{color.fgHigh}",
-            "opacity": 0.88
-          },
-          "active": {
-            "text": "{color.fgHigh}",
-            "opacity": 0.82
-          }
+          "background": null,
+          "text": "color.foreground",
+          "border": null
         }
       },
       "byState": {
         "disabled": {
-          "classic": {
-            "background": "colors.neutral.neutral-alpha.3",
-            "text": "colors.neutral.neutral-alpha.8",
-            "border": "colors.neutral.neutral.4",
-            "borderWidth": 1,
-            "shadow": "shadows.button-classic.button-classic-accent"
-          },
-          "solid": {
-            "background": "colors.neutral.neutral-alpha.3",
-            "text": "colors.neutral.neutral-alpha.8",
-            "border": null
-          },
-          "soft": {
-            "background": "colors.neutral.neutral-alpha.3",
-            "text": "colors.neutral.neutral-alpha.8",
-            "border": null
-          },
-          "surface": {
-            "background": "colors.neutral.neutral-alpha.2",
-            "text": "colors.neutral.neutral-alpha.8",
-            "border": "colors.neutral.neutral-alpha.6",
-            "borderWidth": 1
-          },
-          "outline": {
-            "background": null,
-            "text": "colors.neutral.neutral-alpha.8",
-            "border": "colors.neutral.neutral-alpha.7",
-            "borderWidth": 1
-          },
-          "ghost": {
-            "background": null,
-            "text": "colors.neutral.neutral-alpha.8",
-            "border": null
-          }
+          "background": "color.muted",
+          "text": "color.muted-foreground",
+          "border": "color.border"
         }
       }
     }
   },
   "events": [
     {
-      "name": "onPress",
-      "trigger": "Clic, Enter, Espacio o toque",
-      "payload": "MouseEvent<HTMLButtonElement>",
-      "blockedWhen": [
-        "disabled",
-        "loading"
-      ]
+      "name": "onClick",
+      "trigger": "Click or Enter/Space keydown on root",
+      "payload": "React.MouseEvent | React.KeyboardEvent",
+      "blockedWhen": ["disabled", "loading"]
     }
   ],
   "a11y": {
-    "role": "button (implícito por el elemento <button>)",
-    "name": "La etiqueta (children). Si es solo icono, aria-label obligatorio.",
+    "role": "button (implicit from <button>)",
+    "name": "From children text content, or aria-label if icon-only",
     "keyboard": [
-      "Enter — activa",
-      "Space — activa al soltar"
+      "Enter — trigger onClick",
+      "Space — trigger onClick"
     ],
-    "focusIndicator": "Anillo doble: exterior de 4px con colors.accent.accent-alpha.8 e interior de 2px con colors.accent.accent.3 (capa focus-ring en Figma).",
-    "minTarget": "24px de alto como mínimo en size 1; el resto, 32 / 40 / 48 (WCAG 2.5.8).",
-    "contrastNote": "Texto sobre fondo ≥ 4.5:1 salvo disabled. No medido en Figma: pendiente de verificar por variante.",
-    "wcag": [
-      "1.4.3 Contraste (AA)",
-      "2.1.1 Teclado",
-      "2.4.7 Foco visible",
-      "4.1.2 Nombre, función, valor"
-    ]
+    "focusIndicator": "2px solid color.ring, offset 2px",
+    "minTarget": "40x40px (WCAG 2.5.8)",
+    "contrastNote": "color.primary vs color.primary-foreground must meet WCAG AA (4.5:1 for text)",
+    "wcag": ["1.4.3 Contrast (AA)", "2.1.1 Keyboard", "2.4.7 Focus Visible", "2.5.8 Target Size"]
   },
   "content": {
     "label": {
-      "maxLength": 24,
+      "maxLength": 32,
       "casing": "sentence",
-      "voice": "Verbo + objeto: «Guardar cambios»"
+      "voice": "Single verb or short verb phrase. 'Save changes', 'Delete account'."
     }
   },
   "behavior": {
-    "loading": {
-      "indicator": "spinner",
-      "replaces": "icon + label",
-      "blocksInteraction": true,
-      "keepsWidth": true
-    },
+    "loading": "Spinner replaces label area. Width stays fixed to avoid layout shift.",
     "overflow": "truncate",
     "motion": [
       {
         "on": "hover",
         "property": "background-color",
         "reducedMotion": "instant"
+      },
+      {
+        "on": "active",
+        "property": "transform: scale(0.97)",
+        "reducedMotion": "instant"
       }
     ],
     "responsive": []
   },
+  "form": null,
+  "overlay": null,
+  "data": null,
+  "media": null,
+  "theming": {
+    "modes": ["light", "dark"],
+    "density": null
+  },
+  "i18n": {
+    "rtl": "iconStart and iconEnd swap sides automatically with dir=rtl.",
+    "textExpansion": "Width grows with label (hug); set maxWidth if layout is constrained."
+  },
   "testing": {
     "cases": [
-      "disabled y loading no emiten onPress",
-      "loading añade aria-busy, muestra el spinner y mantiene el ancho",
-      "highContrast usa el paso 12 en todas las variantes y colores",
-      "cada variant × color × estado usa los tokens de tokens.bindings",
-      "type por defecto es 'button'"
+      "Renders label text",
+      "onClick fires on click and Enter/Space",
+      "onClick does not fire when disabled=true",
+      "onClick does not fire when loading=true",
+      "Shows spinner when loading=true",
+      "fullWidth stretches to 100%",
+      "All three variants render without crashing",
+      "All three sizes render without crashing"
     ]
+  },
+  "governance": {
+    "owners": ["mokkapp-studio"],
+    "changelog": "contracts/Button.contract.json"
   },
   "anchors": {
     "figma": {
-      "file": "https://www.figma.com/design/pTGbM1i9PKc6858ef7498a/Radix-Themes--Community-",
-      "node": "1230:17452"
+      "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
+      "node": null
     },
     "code": {
-      "importPath": "@/components/button/button",
+      "importPath": "@/components/ui/Button",
       "export": "Button"
     }
   },
   "meta": {
-    "source": "figma",
-    "derivableFromSource": [
-      "props.type",
-      "props.default",
-      "layout",
-      "tokens.bindings"
-    ],
+    "source": "manual",
     "needsReview": [
-      "Figma marca los valores por defecto con ✦ («solid ✦», «2 ✦», «default ✦»): el valor real es el que va sin marca en el contrato. El default del component set en Figma es `classic`, pero el ✦ está en `solid`.",
-      "El eje de Figma se llama «highConstrast» (errata); en código es highContrast.",
-      "loading=true solo existe en Figma junto a state=disable (144 variantes): el diseño de loading hereda el aspecto de disabled. En código, decidir si loading debe verse como disabled.",
-      "classic usa dos capas de degradado (blanco → transparente) sin variable, y una al 20% en hover. No están en tokens.",
-      "opacity en hover/active (0.88, 0.82, 0.92) está fijo en Figma, sin variable. Es el único caso en que el contrato usa opacity; disabled nunca.",
-      "surface: Figma no define fondo para color neutral y error en default/hover (solo accent usa tokens.colors.accent-surface). Radix usa --color-surface.",
-      "Inconsistencias de Figma: texto de variantes no sólidas en accent usa accent-alpha.11, pero neutral y error usan el paso 11 sólido; en highContrast el texto sobre solid/classic es neutral.1 en accent y neutral, y error.1 en error; classic highContrast con color=error usa las sombras de accent; classic disabled usa la sombra button-classic-accent.",
-      "ghost usa text-style …regular en size 2 (el resto de variantes, medium). No verificado en size 1, 3 y 4.",
-      "Tokens de size 1, 3 y 4 leídos solo en solid + accent + default; se asume que valen para las demás variantes. El anillo de foco solo se leyó en accent.",
-      "Anchos: size 2 sin icono = 70px; el ancho depende del texto de ejemplo «Button».",
-      "No existen en Figma: fullWidth (eliminada del contrato), type, onPress.",
-      "Contraste y área táctil no medidos."
-    ]
+      "anchors.figma.node — Button not yet created in Figma",
+      "layout.height tokens — confirm sm=32/md=40/lg=48 with Figma once built",
+      "hover darken amount — 8% filter or use primitives.green.7?"
+    ],
+    "derivableFromSource": ["props", "anatomy", "layout", "tokens.bindings"]
   }
 }

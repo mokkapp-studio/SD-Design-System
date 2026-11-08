@@ -8,5 +8,8 @@
     "icons:build": "node scripts/build-icons.mjs",
     "icons:catalog": "node scripts/build-icon-catalog.mjs",
     "icons:figma": "node scripts/build-figma-icons.mjs"
+  },
+  "dependencies": {
+    "radix-ui": "^1.8.1"
   }
 }

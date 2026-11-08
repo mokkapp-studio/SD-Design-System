@@ -1,346 +1,330 @@
 {
-    "$schema": "./component.schema.json",
-    "id": "nav-bar",
-    "name": "NavBar",
-    "version": "0.1.0",
-    "status": "draft",
-    "category": "navigation",
-    "description": "Barra de navegación superior fija: marca a la izquierda, enlaces principales en el centro-izquierda, acciones a la derecha (sesión, menú móvil). Orienta al usuario y lleva a las secciones principales del producto.",
-    "guidance": {
-        "dos": [
-            "Mantén 3–5 enlaces principales. Si necesitas más, agrúpalos o muévelos a un menú lateral.",
-            "El enlace de la sección actual lleva `aria-current=\"page\"`.",
-            "La marca a la izquierda es siempre un `Link` a la raíz. Puede ser logotipo (imagen) o texto; no las dos cosas.",
-            "En móvil (< 768 px), oculta los enlaces y muestra un `IconButton` con el icono `Menu` que abre un menú (fuera del contrato: lo decide el consumidor)."
-        ],
-        "donts": [
-            {
-                "case": "Más de 5 enlaces principales en escritorio",
-                "useInstead": "Agrupa en un menú desplegable o mueve a un sidebar",
-                "why": "Más de 5 opciones compiten entre sí y se escanean peor."
-            },
-            {
-                "case": "Dos barras de navegación en la misma página",
-                "useInstead": "Una NavBar más secciones (`Tabs` o similares) dentro de la página",
-                "why": "El usuario pierde el sentido de ubicación si hay varias barras principales."
-            },
-            {
-                "case": "Botones destructivos (eliminar, cerrar sesión) sueltos en la barra",
-                "useInstead": "Un menú de usuario con esas acciones",
-                "why": "Las acciones de alto riesgo necesitan contexto y confirmación, no deben estar a un clic."
-            },
-            {
-                "case": "Enlaces que no son navegación (acciones)",
-                "useInstead": "`Button` en la zona de acciones",
-                "why": "Un `Link` navega; un `Button` ejecuta. Mezclarlos confunde al lector de pantalla."
-            }
-        ],
-        "related": [
-            {
-                "component": "Link",
-                "relation": "contains",
-                "difference": "Cada ítem del centro es un Link; el logo también."
-            },
-            {
-                "component": "Button",
-                "relation": "contains",
-                "difference": "La acción de la derecha (p. ej. «Iniciar sesión») es un Button."
-            },
-            {
-                "component": "IconButton",
-                "relation": "contains",
-                "difference": "El disparador del menú móvil es un IconButton."
-            }
-        ]
-    },
-    "semantics": {
-        "element": "nav",
-        "role": "navigation",
-        "refTarget": "root",
-        "elementByProp": null
-    },
-    "props": [
-        {
-            "name": "variant",
-            "type": "'surface' | 'ghost'",
-            "default": "surface",
-            "description": "Fondo. `surface` tiene fondo propio y borde inferior; `ghost` es transparente, pensado para pegarse al hero.",
-            "bindings": {
-                "figma": {
-                    "property": "variant",
-                    "type": "VARIANT"
-                }
-            }
-        },
-        {
-            "name": "size",
-            "type": "'1' | '2'",
-            "default": "2",
-            "description": "Alto de la barra: 48 px (1) o 64 px (2). 1 para apps densas, 2 para marketing.",
-            "bindings": {
-                "figma": {
-                    "property": "size",
-                    "type": "VARIANT"
-                }
-            }
-        },
-        {
-            "name": "sticky",
-            "type": "boolean",
-            "default": true,
-            "description": "Si queda fija al hacer scroll. Visualmente no cambia el componente; se refleja con position: sticky en el consumidor.",
-            "bindings": {
-                "figma": null
-            }
-        }
+  "$schema": "./component.schema.json",
+  "id": "nav-bar",
+  "name": "NavBar",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "navigation",
+  "description": "Top-level site navigation bar with logo, links, optional CTA, and a mobile menu trigger.",
+  "guidance": {
+    "dos": [
+      "Place one NavBar per page at the top of the layout.",
+      "Use variant=surface for pages with a light hero; use variant=transparent to overlay a dark/image hero.",
+      "Keep items to 5 or fewer to avoid overflow on medium screens."
     ],
-    "states": {
-        "native": [],
-        "controlled": []
+    "donts": [
+      {
+        "case": "Nesting interactive components (dropdowns, tooltips) inside items",
+        "useInstead": "A MegaMenu or DropdownMenu component",
+        "why": "NavBar does not manage overlay z-index or keyboard trap for nested overlays."
+      },
+      {
+        "case": "Using NavBar as a secondary / in-page navigation",
+        "useInstead": "Tabs or a sidebar nav",
+        "why": "NavBar is fixed to the viewport top and communicates site-level navigation."
+      }
+    ],
+    "related": [
+      {
+        "component": "Button",
+        "relation": "contained-by",
+        "difference": "The CTA slot typically contains a Button. NavBar does not render a Button itself."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "header",
+    "role": "banner",
+    "refTarget": "root",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "'surface' | 'transparent'",
+      "default": "surface",
+      "required": false,
+      "description": "surface = opaque card background + border. transparent = no background, used over hero images.",
+      "bindings": {
+        "figma": { "property": "Variant", "type": "VARIANT" }
+      }
     },
-    "anatomy": {
-        "root": {
-            "element": "nav",
-            "description": "Contenedor con role=navigation. Auto layout horizontal con tres zonas (marca | enlaces | acciones).",
-            "figmaLayer": "NavBar"
-        },
-        "brand": {
-            "element": "slot",
-            "description": "Marca a la izquierda (logotipo o texto). Siempre un Link al home.",
-            "figmaLayer": "brand",
-            "slot": {
-                "key": "brand",
-                "allowedComponents": [
-                    "Link"
-                ],
-                "minItems": 1,
-                "maxItems": 1,
-                "mandatory": true,
-                "figmaProp": "brand"
-            }
-        },
-        "items": {
-            "element": "slot",
-            "description": "Enlaces principales. Entre 1 y 5. En móvil se ocultan y aparece el disparador de menú.",
-            "figmaLayer": "items",
-            "slot": {
-                "key": "items",
-                "allowedComponents": [
-                    "Link"
-                ],
-                "minItems": 1,
-                "maxItems": 5,
-                "mandatory": true,
-                "figmaProp": "items"
-            }
-        },
-        "actions": {
-            "element": "slot",
-            "description": "Hueco a la derecha para acciones. Pensado para 1–2 Buttons (p. ej. «Iniciar sesión» + «Crear cuenta») o un IconButton de perfil.",
-            "optional": true,
-            "figmaLayer": "actions",
-            "slot": {
-                "key": "actions",
-                "allowedComponents": [
-                    "Button",
-                    "IconButton",
-                    "Badge"
-                ],
-                "minItems": 0,
-                "maxItems": 3,
-                "mandatory": false,
-                "figmaProp": "actions"
-            }
-        },
-        "menuTrigger": {
-            "element": "slot",
-            "description": "IconButton con icono Menu que aparece solo en móvil (< 768 px). El menú que abre vive fuera del componente.",
-            "optional": true,
-            "figmaLayer": "menuTrigger",
-            "figmaToggle": {
-                "property": "mobile",
-                "type": "BOOLEAN",
-                "default": false
-            },
-            "slot": {
-                "key": "menuTrigger",
-                "allowedComponents": [
-                    "IconButton"
-                ],
-                "minItems": 0,
-                "maxItems": 1,
-                "mandatory": false,
-                "figmaProp": "menuTrigger"
-            }
-        }
+    {
+      "name": "logo",
+      "type": "ReactNode",
+      "default": null,
+      "required": true,
+      "description": "Brand logo or wordmark. Rendered inside the logo slot on the left.",
+      "bindings": {
+        "figma": { "property": "Logo", "type": "INSTANCE_SWAP" }
+      }
     },
-    "composition": {
-        "allowedChildren": [
-            "Link",
-            "Button",
-            "IconButton",
-            "Badge"
-        ],
-        "forbiddenChildren": [
-            "NavBar",
-            "input",
-            "form"
-        ],
-        "nestedComponents": [],
-        "asChild": false
+    {
+      "name": "items",
+      "type": "{ label: string; href: string; active?: boolean }[]",
+      "default": "[]",
+      "required": false,
+      "description": "Navigation links. Rendered as an <ul> on desktop; hidden on mobile until menuOpen=true.",
+      "bindings": {
+        "figma": { "property": "Items", "type": "SLOT" }
+      }
     },
-    "layout": {
-        "height": {
-            "mode": "fixed",
-            "values": {
-                "1": 48,
-                "2": 64
-            },
-            "unit": "px",
-            "token": null,
-            "note": "Alto por size."
-        },
-        "width": {
-            "default": "fill",
-            "modes": {
-                "fill": "Ocupa el ancho del contenedor padre. En Figma se marca FILL en horizontal."
-            },
-            "min": null,
-            "max": null,
-            "note": "No limita el ancho; el contenedor interno sí (max 1280 px recomendado para marketing, fluido en app)."
-        },
-        "autoLayout": {
-            "direction": "HORIZONTAL",
-            "sizingHorizontal": "FILL",
-            "sizingVertical": "FIXED",
-            "alignMain": "SPACE_BETWEEN",
-            "alignCross": "CENTER",
-            "gap": "spacing.4 entre zonas; spacing.3 entre items dentro de cada zona."
-        },
-        "padding": {
-            "values": {
-                "1": "0 spacing.4",
-                "2": "0 spacing.5"
-            },
-            "unit": "token",
-            "note": "Padding vertical 0 (lo da el alto fijo). Padding horizontal por size."
-        }
+    {
+      "name": "cta",
+      "type": "ReactNode",
+      "default": null,
+      "required": false,
+      "description": "Optional call-to-action placed at the right of the bar. Typically a Button.",
+      "bindings": {
+        "figma": { "property": "CTA", "type": "INSTANCE_SWAP" }
+      }
     },
-    "tokens": {
-        "policy": {
-            "allowed": [
-                "colors",
-                "tokens.colors",
-                "spacing",
-                "radius",
-                "text-style",
-                "shadows"
-            ],
-            "forbidden": []
-        },
-        "bindings": {
-            "base": {
-                "paddingY": 0,
-                "gap": "spacing.4",
-                "textStyle": "text-style.2.medium"
-            },
-            "byVariant": {
-                "surface": {
-                    "background": "tokens.colors.surface",
-                    "borderBottom": "colors.neutral.neutral-alpha.6",
-                    "text": "colors.neutral.neutral.12"
-                },
-                "ghost": {
-                    "background": null,
-                    "borderBottom": null,
-                    "text": "colors.neutral.neutral.12"
-                }
-            },
-            "bySize": {
-                "1": {
-                    "paddingX": "spacing.4"
-                },
-                "2": {
-                    "paddingX": "spacing.5"
-                }
-            }
-        }
+    {
+      "name": "menuOpen",
+      "type": "boolean",
+      "default": false,
+      "required": false,
+      "description": "Controls mobile drawer visibility. Becomes visible below 768px breakpoint.",
+      "bindings": {
+        "figma": { "property": "MenuOpen", "type": "BOOLEAN" }
+      }
     },
-    "a11y": {
-        "role": "navigation (nativo del elemento <nav>). Si hay varias <nav> en la página, cada una necesita aria-label.",
-        "name": "Añade aria-label=\"Principal\" (o similar) si hay otra <nav>; si no, basta el rol implícito.",
-        "keyboard": [
-            "Tab — avanza por marca → enlaces → acciones → menú móvil",
-            "Shift+Tab — retrocede",
-            "Enter / Space — activa el enlace o botón enfocado"
-        ],
-        "focusIndicator": "Hereda del Link / Button / IconButton: 2 px outline con colors.accent.accent-alpha.8, offset 2 px.",
-        "minTarget": "Cada hijo cumple su propio mínimo (24×24 para IconButton, 36×36 para Button tamaño 1).",
-        "contrastNote": "Texto sobre fondo ≥ 4.5:1 (WCAG 1.4.3). En variant=ghost el contraste depende del hero: comprobar en el consumidor.",
-        "wcag": [
-            "1.3.1 Información y relaciones",
-            "2.4.1 Evitar bloques (necesita «Saltar al contenido» en la página, no en este componente)",
-            "2.4.3 Orden del foco"
-        ]
-    },
-    "behavior": {
-        "overflow": "nowrap",
-        "motion": [
-            {
-                "on": "scroll",
-                "property": "shadow",
-                "reducedMotion": "instant"
-            }
-        ],
-        "responsive": [
-            "< 768 px: oculta `items`, muestra `menuTrigger`.",
-            "≥ 768 px: muestra `items`, oculta `menuTrigger`."
-        ]
-    },
-    "theming": {
-        "modes": [
-            "light",
-            "dark"
-        ],
-        "density": null
-    },
-    "i18n": {
-        "rtl": "Se invierten las zonas: marca pasa a la derecha, acciones a la izquierda.",
-        "textExpansion": "Los enlaces se truncan a una línea con ellipsis si no caben; a partir de ahí, se ocultan y pasan al menú móvil."
-    },
-    "testing": {
-        "cases": [
-            "role=navigation en el <nav>",
-            "aria-current=\"page\" se puede aplicar al Link activo (lo pasa el consumidor)",
-            "Tab recorre marca → items → actions en ese orden",
-            "en < 768 px los items están ocultos y menuTrigger visible",
-            "en ≥ 768 px pasa al revés",
-            "variant=surface muestra fondo y borde inferior; ghost no muestra ninguno",
-            "sticky no cambia el aspecto, solo la posición en el consumidor"
-        ]
-    },
-    "anchors": {
-        "figma": {
-            "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
-            "node": "12:6 (ComponentSet) | 12:2 (mobile=false) | 12:3 (mobile=true)"
-        },
-        "code": {
-            "importPath": "@/components/nav-bar/nav-bar",
-            "export": "NavBar"
-        }
-    },
-    "meta": {
-        "source": "manual",
-        "derivableFromSource": [
-            "props.type",
-            "props.default",
-            "layout"
-        ],
-        "needsReview": [
-            "Primer contrato del sistema que compone varios primitivos (Link, Button, IconButton). Revisar que las reglas de slot (minItems/maxItems) encajen con cómo se usa en marketing vs app.",
-            "El breakpoint de 768 px es una suposición típica; verificar con el consumidor (Next.js).",
-            "`sticky` no tiene propiedad en Figma: es solo código. Si se quiere reflejar la sombra que aparece al hacer scroll, hay que crear una variante en Figma.",
-            "El contrato no define el menú móvil que abre menuTrigger: ese es un componente aparte (`DropdownMenu` o `Sheet`), aún sin contrato."
-        ]
+    {
+      "name": "onMenuOpenChange",
+      "type": "(open: boolean) => void",
+      "default": null,
+      "required": false,
+      "description": "Callback fired when the mobile menu trigger is pressed.",
+      "bindings": {
+        "figma": { "property": null, "type": "VARIANT" }
+      }
     }
+  ],
+  "states": {
+    "native": ["hover", "focus-visible"],
+    "controlled": [
+      {
+        "name": "menuOpen",
+        "description": "Mobile drawer is open. Items become visible, trigger shows close icon.",
+        "aria": "aria-expanded"
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "header",
+      "description": "Full-width sticky container. Spans viewport width.",
+      "figmaLayer": "root"
+    },
+    "inner": {
+      "element": "div",
+      "description": "Max-width wrapper centered horizontally. Holds logo, nav, cta.",
+      "figmaLayer": "inner"
+    },
+    "logo": {
+      "element": "div",
+      "description": "Logo slot on the left side.",
+      "figmaLayer": "logo",
+      "content": { "prop": "logo" }
+    },
+    "nav": {
+      "element": "nav",
+      "description": "Horizontal list of navigation items. Hidden on mobile.",
+      "figmaLayer": "nav"
+    },
+    "items": {
+      "element": "ul",
+      "description": "List of NavItem links inside nav.",
+      "figmaLayer": "items",
+      "slot": {
+        "key": "items",
+        "allowedComponents": ["NavItem"],
+        "minItems": 0,
+        "maxItems": 7,
+        "mandatory": false,
+        "figmaProp": "Items"
+      }
+    },
+    "cta": {
+      "element": "div",
+      "description": "Optional right-side CTA slot.",
+      "optional": true,
+      "figmaLayer": "cta",
+      "content": { "prop": "cta" }
+    },
+    "menuTrigger": {
+      "element": "button",
+      "description": "Hamburger / close icon button. Visible only below 768px.",
+      "figmaLayer": "menu-trigger",
+      "figmaToggle": { "property": "MenuOpen", "type": "BOOLEAN", "default": false }
+    },
+    "mobileDrawer": {
+      "element": "div",
+      "description": "Mobile menu panel. Visible when menuOpen=true and viewport < 768px.",
+      "optional": true,
+      "figmaLayer": "mobile-drawer"
+    }
+  },
+  "composition": {
+    "allowedChildren": null,
+    "forbiddenChildren": ["NavBar"],
+    "nestedComponents": [
+      {
+        "part": "cta",
+        "component": "Button",
+        "fixedProps": { "size": "sm" }
+      }
+    ],
+    "codeParts": [],
+    "asChild": false
+  },
+  "layout": {
+    "height": {
+      "mode": "fixed",
+      "values": { "default": 64 },
+      "unit": "px",
+      "token": null
+    },
+    "width": {
+      "default": "fill",
+      "modes": { "fill": "100vw" },
+      "min": null,
+      "max": null,
+      "note": "Inner container max-width: 1200px, centered."
+    },
+    "autoLayout": {
+      "direction": "HORIZONTAL",
+      "sizingHorizontal": "FILL",
+      "sizingVertical": "FIXED",
+      "alignMain": "SPACE_BETWEEN",
+      "alignCross": "CENTER",
+      "gap": "spacing.4 between logo, nav, cta"
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": ["color", "spacing", "radius", "font", "shadow"],
+      "forbidden": ["primitives"]
+    },
+    "bindings": {
+      "base": {
+        "height": "spacing.16",
+        "paddingX": "spacing.6",
+        "gap": "spacing.4"
+      },
+      "byVariant": {
+        "surface": {
+          "background": "color.card",
+          "text": "color.foreground",
+          "border": "color.border",
+          "shadow": "shadow.sm"
+        },
+        "transparent": {
+          "background": null,
+          "text": "color.foreground",
+          "border": null,
+          "shadow": null
+        }
+      },
+      "byState": {
+        "itemHover": {
+          "text": "color.primary"
+        },
+        "itemActive": {
+          "text": "color.primary",
+          "borderBottom": "color.primary"
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "name": "onMenuOpenChange",
+      "trigger": "Click on menuTrigger",
+      "payload": "boolean",
+      "blockedWhen": []
+    }
+  ],
+  "a11y": {
+    "role": "banner (implicit from <header>)",
+    "name": "Site navigation",
+    "keyboard": [
+      "Tab — move focus through links and CTA",
+      "Enter / Space — activate menuTrigger",
+      "Escape — close mobile drawer when menuOpen=true"
+    ],
+    "focusIndicator": "2px solid color.ring, offset 2px",
+    "minTarget": "44x44px on menuTrigger (WCAG 2.5.8)",
+    "contrastNote": "color.foreground on color.card must meet WCAG AA (4.5:1)",
+    "wcag": ["1.4.3 Contrast (AA)", "2.1.1 Keyboard", "2.4.7 Focus Visible", "4.1.2 Name Role Value"]
+  },
+  "content": {
+    "label": {
+      "maxLength": 20,
+      "casing": "sentence",
+      "voice": "Short noun or noun phrase. 'Pricing', 'About us', 'Blog'."
+    }
+  },
+  "behavior": {
+    "loading": null,
+    "overflow": "Items truncate or wrap to mobile drawer when viewport < 768px.",
+    "motion": [
+      {
+        "on": "menuOpen",
+        "property": "height / opacity of mobileDrawer",
+        "reducedMotion": "instant"
+      }
+    ],
+    "responsive": [
+      "< 768px: nav and cta hidden, menuTrigger visible",
+      ">= 768px: nav and cta visible, menuTrigger hidden"
+    ]
+  },
+  "form": null,
+  "overlay": null,
+  "data": null,
+  "media": null,
+  "theming": {
+    "modes": ["light", "dark"],
+    "density": null
+  },
+  "i18n": {
+    "rtl": "logo moves to right, items to left; drawer slides from left.",
+    "textExpansion": "Items may wrap to 2 lines on medium screens with long translations."
+  },
+  "testing": {
+    "cases": [
+      "Renders logo, all items, and CTA on desktop",
+      "Items and CTA hidden on mobile (< 768px)",
+      "menuTrigger visible on mobile",
+      "Clicking menuTrigger fires onMenuOpenChange(true)",
+      "mobileDrawer visible when menuOpen=true",
+      "Escape key closes mobile drawer",
+      "variant=transparent has no background or border",
+      "Active item shows color.primary underline"
+    ]
+  },
+  "governance": {
+    "owners": ["mokkapp-studio"],
+    "changelog": "contracts/NavBar.contract.json"
+  },
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/dYAgYb0igDOCarC4bFzfC7/DS-MOKKAPP",
+      "node": null
+    },
+    "code": {
+      "importPath": "@/components/ui/NavBar",
+      "export": "NavBar"
+    }
+  },
+  "meta": {
+    "source": "manual",
+    "needsReview": [
+      "anchors.figma.node — NavBar not yet created in Figma",
+      "items prop type — confirm if NavItem is a separate contract or inline object",
+      "max-width inner container — 1200px assumption, confirm with design"
+    ],
+    "derivableFromSource": ["props", "anatomy", "layout", "tokens.bindings"]
+  }
 }

@@ -1,0 +1,116 @@
+/* Button — tokens from tokens/tokens.css */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding-inline: var(--spacing-4);
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, filter 150ms ease;
+  outline: none;
+  text-decoration: none;
+  font-family: inherit;
+}
+
+/* ── Sizes ──────────────────────────────── */
+.sm { height: 32px; padding-inline: var(--spacing-3); font-size: var(--font-size-xs); }
+.md { height: 40px; padding-inline: var(--spacing-4); }
+.lg { height: 48px; padding-inline: var(--spacing-6); font-size: var(--font-size-base); }
+
+/* ── Variants ───────────────────────────── */
+.solid {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-color: transparent;
+}
+.solid:hover:not(:disabled):not([aria-disabled="true"]) {
+  filter: brightness(0.88);
+}
+.solid:active:not(:disabled):not([aria-disabled="true"]) {
+  filter: brightness(0.78);
+  transform: scale(0.97);
+}
+
+.outline {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  border-color: var(--color-border);
+}
+.outline:hover:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-muted);
+}
+.outline:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-muted);
+  transform: scale(0.97);
+}
+
+.ghost {
+  background-color: transparent;
+  color: var(--color-foreground);
+  border-color: transparent;
+}
+.ghost:hover:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-muted);
+}
+.ghost:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-muted);
+  transform: scale(0.97);
+}
+
+/* ── Focus ──────────────────────────────── */
+.button:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* ── Disabled ───────────────────────────── */
+.button:disabled,
+.button[aria-disabled="true"] {
+  background-color: var(--color-muted);
+  color: var(--color-muted-foreground);
+  border-color: var(--color-border);
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: none;
+  transform: none;
+}
+
+/* ── Full width ─────────────────────────── */
+.fullWidth {
+  width: 100%;
+}
+
+/* ── Loading ────────────────────────────── */
+.loading {
+  pointer-events: none;
+}
+
+/* ── Icon parts ─────────────────────────── */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ── Spinner ────────────────────────────── */
+.spinner {
+  display: inline-flex;
+  align-items: center;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button { transition: none; }
+  .spinner { animation: none; }
+  .button:active { transform: none; }
+}
