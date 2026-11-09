@@ -41,5 +41,10 @@ Cabeceras en inglés; contenido en el idioma del contrato. Un bloque sin dato en
 
 ## Publicar
 
-- Primera vez: `figma.spec.createOnCanvasAsync`; después, `editContent` por secciones. Alto de la Section del componente = max(Spec, columna) + 80.
+- Primera vez: `figma.spec.createOnCanvasAsync({ title, content })`; devuelve `{ specNodeId }`.
+- Regenerar: `figma.spec.setContent({ specNodeId, content })` con la Spec entera. `editContent` solo sirve para cambios puntuales (cada `oldText` debe coincidir una vez).
+- Si `setContent` falla con «ambiguous table column correspondence» (las tablas nuevas cambian de columnas respecto a las actuales), vacía antes: `setContent({ specNodeId, content: '# Documentation\n' })` y escribe la Spec completa en una segunda llamada.
+- Exporta los PNG y codifícalos (`figma.base64Encode`) dentro del mismo script que escribe la Spec; el base64 no debe pasar por tu contexto.
+- Relectura: `figma.spec.getContent({ specNodeId })` → `.markdown`. Devuelve las imágenes como URL (`…/image/<sha>?w=&h=`) y las tablas normalizadas (`|---|`); `--verify` lo admite.
+- Alto de la Section del componente = max(Spec, columna) + 80.
 - El botón «full size» de la Spec no tiene API: se pulsa a mano en la UI.
