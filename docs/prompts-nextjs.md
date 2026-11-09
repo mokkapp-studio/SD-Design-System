@@ -144,9 +144,9 @@ Busca en src/components/ cualquier token que ya no exista (variables --… que n
 ```
 Lee AGENTS.md y design-system/docs/icons.md. Instala los iconos de Lucide:
 1. npm install lucide-react
-2. Añade a package.json el script "ds:icons": "node design-system/scripts/build-icons.mjs src/components/icon/icons.ts" y ejecútalo.
+2. Añade a package.json el script "ds:icons": "node design-system/scripts/build-lucide-icons.mjs src/components/icon/icons.ts" y ejecútalo.
 3. Crea src/components/icon/ con icon.tsx y icon.module.css desde design-system/contracts/Icon.contract.json, y copia el contrato.
-4. Añade al playground una fila con todos los iconos de design-system/icons/registry.json a los tamaños 14, 16, 18 y 20.
+4. Añade al playground una fila con todos los iconos de design-system/icons/lucide/registry.json a los tamaños 14, 16, 18 y 20.
 No modifiques otros componentes todavía. Resume lo que has hecho.
 ```
 
@@ -164,7 +164,7 @@ No importes iconos dentro del componente: los recibe como nodo.
 **Añadir un icono:**
 
 ```
-Necesito el icono «<descripción>». Búscalo en lucide.dev/icons, dime el nombre PascalCase y propón la entrada para design-system/icons/registry.json (name y use). No toques design-system/: dame solo la entrada.
+Necesito el icono «<descripción>». Búscalo en lucide.dev/icons, dime el nombre PascalCase y propón la entrada para design-system/icons/lucide/registry.json (name y use). No toques design-system/: dame solo la entrada.
 ```
 
 ## 10. Orden recomendado de componentes
