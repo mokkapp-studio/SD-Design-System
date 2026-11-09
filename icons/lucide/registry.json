@@ -1,5 +1,5 @@
 {
-  "$description": "Iconos permitidos en el sistema. Fuente de verdad: si un icono no está aquí, no se usa. Librería: Lucide (lucide-react). Para añadir uno: nueva entrada, `npm run icons:build` (en el proyecto Next.js, `npm run ds:icons`) y `npm run check`.",
+  "$description": "Iconos permitidos en el sistema. Fuente de verdad: si un icono no está aquí, no se usa. Librería: Lucide (lucide-react). Para añadir uno: nueva entrada, `npm run lucide:build` (en el proyecto Next.js, `npm run ds:icons`) y `npm run check`.",
   "library": "lucide-react",
   "install": "npm install lucide-react",
   "docs": "https://lucide.dev/icons/",

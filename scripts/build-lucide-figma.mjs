@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 // Prepara lotes de código para crear los iconos de Lucide como componentes en Figma (vía MCP, herramienta use_figma).
-//   node scripts/build-figma-icons.mjs [selección] [--batch 40] [--stroke-variable colors.neutral.neutral.12]
+//   node scripts/build-lucide-figma.mjs [selección] [--batch 40] [--stroke-variable colors.neutral.neutral.12]
 // Selección (una sola):
-//   (nada) / --registry      los iconos de icons/registry.json
-//   --all                    los 1.903 iconos del catálogo
+//   (nada) / --registry      los iconos de icons/lucide/registry.json
+//   --all                    los 2.020 iconos del catálogo
 //   --category arrows        una categoría del catálogo
 //   --names arrow-right,plus  nombres concretos (kebab-case)
 // Salida: .cache/figma/batch-001.js, batch-002.js… (cada uno es el `code` de una llamada a use_figma).
-// Los SVG se leen de .cache/lucide (lo crea `npm run icons:catalog`). Sin dependencias.
+// Los SVG se leen de .cache/lucide (lo crea `npm run lucide:catalog`). Sin dependencias.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -18,9 +18,9 @@ const val = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : un
 const batchSize = Number(val('--batch') ?? 40);
 const strokeVar = val('--stroke-variable') ?? 'colors.neutral.neutral.12';
 
-const cat = JSON.parse(fs.readFileSync(path.join(root, 'icons', 'catalog.json'), 'utf8'));
+const cat = JSON.parse(fs.readFileSync(path.join(root, 'icons', 'lucide', 'catalog.json'), 'utf8'));
 const svgDir = path.join(root, '.cache', 'lucide', 'icons');
-if (!fs.existsSync(svgDir)) throw new Error('Falta .cache/lucide: ejecuta antes `npm run icons:catalog`.');
+if (!fs.existsSync(svgDir)) throw new Error('Falta .cache/lucide: ejecuta antes `npm run lucide:catalog`.');
 
 let list;
 if (args.includes('--all')) list = cat.icons;
@@ -34,7 +34,7 @@ else if (val('--category')) {
     if (bad.length) throw new Error(`No existen en el catálogo: ${bad.join(', ')}`);
     list = ns.map((n) => cat.icons.find((i) => i.name === n));
 } else {
-    const reg = JSON.parse(fs.readFileSync(path.join(root, 'icons', 'registry.json'), 'utf8'));
+    const reg = JSON.parse(fs.readFileSync(path.join(root, 'icons', 'lucide', 'registry.json'), 'utf8'));
     const byPascal = new Map(cat.icons.flatMap((i) => [[i.pascal, i], ...(i.aliases ?? []).map((a) => [a.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join(''), i])]));
     const miss = reg.icons.filter((i) => !byPascal.has(i.name)).map((i) => i.name);
     if (miss.length) throw new Error(`En el registry y no en el catálogo: ${miss.join(', ')}`);

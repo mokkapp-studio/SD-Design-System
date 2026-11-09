@@ -2,13 +2,13 @@
   "$schema": "./component.schema.json",
   "id": "icon",
   "name": "Icon",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "status": "draft",
   "category": "media",
   "description": "Dibuja un icono de la librería del sistema (Lucide) con tamaño y accesibilidad coherentes. Hereda el color del texto.",
   "guidance": {
     "dos": [
-      "Usa solo iconos de `icons/registry.json`. Si falta uno, añádelo al registry antes de usarlo.",
+      "Usa solo iconos de `icons/lucide/registry.json`. Si falta uno, añádelo al registry antes de usarlo.",
       "Icono decorativo (acompaña a un texto): sin `label`; el componente lo oculta a lectores de pantalla.",
       "Icono que comunica algo por sí solo: da siempre `label`.",
       "Deja que el color lo herede del texto del componente padre; no lo pintes aparte."
@@ -59,7 +59,7 @@
       "name": "icon",
       "type": "LucideIcon",
       "required": true,
-      "description": "El componente de icono, importado del archivo generado a partir de icons/registry.json.",
+      "description": "El componente de icono, importado del archivo generado a partir de icons/lucide/registry.json.",
       "usage": "Icon con icon={Plus}",
       "bindings": {
         "figma": null

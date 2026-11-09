@@ -126,7 +126,7 @@ for (const f of files) {
   for (const s of strings(c.tokens?.bindings ?? {})) for (const t of expand(s)) checkTok(t);
 }
 
-// 3. Iconos: registry válido, por librería (Lucide en icons/, Phosphor en icons/phosphor/)
+// 3. Iconos: registry válido, por librería (Lucide en icons/lucide/, Phosphor en icons/phosphor/)
 const checkIcons = (dir, lib) => {
   const regRel = `${dir}/registry.json`, catRel = `${dir}/catalog.json`;
   const regPath = path.join(root, regRel);
@@ -158,7 +158,7 @@ const checkIcons = (dir, lib) => {
     }
   }
 };
-checkIcons('icons', 'Lucide');
+checkIcons('icons/lucide', 'Lucide');
 checkIcons('icons/phosphor', 'Phosphor');
 
 for (const w of warnings) console.log('aviso  ', w);

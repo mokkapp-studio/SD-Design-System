@@ -61,7 +61,7 @@ design-system/                        contratos, tokens, docs, check.mjs
 
 ## Iconos
 
-- Solo iconos de `design-system/icons/registry.json`, importados desde `src/components/icon/icons.ts` (generado). Nunca `import * as` ni imports directos de `lucide-react` en componentes.
+- Solo iconos de `design-system/icons/lucide/registry.json`, importados desde `src/components/icon/icons.ts` (generado). Nunca `import * as` ni imports directos de `lucide-react` en componentes.
 - Se dibujan con el componente `Icon` (contrato `Icon.contract.json`). Sin `label` es decorativo (`aria-hidden`); con `label`, `role="img"`.
 - El tamaño lo fija el componente padre por CSS según su `size` (`layout.iconSize` del contrato). El color se hereda (`currentColor`).
 - Si necesitas un icono que no está en el registry, no lo importes: pregunta.

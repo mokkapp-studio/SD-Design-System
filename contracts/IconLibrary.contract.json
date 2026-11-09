@@ -2,20 +2,20 @@
     "$schema": "./component.schema.json",
     "id": "icon-library",
     "name": "IconLibrary",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "status": "draft",
     "category": "media",
     "description": "Reglas de la librería de iconos del sistema (Lucide): qué iconos existen, cómo se llaman, cómo se dibujan y cómo se llevan a Figma. No es un componente: lo que se pinta en pantalla es Icon.",
     "guidance": {
         "dos": [
-            "Busca el icono en icons/catalog.json (todo Lucide) por nombre, tags o categoría. Si no lo encuentras por el nombre, busca por tags: «borrar» no existe, pero «delete» sí.",
-            "Para usarlo en código, añádelo antes a icons/registry.json con su campo `use`. El catálogo es lo que existe; el registry es lo que se aprueba.",
+            "Busca el icono en icons/lucide/catalog.json (todo Lucide) por nombre, tags o categoría. Si no lo encuentras por el nombre, busca por tags: «borrar» no existe, pero «delete» sí.",
+            "Para usarlo en código, añádelo antes a icons/lucide/registry.json con su campo `use`. El catálogo es lo que existe; el registry es lo que se aprueba.",
             "En Figma, cambia el icono de un componente por instance swap con el componente «Categoría / nombre»; no lo dibujes a mano ni pegues SVG sueltos.",
             "Un icono, un significado: no uses el mismo icono para dos acciones distintas en la misma pantalla."
         ],
         "donts": [
             {
-                "case": "Usar un icono de Lucide que no está en icons/registry.json",
+                "case": "Usar un icono de Lucide que no está en icons/lucide/registry.json",
                 "useInstead": "Añadirlo al registry (con su `use`) y regenerar icons.ts",
                 "why": "La lista cerrada evita iconos duplicados o contradictorios y mantiene pequeño el paquete."
             },
@@ -64,7 +64,7 @@
             "name": "name",
             "type": "string",
             "required": true,
-            "description": "Nombre del icono en kebab-case, tal como aparece en icons/catalog.json (`arrow-right`). En código, el mismo nombre en PascalCase (`ArrowRight`). En Figma, el componente «Categoría / arrow-right».",
+            "description": "Nombre del icono en kebab-case, tal como aparece en icons/lucide/catalog.json (`arrow-right`). En código, el mismo nombre en PascalCase (`ArrowRight`). En Figma, el componente «Categoría / arrow-right».",
             "bindings": {
                 "figma": {
                     "property": "iconStart / iconEnd / icon",
@@ -135,8 +135,8 @@
     },
     "behavior": {
         "catalog": {
-            "file": "icons/catalog.json",
-            "generatedBy": "npm run icons:catalog",
+            "file": "icons/lucide/catalog.json",
+            "generatedBy": "npm run lucide:catalog",
             "source": "https://lucide.dev/icons/",
             "fields": [
                 "name (kebab-case)",
@@ -145,14 +145,14 @@
                 "tags",
                 "aliases (nombres antiguos)"
             ],
-            "rule": "Nunca se edita a mano. Para actualizar a una versión nueva de Lucide: `npm run icons:catalog -- --update`."
+            "rule": "Nunca se edita a mano. Para actualizar a una versión nueva de Lucide: `npm run lucide:catalog -- --update`."
         },
         "registry": {
-            "file": "icons/registry.json",
+            "file": "icons/lucide/registry.json",
             "rule": "Subconjunto del catálogo aprobado para código. check.mjs falla si un nombre del registry no existe en el catálogo y avisa si es un alias antiguo."
         },
         "figma": {
-            "generatedBy": "npm run icons:figma -- [--registry | --all | --category id | --names a,b]",
+            "generatedBy": "npm run lucide:figma -- [--registry | --all | --category id | --names a,b]",
             "page": "Iconos Lucide",
             "componentName": "Título de la categoría principal / nombre en kebab-case",
             "componentDescription": "Primera línea `lucide:nombre` (sirve para reconocer y no duplicar); después categorías y tags, para que el buscador de Figma los encuentre.",
@@ -163,7 +163,7 @@
     "anchors": {
         "code": {
             "importPath": "@/components/icon/icons",
-            "export": "(un export por cada icono de icons/registry.json)"
+            "export": "(un export por cada icono de icons/lucide/registry.json)"
         }
     },
     "meta": {
@@ -173,7 +173,7 @@
             "layout.canvas"
         ],
         "needsReview": [
-            "El código de Figma (scripts/build-figma-icons.mjs) se probó contra una simulación de la API, no en un archivo real. Probar primero con `npm run icons:figma` (los iconos del registry) antes de lanzar --all.",
+            "El código de Figma (scripts/build-lucide-figma.mjs) se probó contra una simulación de la API, no en un archivo real. Probar primero con `npm run lucide:figma` (los iconos del registry) antes de lanzar --all.",
             "La variable del trazo (colors.neutral.neutral.12) es una suposición: el nombre real en Figma puede ser otro. Si no se encuentra, los trazos quedan negros y el script lo avisa.",
             "La categoría principal es la primera que lista Lucide para cada icono; muchos iconos tienen varias. La lista completa va en la descripción del componente.",
             "El trazo se adelgaza al escalar a 14–20 px (a 16 px pasa de 2 a 1,33). Si no gusta, decidir un trazo fijo por tamaño; Lucide lo permite en código (absoluteStrokeWidth).",

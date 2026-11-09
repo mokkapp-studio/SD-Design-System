@@ -9,7 +9,7 @@
   "guidance": {
     "dos": [
       "Da siempre `aria-label` con la acción («Borrar búsqueda», «Cerrar diálogo»).",
-      "Usa iconos del registro (`icons/registry.json`) y que el significado sea universal: X, Trash2, Plus, Search.",
+      "Usa iconos del registro (`icons/lucide/registry.json`) y que el significado sea universal: X, Trash2, Plus, Search.",
       "Dentro de un campo (TextField) usa `variant=\"ghost\"` y `color=\"neutral\"`.",
       "Para acciones poco obvias, añade un Tooltip: un icono solo no siempre se entiende.",
       "Para que dos IconButton parezcan una barra, usa el mismo `variant` y `size` en todos."

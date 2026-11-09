@@ -3,7 +3,7 @@
 El sistema usa [Lucide](https://lucide.dev/icons/) a través del paquete `lucide-react`. Hay una lista cerrada de iconos permitidos y un componente `Icon` que fija tamaño y accesibilidad.
 
 ```
-icons/registry.json  ──(npm run icons:build)──►  icons.ts (reexporta solo los permitidos)
+icons/lucide/registry.json  ──(npm run lucide:build)──►  icons.ts (reexporta solo los permitidos)
         ▲                                              │
   aquí se declaran                          los componentes importan de aquí
 ```
@@ -12,11 +12,11 @@ icons/registry.json  ──(npm run icons:build)──►  icons.ts (reexporta s
 
 | Pieza | Para qué |
 | --- | --- |
-| `icons/catalog.json` | TODO Lucide (1.903 iconos) con tags y categorías. Generado; no se edita a mano |
-| `icons/registry.json` | Lista de iconos permitidos en código, con su uso. **Fuente de verdad** |
-| `scripts/build-icons.mjs` | Genera el archivo de reexportación a partir del registry |
-| `scripts/build-icon-catalog.mjs` | Genera `icons/catalog.json` desde Lucide (`npm run icons:catalog`) |
-| `scripts/build-figma-icons.mjs` | Genera lotes de código para crear los iconos en Figma (`npm run icons:figma`) |
+| `icons/lucide/catalog.json` | TODO Lucide (2.020 iconos) con tags y categorías. Generado; no se edita a mano |
+| `icons/lucide/registry.json` | Lista de iconos permitidos en código, con su uso. **Fuente de verdad** |
+| `scripts/build-lucide-icons.mjs` | Genera el archivo de reexportación a partir del registry |
+| `scripts/build-lucide-catalog.mjs` | Genera `icons/lucide/catalog.json` desde Lucide (`npm run lucide:catalog`) |
+| `scripts/build-lucide-figma.mjs` | Genera lotes de código para crear los iconos en Figma (`npm run lucide:figma`) |
 | `contracts/Icon.contract.json` | Contrato del componente `Icon` (tamaño, a11y) |
 | `contracts/IconLibrary.contract.json` | Reglas de la librería: catálogo, nombres, trazo y paso a Figma |
 | `check.mjs` | Valida el registry (PascalCase, sin duplicados, con `use`) y que cada icono exista en el catálogo |
@@ -30,13 +30,13 @@ npm install lucide-react
 Genera el archivo de iconos **dentro del proyecto** (así se resuelve `lucide-react` desde su `node_modules`):
 
 ```bash
-node design-system/scripts/build-icons.mjs src/components/icon/icons.ts
+node design-system/scripts/build-lucide-icons.mjs src/components/icon/icons.ts
 ```
 
 Añade el script a `package.json`:
 
 ```json
-"ds:icons": "node design-system/scripts/build-icons.mjs src/components/icon/icons.ts"
+"ds:icons": "node design-system/scripts/build-lucide-icons.mjs src/components/icon/icons.ts"
 ```
 
 Se genera `src/components/icon/icons.ts`:
@@ -52,13 +52,13 @@ Después, crea el componente `Icon` desde su contrato (prompt en `docs/prompts-n
 ## 2. Declarar un icono nuevo
 
 1. Busca el nombre en [lucide.dev/icons](https://lucide.dev/icons/). En código el nombre va en **PascalCase** (`arrow-right` → `ArrowRight`).
-2. Añádelo a `icons/registry.json` con su uso:
+2. Añádelo a `icons/lucide/registry.json` con su uso:
 
 ```json
 { "name": "Download", "use": "descargar un archivo" }
 ```
 
-3. `npm run icons:build` en el repo del sistema (o `npm run ds:icons` en el proyecto) y `npm run check`.
+3. `npm run lucide:build` en el repo del sistema (o `npm run ds:icons` en el proyecto) y `npm run check`.
 4. Commit en el repo del sistema y, en el proyecto, actualiza el submodule.
 
 Si el nombre no existe en Lucide, TypeScript falla al compilar: es la comprobación.
@@ -94,15 +94,15 @@ Importar siempre desde `icons.ts` y nunca `import * as` de `lucide-react`: solo 
 
 ## 4. Catálogo completo y paso a Figma
 
-- **Catálogo:** `icons/catalog.json` contiene todo Lucide (1.903 iconos) con tags y categorías. Se genera con `npm run icons:catalog`, que descarga Lucide en `.cache/` la primera vez (`--update` para refrescarlo).
-- **Registry:** `icons/registry.json` sigue siendo la lista de iconos que el código puede usar. El catálogo es el universo; el registry, su subconjunto permitido.
-- **Figma:** `npm run icons:figma` prepara lotes de código en `.cache/figma/` para crear los iconos como componentes en Figma vía MCP (`use_figma`). Por defecto usa el registry; `--all`, `--category` o `--names` cambian la selección.
+- **Catálogo:** `icons/lucide/catalog.json` contiene todo Lucide (2.020 iconos) con tags y categorías. Se genera con `npm run lucide:catalog`, que descarga Lucide en `.cache/` la primera vez (`--update` para refrescarlo).
+- **Registry:** `icons/lucide/registry.json` sigue siendo la lista de iconos que el código puede usar. El catálogo es el universo; el registry, su subconjunto permitido.
+- **Figma:** `npm run lucide:figma` prepara lotes de código en `.cache/figma/` para crear los iconos como componentes en Figma vía MCP (`use_figma`). Por defecto usa el registry; `--all`, `--category` o `--names` cambian la selección.
 
 ## 5. Reglas para el agente
 
-- Solo iconos de `icons/registry.json`. Si necesita otro, búscalo en `icons/catalog.json` y propón la entrada para el registry (nombre en PascalCase y `use`); no lo añadas sin preguntar.
+- Solo iconos de `icons/lucide/registry.json`. Si necesita otro, búscalo en `icons/lucide/catalog.json` y propón la entrada para el registry (nombre en PascalCase y `use`); no lo añadas sin preguntar.
 - No pinta ni dimensiona el icono por su cuenta.
-- Después de añadir uno: `icons:build` y `check`.
+- Después de añadir uno: `lucide:build` y `check`.
 
 ## 6. Alternativa: Phosphor
 
@@ -110,10 +110,10 @@ El sistema ofrece [Phosphor](https://phosphoricons.com) como segunda librería. 
 
 | Pieza | Lucide | Phosphor |
 | --- | --- | --- |
-| Catálogo (generado) | `icons/catalog.json` · `npm run icons:catalog` | `icons/phosphor/catalog.json` · `npm run phosphor:catalog` (1.512 iconos, desde `phosphor-icons/core`) |
-| Registry (fuente de verdad) | `icons/registry.json` | `icons/phosphor/registry.json` |
-| Reexportación | `npm run icons:build` | `npm run phosphor:build` |
-| Figma | `npm run icons:figma` → `.cache/figma/` | `npm run phosphor:figma` → `.cache/figma-phosphor/` (lotes + `entry.js`) |
+| Catálogo (generado) | `icons/lucide/catalog.json` · `npm run lucide:catalog` | `icons/phosphor/catalog.json` · `npm run phosphor:catalog` (1.512 iconos, desde `phosphor-icons/core`) |
+| Registry (fuente de verdad) | `icons/lucide/registry.json` | `icons/phosphor/registry.json` |
+| Reexportación | `npm run lucide:build` | `npm run phosphor:build` |
+| Figma | `npm run lucide:figma` → `.cache/figma/` | `npm run phosphor:figma` → `.cache/figma-phosphor/` (lotes + `entry.js`) |
 | Contrato | `IconLibrary` | `PhosphorIconLibrary` |
 
 Diferencias que importan:

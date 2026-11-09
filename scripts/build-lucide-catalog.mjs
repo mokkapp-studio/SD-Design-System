@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Genera icons/catalog.json: el listado COMPLETO de Lucide (nombre, tags, categorías, alias).
-//   node scripts/build-icon-catalog.mjs            -> usa .cache/lucide (lo descarga la primera vez)
-//   node scripts/build-icon-catalog.mjs --update   -> actualiza .cache/lucide antes de leer
-//   node scripts/build-icon-catalog.mjs --source ruta/al/repo-lucide   -> usa un clon que ya tengas
+// Genera icons/lucide/catalog.json: el listado COMPLETO de Lucide (nombre, tags, categorías, alias).
+//   node scripts/build-lucide-catalog.mjs            -> usa .cache/lucide (lo descarga la primera vez)
+//   node scripts/build-lucide-catalog.mjs --update   -> actualiza .cache/lucide antes de leer
+//   node scripts/build-lucide-catalog.mjs --source ruta/al/repo-lucide   -> usa un clon que ya tengas
 // Sin dependencias. Necesita git y red solo la primera vez (o con --update).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -31,11 +31,26 @@ const pascal = (n) => n.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).j
 
 const iconsDir = path.join(src, 'icons');
 const names = fs.readdirSync(iconsDir).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)).sort();
+// Lucide escribe «$extends:<icono>» en categories/tags: «hereda lo de ese icono». Se resuelve recursivamente
+// (la base también puede heredar), se descartan los marcadores «$group:<nombre>» y se deduplica conservando el orden.
+const raw = new Map(names.map((name) => [name, readJson(path.join(iconsDir, `${name}.json`))]));
+const resolveField = (name, field, stack = []) => {
+    if (stack.includes(name)) throw new Error(`Ciclo en $extends: ${[...stack, name].join(' → ')}`);
+    const j = raw.get(name);
+    if (!j) throw new Error(`$extends apunta a un icono que no existe: «${name}» (desde ${stack.at(-1) ?? '?'})`);
+    const out = [];
+    for (const v of j[field] ?? []) {
+        if (v.startsWith('$group:')) continue;
+        if (v.startsWith('$extends:')) out.push(...resolveField(v.slice('$extends:'.length), field, [...stack, name]));
+        else out.push(v);
+    }
+    return [...new Set(out)];
+};
 const icons = names.map((name) => {
-    const j = readJson(path.join(iconsDir, `${name}.json`));
+    const j = raw.get(name);
     if (!fs.existsSync(path.join(iconsDir, `${name}.svg`))) throw new Error(`Falta el SVG de «${name}»`);
     const aliases = (j.aliases ?? []).map((a) => (typeof a === 'string' ? a : a.name)).sort();
-    return { name, pascal: pascal(name), categories: j.categories ?? [], tags: j.tags ?? [], ...(aliases.length ? { aliases } : {}) };
+    return { name, pascal: pascal(name), categories: resolveField(name, 'categories'), tags: resolveField(name, 'tags'), ...(aliases.length ? { aliases } : {}) };
 });
 
 const catDir = path.join(src, 'categories');
@@ -50,7 +65,7 @@ let commit = 'desconocido', date = null;
 try { commit = git('-C', src, 'rev-parse', '--short', 'HEAD'); date = git('-C', src, 'log', '-1', '--format=%cs'); } catch { }
 
 const head = {
-    $description: 'Catálogo completo de Lucide. NO editar a mano: se genera con `npm run icons:catalog`. Es la lista de TODO lo que existe; lo que se puede usar en código está en icons/registry.json (un subconjunto de este catálogo).',
+    $description: 'Catálogo completo de Lucide. NO editar a mano: se genera con `npm run lucide:catalog`. Es la lista de TODO lo que existe; lo que se puede usar en código está en icons/lucide/registry.json (un subconjunto de este catálogo).',
     library: 'lucide', package: 'lucide-react', docs: 'https://lucide.dev/icons/',
     source: { repo: 'lucide-icons/lucide', commit, date },
     canvas: { size: 24, unit: 'px', strokeWidth: 2, linecap: 'round', linejoin: 'round' },
@@ -60,5 +75,6 @@ const head = {
 const out = '{\n' + Object.entries(head).map(([k, v]) => `  ${JSON.stringify(k)}: ${JSON.stringify(v)}`).join(',\n')
     + ',\n  "categories": [\n' + categories.map((c) => '    ' + JSON.stringify(c)).join(',\n')
     + '\n  ],\n  "icons": [\n' + icons.map((i) => '    ' + JSON.stringify(i)).join(',\n') + '\n  ]\n}\n';
-fs.writeFileSync(path.join(root, 'icons', 'catalog.json'), out);
-console.log(`icons/catalog.json: ${icons.length} iconos, ${categories.length} categorías (Lucide @ ${commit})`);
+fs.mkdirSync(path.join(root, 'icons', 'lucide'), { recursive: true });
+fs.writeFileSync(path.join(root, 'icons', 'lucide', 'catalog.json'), out);
+console.log(`icons/lucide/catalog.json: ${icons.length} iconos, ${categories.length} categorías (Lucide @ ${commit})`);
