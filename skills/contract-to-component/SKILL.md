@@ -18,7 +18,7 @@ La skill hermana `ui-contract-builder` crea los contratos. Esta solo los consume
 
 1. **Contrato:** `<sistema>/contracts/<Nombre>.contract.json` (el sistema suele estar en `design-system/`). Si no existe, **para y pregunta**; no lo inventes (puedes proponer usar `ui-contract-builder`).
 2. **Reglas del proyecto:** lee `AGENTS.md` del proyecto (`AGENTS.nextjs.md` es su plantilla). Manda sobre los valores por defecto de abajo.
-3. **Stack:** `package.json` (React 18 o 19, `radix-ui`, `@phosphor-icons/react` o `lucide-react`, según la librería del proyecto), alias `@/`, dónde está `components/`, si `tokens.css` está importado en `globals.css`.
+3. **Stack:** `package.json` (React 18 o 19, `@phosphor-icons/react` o `lucide-react`, según la librería del proyecto), alias `@/`, dónde está `components/`, si `tokens.css` está importado en `globals.css`.
 4. **Valores por defecto** si el proyecto no dice otra cosa: Next.js App Router, TypeScript estricto, CSS Modules, estados con atributos `data-*`, carpeta `src/components/<id>/`.
 
 ## Reglas que no se negocian
@@ -32,13 +32,13 @@ La skill hermana `ui-contract-builder` crea los contratos. Esta solo los consume
 7. **Dependencias:** reutiliza los componentes que pida `composition.nestedComponents` o `slot.allowedComponents` y que ya existan. Si no existe alguno, **para y lista lo que falta**; no lo recrees dentro.
 8. **Contrato primero.** Si algo del contrato es imposible, contradictorio o está mal, no lo corrijas en el código: propón el cambio de contrato (con la versión que sube) y espera.
 9. **No toques el sistema de diseño** (`design-system/`), ni `tokens.css`. No instales librerías sin preguntar.
-10. **Comportamiento accesible complejo** (Checkbox, RadioGroup, Switch, AlertDialog…): primitivos de `radix-ui` + nuestros estilos con `data-*`. No reimplementes foco ni teclado.
+10. **Comportamiento accesible complejo** (Checkbox, RadioGroup, Switch, AlertDialog…): sin librerías de comportamiento. HTML nativo y código propio siguiendo `semantics`, `states.controlled` y `a11y.keyboard`. Estilos con atributos ARIA (`[aria-checked]`, `[open]`), no con `data-state`.
 
 ## Procedimiento
 
 1. **Leer** el contrato entero, `docs/components.md` (vocabulario) y `meta.needsReview`. Apunta cuáles afectan al código.
 2. **Comprobar dependencias** (regla 7). Si faltan, parar.
-3. **Plan corto** (solo si lo piden, o si el componente tiene comportamiento complejo o Radix): props, partes→elementos, qué primitivo, qué `needsReview` te afecta, dudas. Espera el visto bueno.
+3. **Plan corto** (solo si lo piden, o si el componente tiene comportamiento complejo): props, partes→elementos, qué elemento nativo y qué teclado, qué `needsReview` te afecta, dudas. Espera el visto bueno.
 4. **Crear la carpeta** `src/components/<id>/` con:
    - `<id>.contract.json`: copia exacta (`cp`), sin tocar.
    - `<id>.module.css`: ver paso 5.
@@ -61,7 +61,7 @@ La skill hermana `ui-contract-builder` crea los contratos. Esta solo los consume
 
 ## Referencias
 
-- `references/implementation-map.md` — de cada bloque del contrato a su código (con patrones de tsx y CSS, Radix, React 18/19).
+- `references/implementation-map.md` — de cada bloque del contrato a su código (con patrones de tsx y CSS, comportamiento nativo, React 18/19).
 - `references/parity.md` — qué significa «idéntico a Figma», cómo comprobarlo y qué queda fuera.
 - `assets/example/icon-button/` — IconButton completo: contrato, tsx, CSS con bloque generado.
 - `scripts/gen-css.mjs`, `scripts/conformance.mjs`, `scripts/lib.mjs` — Node 18+, sin dependencias.

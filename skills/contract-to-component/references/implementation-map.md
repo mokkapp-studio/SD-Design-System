@@ -64,16 +64,39 @@ Al escribir esas partes a mano: usa las claves del contrato como guía de **qué
 
 **Slot opcional** (`min: 0`): renderiza la parte solo si hay contenido, con su `data-part`.
 
-**Radix (comportamiento complejo)**
+**Comportamiento nativo (sin librerías de comportamiento)**
+
+El contrato dice las props, los tokens y el teclado (`a11y.keyboard`); el código pone el elemento nativo y el ARIA. Estilos sobre atributos ARIA, nunca `[data-state]`, y los `data-variant` / `data-color` / `data-size` de siempre.
+
+- **Switch:** `<button type="button" role="switch" aria-checked={checked}>`. El botón nativo ya alterna con Space y Enter.
 
 ```tsx
-"use client";
-import { Checkbox as RadixCheckbox } from 'radix-ui';
-// El indicador y el estado vienen de Radix (data-state="checked|unchecked|indeterminate").
-// Estilos: selectores sobre [data-state="…"] y nuestros data-* de variante.
+<button type="button" role="switch" aria-checked={checked} disabled={disabled}
+  data-part="root" data-size={size} onClick={toggle}>
 ```
 
-El contrato dice las props y los tokens; Radix pone el foco, el teclado y el ARIA. Si Radix pone `data-state`, úsalo en el CSS en lugar de inventar otro atributo, y verifica que el contrato no pida otro.
+- **Checkbox:** `<button type="button" role="checkbox" aria-checked={checked === 'indeterminate' ? 'mixed' : checked}>`. El contrato dice que Enter no marca: bloquéalo en `onKeyDown`. Dentro de un formulario, añade `<input type="hidden" name={name} value={value} />`.
+
+```tsx
+onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
+```
+
+- **RadioGroup:** `role="radiogroup"` en `RadioGroup.Root`, `role="radio"` en `RadioGroup.Item`. Tabindex itinerante: solo la opción seleccionada (o la primera si no hay) tiene `tabIndex={0}`; las flechas mueven el foco y seleccionan. API compuesta (`composition.codeParts`) con contexto de React.
+
+```tsx
+<div role="radiogroup" aria-labelledby={labelId}>{children}</div>
+<button role="radio" aria-checked={selected} tabIndex={selected || isFirst ? 0 : -1}>{label}</button>
+```
+
+- **AlertDialog:** `<dialog>` abierto con `showModal()`, `role="alertdialog"`, `aria-labelledby` y `aria-describedby`. `autoFocus` en Cancel; Esc cierra (evento `cancel`) y devuelve el foco al Trigger; no se cierra al pulsar fuera; `::backdrop` con el token de overlay de `tokens.bindings`. Partes de `composition.codeParts` con contexto de React.
+
+```tsx
+<dialog role="alertdialog" aria-labelledby={titleId} aria-describedby={descId} ref={ref}>
+```
+
+- **CSS:** selectores sobre `[aria-checked="true"]`, `[aria-checked="mixed"]` y `[open]`.
+
+Si el contrato pide un elemento distinto del patrón (por ejemplo `semantics.element` no coincide), no lo cambies en el código: propón el cambio de contrato.
 
 **Iconos:** solo los del registry, desde el `icons.ts` generado del proyecto, a través del componente `Icon`. El tamaño lo fija el CSS del padre según `layout.iconSize`.
 

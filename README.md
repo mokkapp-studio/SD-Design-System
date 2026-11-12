@@ -21,7 +21,7 @@
   <img src="https://img.shields.io/badge/Node.js-ESM%20sin%20dependencias-339933?logo=nodedotjs&logoColor=white" alt="Node.js">
   <img src="https://img.shields.io/badge/Next.js-App%20Router-000000?logo=nextdotjs&logoColor=white" alt="Next.js">
   <img src="https://img.shields.io/badge/React-TypeScript-3178C6?logo=typescript&logoColor=white" alt="React + TypeScript">
-  <img src="https://img.shields.io/badge/Radix-Themes%20%2B%20Primitives-161618?logo=radixui&logoColor=white" alt="Radix">
+  <img src="https://img.shields.io/badge/Tokens-Radix%20Themes-161618?logo=radixui&logoColor=white" alt="Tokens de Radix Themes">
   <img src="https://img.shields.io/badge/Iconos-Phosphor%20%7C%20Lucide-F97316" alt="Phosphor y Lucide">
   <img src="https://img.shields.io/badge/a11y-WCAG%202.2-2E7D32" alt="WCAG">
   <img src="https://img.shields.io/badge/Git-GitHub-181717?logo=github&logoColor=white" alt="GitHub">
