@@ -36,7 +36,7 @@ Todavía no escribas código. Dame un plan en esta forma:
 
 - Props del componente (tabla: nombre, tipo, default).
 - Partes de la anatomía y qué elemento HTML usa cada una.
-- Cómo implementarás el comportamiento (¿primitivo de Radix o código propio?, ¿necesita "use client"?).
+- Cómo implementarás el comportamiento (¿qué elemento nativo y qué teclado/foco implementas?, ¿necesita "use client"?).
 - Qué tokens usarás y cómo se convierten en variables CSS.
 - Qué parte de meta.needsReview te afecta y qué harás con ella.
 - Dudas o decisiones que necesites de mí.
@@ -133,7 +133,7 @@ Busca en src/components/ cualquier token que ya no exista (variables --… que n
 | --- | --- |
 | Inventa una prop o variante | «Esa prop no está en el contrato. Quítala o pregúntame.» |
 | Usa un color o px suelto | «Sustituye ese valor por el token del contrato (`tokens.bindings…`).» |
-| Reimplementa el teclado a mano | «Usa el primitivo de Radix para el comportamiento (AGENTS.md).» |
+| Reimplementa el teclado a mano | «Implementa el teclado exactamente como dice `a11y.keyboard` del contrato, con HTML nativo (AGENTS.md).» |
 | Opacity en disabled | «Disabled usa `byState.disabled`, nunca opacity.» |
 | Crea un componente sin contrato | «No hay contrato. Para y dime qué falta.» |
 
@@ -172,7 +172,7 @@ Necesito el icono «<descripción>». Búscalo en phosphoricons.com (y en design
 1. Icon (tras instalar Phosphor).
 2. Button y Link (Button usa Icon; Link no tiene dependencias).
 3. IconButton (mismos tokens que Button; recibe un Icon; exige `aria-label`).
-4. Checkbox, Switch, RadioGroup (comportamiento con primitivos).
+4. Checkbox, Switch, RadioGroup (comportamiento nativo, sin librerías).
 5. TextField (usa IconButton como botón final: hazlo después de IconButton).
 6. AlertDialog (usa Button).
 7. Páginas: acceso, ajustes, formulario largo.

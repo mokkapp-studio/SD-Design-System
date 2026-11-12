@@ -46,7 +46,7 @@ design-system/                        contratos, tokens, docs, check.mjs
 - **Tipos:** sin `any`. Exporta con nombre (`export function Button`), y exporta el tipo de props (`ButtonProps`).
 - **React:** si el proyecto usa React 19, `ref` es una prop normal; con React 18, usa `forwardRef`.
 - **`"use client"`:** solo en componentes con estado, eventos o hooks. Nada más.
-- **Comportamiento accesible complejo** (Checkbox, RadioGroup, Switch, AlertDialog): usa los primitivos de Radix (`radix-ui`) para el comportamiento y aplica nuestros estilos con `data-*`. No reimplementes foco, teclado ni ARIA a mano.
+- **Comportamiento accesible complejo** (Checkbox, RadioGroup, Switch, AlertDialog): sin librerías de comportamiento. Usa HTML nativo y código propio siguiendo `semantics`, `states.controlled` y `a11y.keyboard` del contrato. Estiliza el estado con los atributos ARIA (`[aria-checked="true"]`, `[aria-checked="mixed"]`, `[open]`), no con `data-state`.
 
 ## Reglas de estilo
 
@@ -76,7 +76,8 @@ Cumple `a11y` del contrato: rol, nombre accesible, teclado, foco visible, área 
 - No inventas props, variantes, estados ni tokens.
 - No tocas `design-system/`.
 - No editas `tokens.css` (se regenera).
-- No instalas librerías sin preguntar (`@phosphor-icons/react` y `radix-ui` ya están decididas; Lucide solo si el proyecto lo elige).
+- No instalas librerías sin preguntar (`@phosphor-icons/react` ya está decidida; Lucide solo si el proyecto lo elige).
+- No instalas `radix-ui` ni otras librerías de comportamiento.
 - No creas componentes que no tengan contrato.
 - No importas iconos fuera del registry.
 
