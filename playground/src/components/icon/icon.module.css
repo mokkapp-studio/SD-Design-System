@@ -1,0 +1,12 @@
+/* Sin tokens de color: el icono hereda currentColor del padre (Icon.tokens.policy). */
+.root {
+  display: inline-block;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+/* layout.height.values: cuadrado, ancho = alto */
+.root[data-size="14"] { width: 14px; height: 14px; }
+.root[data-size="16"] { width: 16px; height: 16px; }
+.root[data-size="18"] { width: 18px; height: 18px; }
+.root[data-size="20"] { width: 20px; height: 20px; }

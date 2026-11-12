@@ -1,0 +1,810 @@
+{
+  "$schema": "./component.schema.json",
+  "id": "switch",
+  "name": "Switch",
+  "version": "0.1.0",
+  "status": "draft",
+  "category": "input",
+  "description": "Interruptor de dos posiciones (encendido / apagado) cuyo efecto se aplica al cambiar. Alternativa a la casilla para ajustes.",
+  "guidance": {
+    "dos": [
+      "Usa un Switch para ajustes con efecto inmediato: «Notificaciones», «Modo oscuro».",
+      "Etiqueta (`label`) en positivo y que describa el estado «encendido»: «Recibir avisos».",
+      "Pon la etiqueta a la derecha del interruptor.",
+      "Haz que el cambio se aplique al instante, sin botón de guardar."
+    ],
+    "donts": [
+      {
+        "case": "Opción que se confirma al enviar un formulario",
+        "useInstead": "Checkbox",
+        "why": "Un Switch promete efecto inmediato; una casilla espera al envío."
+      },
+      {
+        "case": "Elegir una opción entre varias",
+        "useInstead": "RadioGroup",
+        "why": "Un Switch solo tiene dos posiciones."
+      },
+      {
+        "case": "Seleccionar varios elementos de una lista",
+        "useInstead": "Checkbox",
+        "why": "Un Switch no admite estado indeterminado."
+      },
+      {
+        "case": "Lanzar una acción",
+        "useInstead": "Button",
+        "why": "Un Switch guarda un estado, no ejecuta."
+      }
+    ],
+    "related": [
+      {
+        "component": "Checkbox",
+        "relation": "alternative",
+        "difference": "Se confirma con el formulario; admite indeterminado."
+      },
+      {
+        "component": "RadioGroup",
+        "relation": "alternative",
+        "difference": "Una opción entre varias."
+      },
+      {
+        "component": "Button",
+        "relation": "alternative",
+        "difference": "Ejecuta una acción."
+      }
+    ]
+  },
+  "semantics": {
+    "element": "button",
+    "role": "switch",
+    "refTarget": "track",
+    "elementByProp": null
+  },
+  "props": [
+    {
+      "name": "variant",
+      "type": "'classic' | 'surface' | 'soft'",
+      "default": "surface",
+      "description": "Aspecto. surface = pista con borde; classic = igual con sombra interior; soft = relleno tenue de acento sin borde.",
+      "bindings": {
+        "figma": {
+          "property": "variant",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "size",
+      "type": "'1' | '2' | '3'",
+      "default": "2",
+      "description": "Tamaño de la pista: 28x16 / 35x20 / 42x24 px, con su pulgar y espaciado. El 2 es el valor por defecto.",
+      "bindings": {
+        "figma": {
+          "property": "size",
+          "type": "VARIANT"
+        }
+      }
+    },
+    {
+      "name": "highContrast",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true y el interruptor está encendido, usa el paso 12 del acento. Apagado no cambia mucho.",
+      "bindings": {
+        "figma": {
+          "property": "highContrast",
+          "type": "VARIANT",
+          "value": "true"
+        }
+      }
+    },
+    {
+      "name": "checked",
+      "type": "boolean",
+      "default": false,
+      "description": "Encendido. En Figma es el eje `status`: false = «unchecked ✦», true = «checked».",
+      "bindings": {
+        "figma": {
+          "property": "status",
+          "type": "VARIANT",
+          "value": "checked"
+        }
+      }
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": false,
+      "description": "Si es true, no se puede cambiar. En Figma es el valor «disable» del eje `state`.",
+      "bindings": {
+        "figma": {
+          "property": "state",
+          "type": "VARIANT",
+          "value": "disable"
+        }
+      }
+    },
+    {
+      "name": "label",
+      "type": "string | undefined",
+      "default": null,
+      "description": "Texto a la derecha del interruptor. En Figma el boolean `text` lo muestra u oculta (oculto por defecto). Texto de ejemplo: «Text».",
+      "bindings": {
+        "figma": {
+          "property": "⮑ ✏️ text",
+          "type": "TEXT"
+        }
+      }
+    },
+    {
+      "name": "name",
+      "type": "string | undefined",
+      "default": null,
+      "description": "Nombre del campo al enviar un formulario. Solo de código.",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "onCheckedChange",
+      "type": "(checked: boolean) => void",
+      "default": null,
+      "description": "Se emite al cambiar de posición. Solo de código.",
+      "bindings": {
+        "figma": null
+      }
+    }
+  ],
+  "states": {
+    "native": [
+      "hover",
+      "focus-visible",
+      "active"
+    ],
+    "controlled": [
+      {
+        "name": "checked",
+        "description": "Encendido. El pulgar va a la derecha y la pista usa el acento.",
+        "aria": "aria-checked='true'"
+      },
+      {
+        "name": "disabled",
+        "description": "No interactivo. Pista y pulgar con tokens neutros; nunca con opacity.",
+        "aria": "disabled (atributo HTML nativo)"
+      }
+    ]
+  },
+  "anatomy": {
+    "root": {
+      "element": "span",
+      "description": "Contenedor de interruptor y etiqueta. Un solo objetivo pulsable.",
+      "figmaLayer": "Switch (cada variante del component set)"
+    },
+    "focusRing": {
+      "element": "css",
+      "description": "No es un elemento: se pinta con :focus-visible. En Figma es una capa que se muestra con el boolean focusRing: borde exterior de 4px e interior de 2px.",
+      "optional": true,
+      "figmaLayer": "focus-ring",
+      "figmaToggle": {
+        "property": "focusRing",
+        "type": "BOOLEAN",
+        "default": false
+      }
+    },
+    "track": {
+      "element": "button",
+      "description": "La pista. Lleva role=switch y aria-checked.",
+      "figmaLayer": "switch"
+    },
+    "thumb": {
+      "element": "span",
+      "description": "El pulgar circular. Izquierda si está apagado, derecha si está encendido.",
+      "figmaLayer": "thumb"
+    },
+    "label": {
+      "element": "label",
+      "description": "Texto a la derecha. Asociado al interruptor.",
+      "optional": true,
+      "figmaLayer": "Text",
+      "figmaToggle": {
+        "property": "text",
+        "type": "BOOLEAN",
+        "default": false
+      },
+      "content": {
+        "prop": "label"
+      }
+    }
+  },
+  "composition": {
+    "allowedChildren": null,
+    "forbiddenChildren": [
+      "Switch",
+      "Button"
+    ],
+    "nestedComponents": [],
+    "asChild": false
+  },
+  "layout": {
+    "height": {
+      "mode": "fixed",
+      "values": {
+        "1": 16,
+        "2": 20,
+        "3": 24
+      },
+      "unit": "px",
+      "token": null,
+      "note": "Altura de la pista; sin token."
+    },
+    "width": {
+      "default": "hug",
+      "modes": {
+        "hug": "Pista más etiqueta.",
+        "fill": "No aplica.",
+        "fixed": "No aplica."
+      },
+      "min": null,
+      "max": null,
+      "note": "Sin tokens de ancho."
+    },
+    "autoLayout": {
+      "direction": "HORIZONTAL",
+      "sizingHorizontal": "HUG",
+      "sizingVertical": "HUG",
+      "alignMain": "MIN",
+      "alignCross": "CENTER",
+      "gap": "Entre pista y etiqueta, por size: spacing.2 / 2 / 3"
+    },
+    "trackSize": {
+      "values": {
+        "1": "28x16",
+        "2": "35x20",
+        "3": "42x24"
+      },
+      "unit": "px",
+      "padding": 1
+    },
+    "thumbSize": {
+      "values": {
+        "1": 14,
+        "2": 18,
+        "3": 22
+      },
+      "unit": "px"
+    }
+  },
+  "tokens": {
+    "policy": {
+      "allowed": [
+        "colors",
+        "tokens.colors",
+        "spacing",
+        "radius",
+        "text-style",
+        "shadows",
+        "overlays"
+      ],
+      "forbidden": []
+    },
+    "bindings": {
+      "base": {
+        "trackRadius": "radius.full",
+        "thumbRadius": "radius.full",
+        "labelColor": "tokens.colors.text",
+        "focusRingOuter": {
+          "color": "colors.accent.accent-alpha.8",
+          "width": 4
+        },
+        "focusRingInner": {
+          "color": "colors.accent.accent.3",
+          "width": 2
+        }
+      },
+      "bySize": {
+        "1": {
+          "gap": "spacing.2",
+          "labelTextStyle": "text-style.2.regular"
+        },
+        "2": {
+          "gap": "spacing.2",
+          "labelTextStyle": "text-style.2.regular"
+        },
+        "3": {
+          "gap": "spacing.3",
+          "labelTextStyle": "text-style.3.regular"
+        }
+      },
+      "byVariant": {
+        "classic": {
+          "unchecked": {
+            "default": {
+              "track": {
+                "background": "colors.neutral.neutral-alpha.3",
+                "border": "colors.neutral.neutral-alpha.6",
+                "borderWidth": 1,
+                "shadow": "shadows.shadow-1"
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "colors.neutral.neutral.6",
+                "strokeWidth": 1,
+                "shadow": null
+              }
+            },
+            "hover": {
+              "track": {
+                "background": "colors.neutral.neutral-alpha.4",
+                "border": "colors.neutral.neutral-alpha.6",
+                "borderWidth": 1,
+                "shadow": "shadows.shadow-1"
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "colors.neutral.neutral.6",
+                "strokeWidth": 1,
+                "shadow": null
+              }
+            },
+            "active": {
+              "track": {
+                "background": "colors.neutral.neutral-alpha.5",
+                "border": "colors.neutral.neutral-alpha.6",
+                "borderWidth": 1,
+                "shadow": "shadows.shadow-1"
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "colors.neutral.neutral.6",
+                "strokeWidth": 1,
+                "shadow": null
+              }
+            }
+          },
+          "checked": {
+            "default": {
+              "track": {
+                "background": "colors.accent.accent.9",
+                "border": "colors.neutral.neutral-alpha.7",
+                "borderWidth": 1,
+                "shadow": "shadows.shadow-1"
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "overlays.black-alpha.4",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            },
+            "hover": {
+              "track": {
+                "background": "colors.accent.accent.10",
+                "border": "colors.neutral.neutral-alpha.7",
+                "borderWidth": 1,
+                "shadow": "shadows.shadow-1"
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "overlays.black-alpha.4",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            },
+            "active": {
+              "track": {
+                "background": "colors.accent.accent.9",
+                "border": "colors.neutral.neutral-alpha.7",
+                "borderWidth": 1,
+                "shadow": "shadows.shadow-1",
+                "opacity": 0.92
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "overlays.black-alpha.4",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            }
+          }
+        },
+        "surface": {
+          "unchecked": {
+            "default": {
+              "track": {
+                "background": "colors.neutral.neutral-alpha.3",
+                "border": "colors.neutral.neutral-alpha.7",
+                "borderWidth": 1
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "colors.neutral.neutral.8",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            },
+            "hover": {
+              "track": {
+                "background": "colors.neutral.neutral-alpha.4",
+                "border": "colors.neutral.neutral-alpha.7",
+                "borderWidth": 1
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "colors.neutral.neutral.8",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            },
+            "active": {
+              "track": {
+                "background": "colors.neutral.neutral-alpha.5",
+                "border": "colors.neutral.neutral-alpha.7",
+                "borderWidth": 1
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "colors.neutral.neutral.8",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            }
+          },
+          "checked": {
+            "default": {
+              "track": {
+                "background": "colors.accent.accent.9",
+                "border": "colors.neutral.neutral-alpha.7",
+                "borderWidth": 1
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "overlays.black-alpha.4",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            },
+            "hover": {
+              "track": {
+                "background": "colors.accent.accent.10",
+                "border": "colors.neutral.neutral-alpha.7",
+                "borderWidth": 1
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "overlays.black-alpha.4",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            },
+            "active": {
+              "track": {
+                "background": "colors.accent.accent.9",
+                "border": "colors.neutral.neutral-alpha.7",
+                "borderWidth": 1,
+                "opacity": 0.92
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "overlays.black-alpha.4",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            }
+          }
+        },
+        "soft": {
+          "unchecked": {
+            "default": {
+              "track": {
+                "background": "colors.accent.accent-alpha.5",
+                "border": null
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "colors.accent.accent-alpha.3",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            },
+            "hover": {
+              "track": {
+                "background": "colors.accent.accent-alpha.6",
+                "border": null
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "colors.accent.accent-alpha.3",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            },
+            "active": {
+              "track": {
+                "background": "colors.accent.accent-alpha.6",
+                "border": null,
+                "opacity": 0.92
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "colors.accent.accent-alpha.3",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            }
+          },
+          "checked": {
+            "default": {
+              "track": {
+                "background": "colors.accent.accent-alpha.8",
+                "border": null
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "overlays.black-alpha.4",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            },
+            "hover": {
+              "track": {
+                "background": "colors.accent.accent-alpha.9",
+                "border": null
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "overlays.black-alpha.4",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            },
+            "active": {
+              "track": {
+                "background": "colors.accent.accent-alpha.10",
+                "border": null,
+                "opacity": 0.92
+              },
+              "thumb": {
+                "fill": "tokens.colors.accent-contrast",
+                "stroke": "overlays.black-alpha.4",
+                "strokeWidth": 1,
+                "shadow": "shadows.shadow-3"
+              }
+            }
+          }
+        }
+      },
+      "byHighContrast": {
+        "classic": {
+          "checked": {
+            "default": {
+              "track": {
+                "background": "colors.accent.accent.12"
+              },
+              "thumb": {
+                "fill": "colors.neutral.neutral.1"
+              }
+            },
+            "hover": {
+              "track": {
+                "background": "colors.accent.accent.12",
+                "opacity": 0.88
+              },
+              "thumb": {
+                "fill": "colors.neutral.neutral.1"
+              }
+            },
+            "active": {
+              "track": {
+                "background": "colors.accent.accent.12",
+                "opacity": 0.82
+              },
+              "thumb": {
+                "fill": "colors.neutral.neutral.1"
+              }
+            }
+          }
+        },
+        "surface": {
+          "checked": {
+            "default": {
+              "track": {
+                "background": "colors.accent.accent.12"
+              },
+              "thumb": {
+                "fill": "colors.neutral.neutral.1"
+              }
+            },
+            "hover": {
+              "track": {
+                "background": "colors.accent.accent.12",
+                "opacity": 0.88
+              },
+              "thumb": {
+                "fill": "colors.neutral.neutral.1"
+              }
+            },
+            "active": {
+              "track": {
+                "background": "colors.accent.accent.12",
+                "opacity": 0.82
+              },
+              "thumb": {
+                "fill": "colors.neutral.neutral.1"
+              }
+            }
+          }
+        },
+        "soft": {
+          "checked": {
+            "default": {
+              "track": {
+                "background": "colors.accent.accent.12"
+              },
+              "thumb": {
+                "fill": "colors.neutral.neutral.1"
+              }
+            },
+            "hover": {
+              "track": {
+                "background": "colors.accent.accent.12",
+                "opacity": 0.88
+              },
+              "thumb": {
+                "fill": "colors.neutral.neutral.1"
+              }
+            },
+            "active": {
+              "track": {
+                "background": "colors.accent.accent.12",
+                "opacity": 0.82
+              },
+              "thumb": {
+                "fill": "colors.neutral.neutral.1"
+              }
+            }
+          }
+        }
+      },
+      "byState": {
+        "disabled": {
+          "classic": {
+            "track": {
+              "background": "colors.neutral.neutral-alpha.3",
+              "border": "colors.neutral.neutral-alpha.5",
+              "borderWidth": 1
+            },
+            "thumb": {
+              "fill": "colors.neutral.neutral.2",
+              "stroke": "colors.neutral.neutral.6",
+              "strokeWidth": 1
+            }
+          },
+          "surface": {
+            "track": {
+              "background": "colors.neutral.neutral-alpha.3",
+              "border": "colors.neutral.neutral-alpha.5",
+              "borderWidth": 1
+            },
+            "thumb": {
+              "fill": "colors.neutral.neutral.2",
+              "stroke": "colors.neutral.neutral.6",
+              "strokeWidth": 1
+            }
+          },
+          "soft": {
+            "track": {
+              "background": "colors.neutral.neutral-alpha.3",
+              "border": "colors.neutral.neutral-alpha.5",
+              "borderWidth": 1
+            },
+            "thumb": {
+              "fill": "colors.neutral.neutral.2",
+              "stroke": "colors.neutral.neutral.6",
+              "strokeWidth": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "name": "onCheckedChange",
+      "trigger": "Clic, o Espacio con el interruptor enfocado",
+      "payload": "boolean",
+      "blockedWhen": [
+        "disabled"
+      ]
+    }
+  ],
+  "a11y": {
+    "role": "switch",
+    "name": "La etiqueta (label). Sin etiqueta visible, aria-label obligatorio.",
+    "keyboard": [
+      "Space — alterna",
+      "Enter — alterna (opcional según el patrón)",
+      "Tab — entra y sale"
+    ],
+    "focusIndicator": "Anillo doble sobre la pista: exterior de 4px con colors.accent.accent-alpha.8 e interior de 2px con colors.accent.accent.3 (capa focus-ring).",
+    "minTarget": "La pista mide 16 / 20 / 24 px de alto: por debajo de 24x24 en size 1 y 2 (WCAG 2.5.8). Hay que hacer pulsable también la etiqueta o añadir padding invisible.",
+    "contrastNote": "Pista contra el fondo ≥ 3:1 (WCAG 1.4.11) y texto ≥ 4.5:1. No medido en Figma; la pista apagada usa neutral-alpha.3 con borde neutral-alpha.7.",
+    "wcag": [
+      "1.4.3 Contraste (AA)",
+      "1.4.11 Contraste no textual",
+      "2.1.1 Teclado",
+      "2.4.7 Foco visible",
+      "2.5.8 Tamaño del objetivo",
+      "4.1.2 Nombre, función, valor"
+    ]
+  },
+  "form": {
+    "control": "switch",
+    "label": {
+      "prop": "label",
+      "position": "end",
+      "required": true
+    },
+    "validation": null,
+    "errorMessage": null,
+    "note": "Figma no define estado de error. Valor enviado: según name y checked."
+  },
+  "content": {
+    "label": {
+      "maxLength": 60,
+      "casing": "sentence",
+      "voice": "Ajuste en positivo: «Recibir avisos»"
+    }
+  },
+  "behavior": {
+    "overflow": "wrap",
+    "motion": [
+      {
+        "on": "checked",
+        "property": "posición del pulgar y color de la pista",
+        "reducedMotion": "instant"
+      }
+    ],
+    "responsive": []
+  },
+  "testing": {
+    "cases": [
+      "Space alterna checked y emite onCheckedChange",
+      "disabled no recibe foco ni emite onCheckedChange",
+      "aria-checked refleja el estado",
+      "pulsar la etiqueta alterna el interruptor",
+      "sin label ni aria-label falla el check de accesibilidad"
+    ]
+  },
+  "anchors": {
+    "figma": {
+      "file": "https://www.figma.com/design/pTGbM1i9PKc6858ef7498a/Radix-Themes--Community-",
+      "node": "874:112258"
+    },
+    "code": {
+      "importPath": "@/components/switch/switch",
+      "export": "Switch"
+    }
+  },
+  "meta": {
+    "source": "figma",
+    "derivableFromSource": [
+      "props.type",
+      "props.default",
+      "layout",
+      "tokens.bindings"
+    ],
+    "needsReview": [
+      "Los valores por defecto van marcados con ✦ («surface ✦», «2 ✦», «unchecked ✦», «default ✦»). El default del component set es `classic`.",
+      "Tokens de color leídos en size 2 con el texto de ejemplo. En size 1 y 3 solo se leyeron medidas, gap y estilo de texto.",
+      "Size 1 usa el estilo de texto de size 2 (Typography/2/Regular) en Figma; en Checkbox y RadioGroup, size 1 usa Typography/1.",
+      "Posición del pulgar: izquierda (unchecked) y derecha (checked) por alineación de la pista con padding de 1px; no hay variable de recorrido.",
+      "Hay un borde en la pista también encendida (neutral-alpha.7, surface y classic): puede ser intencionado o un sobrante.",
+      "En classic, el borde de la pista apagada es neutral-alpha.6 y el pulgar sin sombra; en surface y soft el pulgar lleva shadows.shadow-3.",
+      "classic usa shadows.shadow-1 en la pista, salvo en disabled.",
+      "opacity en hover/active (0.88, 0.82, 0.92) fijo en Figma, sin variable. Es el único caso en que el contrato usa opacity; disabled nunca.",
+      "disabled se ve igual para encendido y apagado: no distingue la posición por color. El texto no cambia de color.",
+      "El anillo de foco se leyó solo en size 2 (radio 6 con radius.3-max). Radio de esquina en size 1 y 3 no leído.",
+      "La pista mide menos de 24px de alto en size 1 y 2: área táctil por debajo de WCAG 2.5.8.",
+      "Sin estado de error, campo requerido ni etiqueta a la izquierda en Figma."
+    ]
+  }
+}

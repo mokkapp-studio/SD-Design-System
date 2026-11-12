@@ -1,0 +1,9 @@
+/* Solo para el lienzo de Storybook: fondo y texto salen de variables de tokens.css. */
+body {
+  margin: 0;
+  background-color: var(--colors-neutral-neutral-1);
+  color: var(--colors-neutral-neutral-12);
+  font: var(--text-style-2-regular);
+}
+.sb-stack { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-3); padding: var(--spacing-3); }
+.sb-col { display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-3); padding: var(--spacing-3); }
