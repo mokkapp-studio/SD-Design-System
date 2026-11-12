@@ -2,7 +2,7 @@
   "$schema": "./component.schema.json",
   "id": "icon",
   "name": "Icon",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "status": "draft",
   "category": "media",
   "description": "Dibuja un icono de la librería del sistema (Phosphor, alternativa Lucide por proyecto) con tamaño, peso y accesibilidad coherentes. Hereda el color del texto.",
@@ -198,9 +198,9 @@
       "props.default"
     ],
     "needsReview": [
-      "Figma de Radix usa sus propios iconos (instance swap por defecto «Design / blending-mode» y similares). El sistema usa Phosphor: el aspecto cambia y hay que revisar cada icono en Figma.",
-      "Phosphor dibuja con relleno en rejilla de 16 px (viewBox 256), no con trazo: no hay strokeWidth. Radix Icons son de 15px con otro estilo: revisar el peso regular frente a Radix en Figma.",
-      "Los tamaños 14 / 16 / 18 / 20 salen de Button y TextField; no hay token de tamaño de icono.",
+      "Decidido: Phosphor sustituye a Radix como referencia de iconos. Pendiente: revisar cada instance swap en Figma (por defecto «Design / blending-mode»).",
+      "Decidido: peso regular por defecto, sin strokeWidth (Phosphor dibuja con relleno en rejilla de 16 px). Pendiente: comprobar en Figma el aspecto frente a Radix.",
+      "Decidido: los tamaños 14 / 16 / 18 / 20 no tienen token; viven en layout de Button, IconButton y TextField.",
       "El anchor de Figma queda sin nodo: el componente no existe como tal en el archivo."
     ]
   }
