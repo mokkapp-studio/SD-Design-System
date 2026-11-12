@@ -1053,10 +1053,10 @@
   --overlays-white-alpha-10: #ffffffcc;
   --overlays-white-alpha-11: #ffffffe5;
   --overlays-white-alpha-12: #fffffff2;
-  --typography-font-family-text: SF Pro;
-  --typography-font-family-code: Menlo;
-  --typography-font-family-emphasis: Times New Roman;
-  --typography-font-family-quote: Times New Roman;
+  --typography-font-family-text: "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --typography-font-family-code: Menlo, ui-monospace, "SF Mono", monospace;
+  --typography-font-family-emphasis: "Times New Roman", Times, serif;
+  --typography-font-family-quote: "Times New Roman", Times, serif;
   --typography-font-weight-light: 300;
   --typography-font-weight-regular: 400;
   --typography-font-weight-medium: 510;

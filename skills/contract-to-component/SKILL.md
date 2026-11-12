@@ -18,7 +18,7 @@ La skill hermana `ui-contract-builder` crea los contratos. Esta solo los consume
 
 1. **Contrato:** `<sistema>/contracts/<Nombre>.contract.json` (el sistema suele estar en `design-system/`). Si no existe, **para y pregunta**; no lo inventes (puedes proponer usar `ui-contract-builder`).
 2. **Reglas del proyecto:** lee `AGENTS.md` del proyecto (`AGENTS.nextjs.md` es su plantilla). Manda sobre los valores por defecto de abajo.
-3. **Stack:** `package.json` (React 18 o 19, `radix-ui`, `lucide-react`), alias `@/`, dónde está `components/`, si `tokens.css` está importado en `globals.css`.
+3. **Stack:** `package.json` (React 18 o 19, `radix-ui`, `@phosphor-icons/react` o `lucide-react`, según la librería del proyecto), alias `@/`, dónde está `components/`, si `tokens.css` está importado en `globals.css`.
 4. **Valores por defecto** si el proyecto no dice otra cosa: Next.js App Router, TypeScript estricto, CSS Modules, estados con atributos `data-*`, carpeta `src/components/<id>/`.
 
 ## Reglas que no se negocian

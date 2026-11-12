@@ -2,7 +2,7 @@
   "$schema": "./component.schema.json",
   "id": "navbar",
   "name": "Navbar",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "status": "draft",
   "category": "navigation",
   "description": "Barra superior de navegación de la aplicación: marca a la izquierda, una lista de NavbarItem en el centro y acciones a la derecha. En móvil, las secciones se abren en un panel desplegable desde un botón de menú.",
@@ -167,7 +167,7 @@
     },
     "menuToggle": {
       "element": "button",
-      "description": "Botón de menú, solo móvil. Es un IconButton ghost neutral de tamaño 3 (40 × 40 px). Su icono es «menu» con open=false y «x» con open=true. Lleva aria-expanded y aria-controls.",
+      "description": "Botón de menú, solo móvil. Es un IconButton ghost neutral de tamaño 3 (40 × 40 px). Su icono es `List` con open=false y `X` con open=true. Lleva aria-expanded y aria-controls.",
       "optional": true,
       "figmaLayer": "menuToggle"
     },
@@ -404,7 +404,7 @@
       "Nombre de marca «Mokkapp»: texto fijo en Figma, no es propiedad. Decisión pendiente: texto fijo del componente, o añadir una propiedad de texto (o slot `brand`) en Figma. No se ha añadido prop en código.",
       "Lista de secciones y acciones: en Figma son instancias fijas (4 NavbarItem y 2 Button), sin propiedad de slot ni instance swap. El contrato las modela como slots con figmaProp null. minItems de la lista (1) y mandatory (true) son decisiones propuestas.",
       "Los NavbarItem aparecen dos veces en Figma: en la barra (escritorio) y en el panel (móvil). Decisión propuesta: en código, una sola lista que se reorganiza con CSS, para no duplicar nodos. Si se quiere dos listas, cambiar anatomy.",
-      "Icono del botón de menú: es un swap de instancia que cambia según open (menu → x). Se resuelve en código con la prop open; no hay prop de icono en el contrato. El botón de menú es IconButton (ghost, neutral, size 3, highContrast false) con su contrato. aria-label del botón no está en Figma: pendiente de definir el texto (p. ej. «Abrir menú» / «Cerrar menú»).",
+      "Icono del botón de menú: es un swap de instancia que cambia según open (List → X, Phosphor; en Lucide, menu → x). Se resuelve en código con la prop open; no hay prop de icono en el contrato. El botón de menú es IconButton (ghost, neutral, size 3, highContrast false) con su contrato. aria-label del botón no está en Figma: pendiente de definir el texto (p. ej. «Abrir menú» / «Cerrar menú»).",
       "Los dos botones de acción son Button (variant soft y solid, color accent, size 2) con textos «Entrar» y «Empezar». Los textos son overrides de instancia, no propiedades del Navbar. Se dejan como contenido del slot actions.",
       "Medidas sin variable en Figma: logo 20 × 20 px; alto del root 64 px y 320 px abierto (resultado de padding + alto de brand); el panel móvil 256 px de alto; padding de bar 12 px vertical y gap entre marca y nombre. La mayoría de ellas coinciden con tokens existentes (spacing.*, tokens.space.button-height-3), pero solo por valor, no por variable. Los tamaños del panel no tienen token.",
       "Trazo del root: neutral-alpha.6 con opacidad de 0.15 sobre el propio trazo. El token de color está ligado, pero la opacidad 0.15 no tiene token y la posición del trazo (interior/exterior, borde inferior) no se pudo leer. Se documenta el color y el ancho de 1 px; verificar a mano.",

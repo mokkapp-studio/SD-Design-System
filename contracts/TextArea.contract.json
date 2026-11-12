@@ -2,7 +2,7 @@
   "$schema": "./component.schema.json",
   "id": "text-area",
   "name": "TextArea",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "status": "draft",
   "category": "input",
   "description": "Campo de varias líneas para que la persona escriba un texto largo. Admite etiqueta visible y un valor que se puede desplazar dentro de la caja.",
@@ -490,8 +490,8 @@
       "node": "27:993"
     },
     "code": {
-      "importPath": "—",
-      "export": "—"
+      "importPath": "@/components/text-area/text-area",
+      "export": "TextArea"
     }
   },
   "meta": {

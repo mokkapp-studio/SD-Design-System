@@ -2,7 +2,7 @@
   "$schema": "./component.schema.json",
   "id": "button",
   "name": "Button",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "status": "draft",
   "category": "action",
   "description": "Lanza una acción cuando la persona lo pulsa. Se elige el énfasis con `variant`, el significado con `color` y se puede reforzar el contraste con `highContrast`.",
@@ -236,7 +236,7 @@
     },
     "icon": {
       "element": "slot",
-      "description": "Hueco para el icono inicial. Se oculta si no hay icono.",
+      "description": "Hueco para el icono inicial. Se oculta si no hay icono. Hereda el color de `text` del root (sin iconColor propio).",
       "optional": true,
       "figmaLayer": "Design / blending-mode (primera instancia)",
       "figmaToggle": {
@@ -265,7 +265,7 @@
     },
     "iconEnd": {
       "element": "slot",
-      "description": "Hueco para el icono final.",
+      "description": "Hueco para el icono final. Hereda el color de `text` del root (sin iconColor propio).",
       "optional": true,
       "figmaLayer": "Design / blending-mode (segunda instancia)",
       "figmaToggle": {
