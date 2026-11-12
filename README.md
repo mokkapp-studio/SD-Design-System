@@ -22,7 +22,7 @@
   <img src="https://img.shields.io/badge/Next.js-App%20Router-000000?logo=nextdotjs&logoColor=white" alt="Next.js">
   <img src="https://img.shields.io/badge/React-TypeScript-3178C6?logo=typescript&logoColor=white" alt="React + TypeScript">
   <img src="https://img.shields.io/badge/Radix-Themes%20%2B%20Primitives-161618?logo=radixui&logoColor=white" alt="Radix">
-  <img src="https://img.shields.io/badge/Iconos-Lucide%20%7C%20Phosphor-F97316" alt="Lucide y Phosphor">
+  <img src="https://img.shields.io/badge/Iconos-Phosphor%20%7C%20Lucide-F97316" alt="Phosphor y Lucide">
   <img src="https://img.shields.io/badge/a11y-WCAG%202.2-2E7D32" alt="WCAG">
   <img src="https://img.shields.io/badge/Git-GitHub-181717?logo=github&logoColor=white" alt="GitHub">
 </p>
@@ -162,17 +162,17 @@ SD-Design-System/
 │       └── scripts/              gen-css.mjs · conformance.mjs · lib.mjs
 │
 ├── icons/                        🔣 Registros de iconos permitidos (un proyecto usa una librería)
-│   ├── lucide/                   registry.json · catalog.json · icons.ts
-│   └── phosphor/                 registry.json · catalog.json · icons.ts
+│   ├── phosphor/                 registry.json · catalog.json · icons.ts (por defecto)
+│   └── lucide/                   registry.json · catalog.json · icons.ts (alternativa)
 │
 ├── scripts/                      ⚙️ Generadores
 │   ├── build-tokens.mjs          tokens.json → tokens.css
-│   ├── build-lucide-icons.mjs    registro Lucide → icons.ts
-│   ├── build-lucide-catalog.mjs  catálogo completo de Lucide
-│   ├── build-lucide-figma.mjs    paso de iconos Lucide a Figma
 │   ├── build-phosphor-icons.mjs  registro Phosphor → icons.ts
 │   ├── build-phosphor-catalog.mjs
-│   └── build-phosphor-figma.mjs
+│   ├── build-phosphor-figma.mjs
+│   ├── build-lucide-icons.mjs    registro Lucide → icons.ts (alternativa)
+│   ├── build-lucide-catalog.mjs  catálogo completo de Lucide
+│   └── build-lucide-figma.mjs    paso de iconos Lucide a Figma
 │
 └── docs/                         📚 Guías
     ├── assets/banner.svg         Portada de este README
@@ -180,7 +180,7 @@ SD-Design-System/
     ├── figma.md                  Preparar Figma y conectarlo con el contrato
     ├── tokens-from-figma.md      Cómo se exportan y representan los tokens
     ├── components.md             Índice de componentes y vocabulario de props
-    ├── icons.md                  Iconos (Lucide / Phosphor)
+    ├── icons.md                  Iconos (Phosphor, con Lucide como alternativa)
     ├── nextjs.md                 Llevar el sistema a un proyecto Next.js
     ├── prompts-nextjs.md         Prompts listos para usar con el agente
     └── ejercicios.md             Ejercicios prácticos
@@ -353,7 +353,7 @@ El agente lee [`AGENTS.md`](AGENTS.md) antes de tocar nada. **Si algo no está e
 | [`docs/figma.md`](docs/figma.md) | Preparar Figma y conectarlo con el contrato |
 | [`docs/tokens-from-figma.md`](docs/tokens-from-figma.md) | Tokens: origen, modos y generación de CSS |
 | [`docs/components.md`](docs/components.md) | Índice de componentes y vocabulario de props |
-| [`docs/icons.md`](docs/icons.md) | Iconos con Lucide o Phosphor |
+| [`docs/icons.md`](docs/icons.md) | Iconos con Phosphor (por defecto) o Lucide |
 | [`docs/nextjs.md`](docs/nextjs.md) | Llevar el sistema a un proyecto Next.js |
 | [`docs/prompts-nextjs.md`](docs/prompts-nextjs.md) | Prompts listos para trabajar con el agente |
 | [`docs/ejercicios.md`](docs/ejercicios.md) | Ejercicios prácticos para aprender el sistema |

@@ -2,18 +2,29 @@
   "$schema": "./component.schema.json",
   "id": "icon",
   "name": "Icon",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "status": "draft",
   "category": "media",
-  "description": "Dibuja un icono de la librería del sistema (Lucide) con tamaño y accesibilidad coherentes. Hereda el color del texto.",
+  "description": "Dibuja un icono de la librería del sistema (Phosphor, alternativa Lucide por proyecto) con tamaño, peso y accesibilidad coherentes. Hereda el color del texto.",
   "guidance": {
     "dos": [
-      "Usa solo iconos de `icons/lucide/registry.json`. Si falta uno, añádelo al registry antes de usarlo.",
+      "Usa solo iconos de `icons/phosphor/registry.json` (o de `icons/lucide/registry.json` si el proyecto usa Lucide). Si falta uno, añádelo al registry antes de usarlo.",
+      "Peso `regular` por defecto. Usa `fill` solo para el estado activo o seleccionado del mismo icono.",
       "Icono decorativo (acompaña a un texto): sin `label`; el componente lo oculta a lectores de pantalla.",
       "Icono que comunica algo por sí solo: da siempre `label`.",
       "Deja que el color lo herede del texto del componente padre; no lo pintes aparte."
     ],
     "donts": [
+      {
+        "case": "No fijar color, stroke ni fill: el icono usa siempre currentColor",
+        "useInstead": "Dejar que el color lo herede del texto del padre (currentColor)",
+        "why": "Un color fijo no cambia con el tema ni con el estado del componente que lo contiene."
+      },
+      {
+        "case": "Usar fill como adorno o para destacar sin que cambie el estado",
+        "useInstead": "El color o el tamaño del componente padre",
+        "why": "Fill comunica «activo / seleccionado»; usarlo como adorno confunde ese significado."
+      },
       {
         "case": "Botón solo con icono",
         "useInstead": "IconButton con aria-label",
@@ -23,6 +34,11 @@
         "case": "Importar toda la librería (import * as)",
         "useInstead": "Importar desde el archivo generado de iconos",
         "why": "Aumenta el tamaño del paquete y se salta el registro de iconos permitidos."
+      },
+      {
+        "case": "Importar directamente de @phosphor-icons/react o lucide-react en un componente",
+        "useInstead": "Importar desde src/components/icon/icons.ts (generado)",
+        "why": "Se salta el registro de iconos permitidos y el paquete pierde el tree-shaking controlado."
       },
       {
         "case": "Emoji o imagen como icono",
@@ -57,10 +73,19 @@
   "props": [
     {
       "name": "icon",
-      "type": "LucideIcon",
+      "type": "PhosphorIcon",
       "required": true,
-      "description": "El componente de icono, importado del archivo generado a partir de icons/lucide/registry.json.",
+      "description": "El componente de icono, importado del archivo generado a partir de icons/phosphor/registry.json (tipo PhosphorIcon, reexportado por icons.ts). Con Lucide, el tipo es LucideIcon y el origen icons/lucide/registry.json.",
       "usage": "Icon con icon={Plus}",
+      "bindings": {
+        "figma": null
+      }
+    },
+    {
+      "name": "weight",
+      "type": "'regular' | 'fill'",
+      "default": "regular",
+      "description": "Peso del icono de Phosphor. regular = reposo; fill = estado activo o seleccionado. Sin efecto con Lucide.",
       "bindings": {
         "figma": null
       }
@@ -91,7 +116,7 @@
   "anatomy": {
     "root": {
       "element": "svg",
-      "description": "El icono. Hereda el color con currentColor."
+      "description": "El icono. color = currentColor: hereda el color del texto del padre. No tiene color, stroke ni fill propios."
     }
   },
   "composition": {
@@ -136,9 +161,7 @@
       ]
     },
     "bindings": {
-      "base": {
-        "strokeWidth": 2
-      }
+      "base": {}
     }
   },
   "a11y": {
@@ -154,7 +177,8 @@
     "cases": [
       "sin label lleva aria-hidden=\"true\"",
       "con label lleva role=\"img\" y aria-label",
-      "hereda el color del padre (currentColor)"
+      "hereda el color del padre (currentColor)",
+      "weight por defecto es regular; fill se aplica solo cuando se pide"
     ]
   },
   "anchors": {
@@ -174,9 +198,9 @@
       "props.default"
     ],
     "needsReview": [
-      "Figma de Radix usa sus propios iconos (instance swap por defecto «Design / blending-mode» y similares). El sistema usa Lucide: el aspecto cambia y hay que revisar cada icono en Figma.",
-      "strokeWidth 2 es el valor por defecto de Lucide, no viene de Figma. Radix Icons son de 15px con trazo distinto: decidir si se ajusta a 1.5.",
-      "Los tamaños 14 / 16 / 18 / 20 salen de Button y TextField; no hay token de tamaño de icono.",
+      "Decidido: Phosphor sustituye a Radix como referencia de iconos. Pendiente: revisar cada instance swap en Figma (por defecto «Design / blending-mode»).",
+      "Decidido: peso regular por defecto, sin strokeWidth (Phosphor dibuja con relleno en rejilla de 16 px). Pendiente: comprobar en Figma el aspecto frente a Radix.",
+      "Decidido: los tamaños 14 / 16 / 18 / 20 no tienen token; viven en layout de Button, IconButton y TextField.",
       "El anchor de Figma queda sin nodo: el componente no existe como tal en el archivo."
     ]
   }

@@ -61,8 +61,9 @@ design-system/                        contratos, tokens, docs, check.mjs
 
 ## Iconos
 
-- Solo iconos de `design-system/icons/lucide/registry.json`, importados desde `src/components/icon/icons.ts` (generado). Nunca `import * as` ni imports directos de `lucide-react` en componentes.
+- Solo iconos de `design-system/icons/phosphor/registry.json`, importados desde `src/components/icon/icons.ts` (generado). Nunca `import * as` ni imports directos de `@phosphor-icons/react` (ni de `lucide-react`) en componentes.
 - Se dibujan con el componente `Icon` (contrato `Icon.contract.json`). Sin `label` es decorativo (`aria-hidden`); con `label`, `role="img"`.
+- Peso `regular` por defecto; `weight="fill"` solo para el estado activo o seleccionado del mismo icono.
 - El tamaño lo fija el componente padre por CSS según su `size` (`layout.iconSize` del contrato). El color se hereda (`currentColor`).
 - Si necesitas un icono que no está en el registry, no lo importes: pregunta.
 
@@ -75,7 +76,7 @@ Cumple `a11y` del contrato: rol, nombre accesible, teclado, foco visible, área 
 - No inventas props, variantes, estados ni tokens.
 - No tocas `design-system/`.
 - No editas `tokens.css` (se regenera).
-- No instalas librerías sin preguntar (`lucide-react` y `radix-ui` ya están decididas).
+- No instalas librerías sin preguntar (`@phosphor-icons/react` y `radix-ui` ya están decididas; Lucide solo si el proyecto lo elige).
 - No creas componentes que no tengan contrato.
 - No importas iconos fuera del registry.
 

@@ -90,6 +90,7 @@ for (const s of c.states?.controlled ?? []) {
 if (/:\s*any\b|\bas any\b|<any>/.test(tsx)) err('hay «any» en el tsx');
 if (/style=\{\{/.test(tsx)) err('estilos en línea (style={{…}}): usa el CSS Module');
 if (/from\s+['"]lucide-react['"]/.test(tsx)) err('import directo de lucide-react: usa los iconos del registry');
+if (/from\s+['"]@phosphor-icons\/react(\/[a-z]+)?['"]/.test(tsx)) err('import directo de @phosphor-icons/react: usa los iconos del registry (icons.ts)');
 if (/\bhooks?\b|useState|useEffect|useRef|useReducer|onClick|onChange/.test(tsx) && !/^\s*['"]use client['"]/m.test(tsx) && /useState|useEffect|useRef|useReducer/.test(tsx)) err('usa hooks pero falta «use client»');
 
 // 5. Atributos data-* usados en el CSS ↔ tsx, y variantes cubiertas

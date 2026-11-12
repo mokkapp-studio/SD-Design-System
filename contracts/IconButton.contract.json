@@ -2,14 +2,14 @@
   "$schema": "./component.schema.json",
   "id": "icon-button",
   "name": "IconButton",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "status": "draft",
   "category": "action",
   "description": "Botón cuadrado que solo muestra un icono y lanza una acción. Mismas variantes, colores y tamaños que Button, pero sin etiqueta: el nombre accesible va en `aria-label`, que es obligatorio.",
   "guidance": {
     "dos": [
       "Da siempre `aria-label` con la acción («Borrar búsqueda», «Cerrar diálogo»).",
-      "Usa iconos del registro (`icons/lucide/registry.json`) y que el significado sea universal: X, Trash2, Plus, Search.",
+      "Usa iconos del registro (`icons/phosphor/registry.json`, o `icons/lucide/registry.json` en un proyecto Lucide) y que el significado sea universal: X, Trash, Plus, MagnifyingGlass.",
       "Dentro de un campo (TextField) usa `variant=\"ghost\"` y `color=\"neutral\"`.",
       "Para acciones poco obvias, añade un Tooltip: un icono solo no siempre se entiende.",
       "Para que dos IconButton parezcan una barra, usa el mismo `variant` y `size` en todos."
@@ -237,7 +237,7 @@
     },
     "spinner": {
       "element": "svg",
-      "description": "Spinner. Solo con loading=true; sustituye al icono.",
+      "description": "Spinner. Solo con loading=true; sustituye al icono. Mide lo mismo que el icono de su size (16 / 16 / 18 / 20 px).",
       "optional": true,
       "figmaLayer": "content-container › Spinner (16px en size 2)"
     }
@@ -377,21 +377,21 @@
         "classic": {
           "default": {
             "background": "{color.step}.9",
-            "iconColor": "{color.onSolid}",
+            "text": "{color.onSolid}",
             "border": "{color.step}.9",
             "borderWidth": 1,
             "shadow": "shadows.button-classic.button-classic-{color}"
           },
           "hover": {
             "background": "{color.step}.10",
-            "iconColor": "{color.onSolid}",
+            "text": "{color.onSolid}",
             "border": "{color.step}.9",
             "borderWidth": 1,
             "shadow": "shadows.button-classic.button-classic-{color}"
           },
           "active": {
             "background": "{color.step}.9",
-            "iconColor": "{color.onSolid}",
+            "text": "{color.onSolid}",
             "border": "{color.step}.9",
             "borderWidth": 1,
             "shadow": "shadows.button-classic.button-classic-{color}-active"
@@ -400,17 +400,17 @@
         "solid": {
           "default": {
             "background": "{color.step}.9",
-            "iconColor": "{color.onSolid}",
+            "text": "{color.onSolid}",
             "border": null
           },
           "hover": {
             "background": "{color.step}.10",
-            "iconColor": "{color.onSolid}",
+            "text": "{color.onSolid}",
             "border": null
           },
           "active": {
             "background": "{color.step}.10",
-            "iconColor": "{color.onSolid}",
+            "text": "{color.onSolid}",
             "border": null,
             "opacity": 0.92
           }
@@ -418,17 +418,17 @@
         "soft": {
           "default": {
             "background": "{color.alpha}.3",
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": null
           },
           "hover": {
             "background": "{color.alpha}.4",
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": null
           },
           "active": {
             "background": "{color.alpha}.5",
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": null,
             "opacity": 0.92
           }
@@ -436,19 +436,19 @@
         "surface": {
           "default": {
             "background": "{color.surface}",
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": "{color.alpha}.7",
             "borderWidth": 1
           },
           "hover": {
             "background": "{color.surface}",
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": "{color.alpha}.8",
             "borderWidth": 1
           },
           "active": {
             "background": "{color.alpha}.3",
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": "{color.alpha}.8",
             "borderWidth": 1,
             "opacity": 0.92
@@ -457,19 +457,19 @@
         "outline": {
           "default": {
             "background": null,
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": "{color.alpha}.8",
             "borderWidth": 1
           },
           "hover": {
             "background": "{color.alpha}.2",
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": "{color.alpha}.8",
             "borderWidth": 1
           },
           "active": {
             "background": "{color.alpha}.3",
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": "{color.alpha}.8",
             "borderWidth": 1,
             "opacity": 0.92
@@ -478,17 +478,17 @@
         "ghost": {
           "default": {
             "background": null,
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": null
           },
           "hover": {
             "background": "{color.alpha}.3",
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": null
           },
           "active": {
             "background": "{color.alpha}.4",
-            "iconColor": "{color.fg}",
+            "text": "{color.fg}",
             "border": null,
             "opacity": 0.92
           }
@@ -498,20 +498,20 @@
         "classic": {
           "default": {
             "background": "{color.step}.12",
-            "iconColor": "{color.onSolidHigh}",
+            "text": "{color.onSolidHigh}",
             "border": "{color.step}.12",
             "shadow": "shadows.button-classic.button-classic-{color.hcShadow}"
           },
           "hover": {
             "background": "{color.step}.12",
-            "iconColor": "{color.onSolidHigh}",
+            "text": "{color.onSolidHigh}",
             "border": "{color.step}.12",
             "shadow": "shadows.button-classic.button-classic-{color.hcShadow}",
             "opacity": 0.88
           },
           "active": {
             "background": "{color.step}.12",
-            "iconColor": "{color.onSolidHigh}",
+            "text": "{color.onSolidHigh}",
             "border": "{color.step}.12",
             "shadow": "shadows.button-classic.button-classic-{color.hcShadow}-active"
           }
@@ -519,71 +519,71 @@
         "solid": {
           "default": {
             "background": "{color.step}.12",
-            "iconColor": "{color.onSolidHigh}"
+            "text": "{color.onSolidHigh}"
           },
           "hover": {
             "background": "{color.step}.12",
-            "iconColor": "{color.onSolidHigh}",
+            "text": "{color.onSolidHigh}",
             "opacity": 0.88
           },
           "active": {
             "background": "{color.step}.12",
-            "iconColor": "{color.onSolidHigh}",
+            "text": "{color.onSolidHigh}",
             "opacity": 0.82
           }
         },
         "soft": {
           "default": {
-            "iconColor": "{color.fgHigh}"
+            "text": "{color.fgHigh}"
           },
           "hover": {
-            "iconColor": "{color.fgHigh}",
+            "text": "{color.fgHigh}",
             "opacity": 0.88
           },
           "active": {
-            "iconColor": "{color.fgHigh}",
+            "text": "{color.fgHigh}",
             "opacity": 0.82
           }
         },
         "surface": {
           "default": {
-            "iconColor": "{color.fgHigh}"
+            "text": "{color.fgHigh}"
           },
           "hover": {
-            "iconColor": "{color.fgHigh}",
+            "text": "{color.fgHigh}",
             "opacity": 0.88
           },
           "active": {
-            "iconColor": "{color.fgHigh}",
+            "text": "{color.fgHigh}",
             "opacity": 0.82
           }
         },
         "outline": {
           "default": {
-            "iconColor": "{color.fgHigh}",
+            "text": "{color.fgHigh}",
             "border": "{color.strokeHigh}"
           },
           "hover": {
-            "iconColor": "{color.fgHigh}",
+            "text": "{color.fgHigh}",
             "border": "{color.strokeHigh}",
             "opacity": 0.88
           },
           "active": {
-            "iconColor": "{color.fgHigh}",
+            "text": "{color.fgHigh}",
             "border": "{color.strokeHigh}",
             "opacity": 0.82
           }
         },
         "ghost": {
           "default": {
-            "iconColor": "{color.fgHigh}"
+            "text": "{color.fgHigh}"
           },
           "hover": {
-            "iconColor": "{color.fgHigh}",
+            "text": "{color.fgHigh}",
             "opacity": 0.88
           },
           "active": {
-            "iconColor": "{color.fgHigh}",
+            "text": "{color.fgHigh}",
             "opacity": 0.82
           }
         }
@@ -592,36 +592,36 @@
         "disabled": {
           "classic": {
             "background": "colors.neutral.neutral-alpha.3",
-            "iconColor": "colors.neutral.neutral-alpha.8",
+            "text": "colors.neutral.neutral-alpha.8",
             "border": "colors.neutral.neutral.4",
             "borderWidth": 1,
             "shadow": "shadows.button-classic.button-classic-accent"
           },
           "solid": {
             "background": "colors.neutral.neutral-alpha.3",
-            "iconColor": "colors.neutral.neutral-alpha.8",
+            "text": "colors.neutral.neutral-alpha.8",
             "border": null
           },
           "soft": {
             "background": "colors.neutral.neutral-alpha.3",
-            "iconColor": "colors.neutral.neutral-alpha.8",
+            "text": "colors.neutral.neutral-alpha.8",
             "border": null
           },
           "surface": {
             "background": "colors.neutral.neutral-alpha.2",
-            "iconColor": "colors.neutral.neutral-alpha.8",
+            "text": "colors.neutral.neutral-alpha.8",
             "border": "colors.neutral.neutral-alpha.6",
             "borderWidth": 1
           },
           "outline": {
             "background": null,
-            "iconColor": "colors.neutral.neutral-alpha.8",
+            "text": "colors.neutral.neutral-alpha.8",
             "border": "colors.neutral.neutral-alpha.7",
             "borderWidth": 1
           },
           "ghost": {
             "background": null,
-            "iconColor": "colors.neutral.neutral-alpha.8",
+            "text": "colors.neutral.neutral-alpha.8",
             "border": null
           }
         }
@@ -710,15 +710,15 @@
       "Figma marca los valores por defecto con ✦ («solid ✦», «2 ✦», «default ✦»): el valor real va sin marca en el contrato.",
       "El eje de Figma es «highContrast» aquí (en Button es «highConstrast», errata). Comprobado: en el IconButton está bien escrito.",
       "Tokens de fondo, borde, sombra y opacity leídos de la capa content-container en size 2 para las 6 variantes × accent / neutral y, para error, solid y outline. Se asume que valen para el resto de sizes, y para error en classic / soft / surface / ghost (mismo patrón que Button).",
-      "El color del icono (iconColor) NO se pudo leer en la mayoría de variantes: el icono es una instancia y sus rellenos no son accesibles. Solo se confirmó solid + accent + default (tokens.colors.accent-contrast). El resto se copió de Button (text): es una suposición razonable, verificar a mano.",
-      "El color del icono en disabled (neutral-alpha.8) y el de highContrast también son suposiciones copiadas de Button.",
+      "Decidido: el icono hereda el color `text` del root, sin color propio (antes iconColor). Pendiente: en Figma el icono es una instancia y sus rellenos no se pudieron leer; solo se confirmó solid + accent + default (tokens.colors.accent-contrast). Verificar a mano el resto de variantes.",
+      "Decidido: el color del icono en disabled y en highContrast sigue la misma regla (hereda `text`). Sus valores siguen copiados de Button; verificar a mano.",
       "El radio sí está enlazado y se verificó en los 4 sizes: radius.1-max a radius.4-max.",
       "Anchos y altos (24 / 32 / 40 / 48) y tamaño del icono (16 / 16 / 18 / 20) están sueltos en Figma, sin variable. Los tokens tokens.space.button-height-N se usan por coincidencia de valor con Button.",
-      "loading=true solo existe en Figma junto a state=disable. El spinner mide 16px en size 2; no se verificó el de los otros sizes.",
+      "Decidido: el spinner mide lo mismo que el icono de su size (16 / 16 / 18 / 20 px). Pendiente: en Figma solo se midió 16 px en size 2; verificar los otros sizes.",
       "opacity en hover / active (0.88, 0.82, 0.92) está fija en Figma, sin variable, igual que en Button.",
       "classic usa dos capas de degradado (blanco → transparente) sin variable. No están en tokens.",
-      "El anillo de foco se copió de Button (accent); no se leyó en IconButton.",
-      "Contraste y área táctil no medidos. Con 24px en size 1 se cumple 2.5.8 justo en el límite.",
+      "Decidido: el anillo de foco se copia de Button (accent). Se revisa si Button cambia.",
+      "Pendiente: contraste no medido (script por variante, light y dark). Área: 24 px en size 1 cumple WCAG 2.5.8 justo en el límite; aceptado.",
       "No existen en Figma: aria-label, type, onPress."
     ]
   }

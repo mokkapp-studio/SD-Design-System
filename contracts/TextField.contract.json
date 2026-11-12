@@ -2,7 +2,7 @@
   "$schema": "./component.schema.json",
   "id": "text-field",
   "name": "TextField",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "status": "draft",
   "category": "input",
   "description": "Campo de una línea para que la persona escriba texto. Admite etiqueta, un icono inicial y un botón final.",
@@ -152,7 +152,7 @@
       "type": "ReactNode | undefined",
       "default": null,
       "description": "Icono inicial. 14px en size 1; 16px en size 2 y 3. aria-hidden.",
-      "usage": "icon={<Search />}",
+      "usage": "icon={<MagnifyingGlass />}",
       "bindings": {
         "figma": {
           "property": "⮑ 🔄 icon",

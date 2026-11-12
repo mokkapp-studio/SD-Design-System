@@ -8,14 +8,19 @@
   "icons": [
     { "name": "ArrowRight", "use": "avanzar, siguiente, continuar" },
     { "name": "Check", "use": "confirmación, marcado" },
+    { "name": "CheckCircle", "use": "confirmación de éxito, logo de marca de ejemplo (Footer)" },
     { "name": "CaretDown", "use": "desplegar, selector" },
     { "name": "Eye", "use": "mostrar contenido (p. ej. contraseña)" },
     { "name": "EyeSlash", "use": "ocultar contenido" },
+    { "name": "GithubLogo", "use": "enlace a GitHub (redes del pie)" },
     { "name": "Info", "use": "información neutra" },
+    { "name": "LinkedinLogo", "use": "enlace a LinkedIn (redes del pie)" },
+    { "name": "List", "use": "menú de navegación en móvil (abrir)" },
     { "name": "Minus", "use": "quitar, restar, estado indeterminado" },
     { "name": "Plus", "use": "añadir, crear" },
     { "name": "MagnifyingGlass", "use": "buscar" },
     { "name": "Trash", "use": "eliminar (acción destructiva)" },
-    { "name": "X", "use": "cerrar, borrar el contenido" }
+    { "name": "X", "use": "cerrar, borrar el contenido, cerrar menú" },
+    { "name": "YoutubeLogo", "use": "enlace a YouTube (redes del pie)" }
   ]
 }

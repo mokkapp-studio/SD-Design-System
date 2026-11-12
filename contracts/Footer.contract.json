@@ -2,7 +2,7 @@
   "$schema": "./component.schema.json",
   "id": "footer",
   "name": "Footer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "status": "draft",
   "category": "container",
   "description": "Pie de página de la aplicación. En su versión simple, solo la barra inferior con el copyright y los enlaces sociales. En su versión completa, además la marca con su eslogan y una fila de FooterColumn, con un separador entre ambas partes.",
@@ -59,7 +59,7 @@
       {
         "component": "Icon",
         "relation": "contains",
-        "difference": "El logo de la marca es un Icon circle-check de 20 px, no una imagen (ver needsReview)."
+        "difference": "El logo de la marca es un Icon CheckCircle de 20 px, no una imagen (ver needsReview)."
       }
     ]
   },
@@ -125,7 +125,7 @@
     },
     "logo": {
       "element": "svg",
-      "description": "Logo de la marca: Icon circle-check de 20 px, fijo en Figma.",
+      "description": "Logo de la marca: Icon CheckCircle de 20 px, fijo en Figma.",
       "optional": true,
       "figmaLayer": "logo"
     },
@@ -218,7 +218,7 @@
         "part": "logo",
         "component": "Icon",
         "fixedProps": {
-          "icon": "circle-check",
+          "icon": "CheckCircle",
           "size": "20"
         }
       }
@@ -439,8 +439,8 @@
       "Propiedad showSocial (BOOLEAN, por defecto true): controla la capa social de la barra inferior. Se expone como prop showSocial. Nota: en FooterColumn, showSocial no tenía capas; aquí sí la tiene.",
       "Textos fijos sin propiedad: marca «Mokkapp», eslogan, copyright «© 2026 Mokkapp Studio». Pregunta: ¿añadir propiedades de texto en Figma o aprobarlas en código? No se han añadido props.",
       "Títulos y enlaces de las columnas: tres instancias de FooterColumn con sus títulos y enlaces fijos (overrides de instancia). Figma no permite cambiarlos desde el Footer.",
-      "Logo: Icon circle-check de 20 px, no una imagen. Decidir si la marca debe llevar un logo real (imagen o SVG propio) en lugar de un icono de ejemplo.",
-      "Redes sociales: tres IconButton ghost de tamaño 2 (LinkedIn, GitHub, YouTube), con icono por instancia swap. Problema: IconButton es un botón y no tiene href, pero estos elementos deben llevar a una URL. Decidir si son Link con icono (y cambiar el contrato) o IconButton con onPress y destino en la aplicación. Además, IconButton exige aria-label y Figma no define los textos (p. ej. «LinkedIn»).",
+      "Logo: Icon CheckCircle de 20 px, no una imagen. Decidir si la marca debe llevar un logo real (imagen o SVG propio) en lugar de un icono de ejemplo.",
+      "Redes sociales: tres IconButton ghost de tamaño 2 (LinkedIn, GitHub, YouTube), con icono por instancia swap (LinkedinLogo, GithubLogo, YoutubeLogo). Problema: IconButton es un botón y no tiene href, pero estos elementos deben llevar a una URL. Decidir si son Link con icono (y cambiar el contrato) o IconButton con onPress y destino en la aplicación. Además, IconButton exige aria-label y Figma no define los textos (p. ej. «LinkedIn»).",
       "Separación en móvil: las columnas se apilan con 24 px entre ellas, valor derivado de las alturas de los componentes en Figma (344 px de alto total con tres columnas de 108, 108 y 80 px). No tiene variable: confirmar y, si se quiere, crear un token.",
       "Separación entre marca y columnas: 48 px en escritorio (spacing.8) y 32 px en móvil (spacing.6), ligados a variable.",
       "Trazo superior del footer: neutral-alpha.6 con opacidad de 0.15 sobre el propio trazo, igual que en Navbar y Form. La opacidad no tiene token y la posición del trazo se documenta como superior por convención; verificar a mano.",

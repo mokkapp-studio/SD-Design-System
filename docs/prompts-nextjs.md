@@ -142,11 +142,11 @@ Busca en src/components/ cualquier token que ya no exista (variables --… que n
 **Instalar (una vez):**
 
 ```
-Lee AGENTS.md y design-system/docs/icons.md. Instala los iconos de Lucide:
-1. npm install lucide-react
-2. Añade a package.json el script "ds:icons": "node design-system/scripts/build-lucide-icons.mjs src/components/icon/icons.ts" y ejecútalo.
-3. Crea src/components/icon/ con icon.tsx y icon.module.css desde design-system/contracts/Icon.contract.json, y copia el contrato.
-4. Añade al playground una fila con todos los iconos de design-system/icons/lucide/registry.json a los tamaños 14, 16, 18 y 20.
+Lee AGENTS.md y design-system/docs/icons.md. Instala los iconos de Phosphor:
+1. npm install @phosphor-icons/react
+2. Añade a package.json el script "ds:icons": "node design-system/scripts/build-phosphor-icons.mjs src/components/icon/icons.ts" y ejecútalo.
+3. Crea src/components/icon/ con icon.tsx y icon.module.css desde design-system/contracts/Icon.contract.json (con la prop weight: regular por defecto, fill para el estado activo), y copia el contrato.
+4. Añade al playground una fila con todos los iconos de design-system/icons/phosphor/registry.json a los tamaños 14, 16, 18 y 20, en los pesos regular y fill.
 No modifiques otros componentes todavía. Resume lo que has hecho.
 ```
 
@@ -164,12 +164,12 @@ No importes iconos dentro del componente: los recibe como nodo.
 **Añadir un icono:**
 
 ```
-Necesito el icono «<descripción>». Búscalo en lucide.dev/icons, dime el nombre PascalCase y propón la entrada para design-system/icons/lucide/registry.json (name y use). No toques design-system/: dame solo la entrada.
+Necesito el icono «<descripción>». Búscalo en phosphoricons.com (y en design-system/icons/phosphor/catalog.json), dime el nombre PascalCase y propón la entrada para design-system/icons/phosphor/registry.json (name y use). No toques design-system/: dame solo la entrada.
 ```
 
 ## 10. Orden recomendado de componentes
 
-1. Icon (tras instalar Lucide).
+1. Icon (tras instalar Phosphor).
 2. Button y Link (Button usa Icon; Link no tiene dependencias).
 3. IconButton (mismos tokens que Button; recibe un Icon; exige `aria-label`).
 4. Checkbox, Switch, RadioGroup (comportamiento con primitivos).

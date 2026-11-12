@@ -2,7 +2,7 @@
   "$schema": "./component.schema.json",
   "id": "alert-dialog",
   "name": "AlertDialog",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "status": "draft",
   "category": "overlay",
   "description": "Diálogo modal de confirmación que interrumpe a la persona y espera una respuesta.",
@@ -627,7 +627,7 @@
       "node": "800:3697"
     },
     "code": {
-      "importPath": "@radix-ui/themes",
+      "importPath": "@/components/alert-dialog/alert-dialog",
       "export": "AlertDialog"
     }
   },
