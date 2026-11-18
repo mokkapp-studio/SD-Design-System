@@ -25,9 +25,9 @@
   box-sizing: border-box;
   border: 1px solid transparent;
   /* behavior.motion: posición del pulgar y color de la pista. TODO(contract): sin duración en el contrato. */
-  transition: transform 120ms;
+  transition: transform 120ms; /* TODO(contract): duración sin token de motion (behavior.motion no la fija) */
 }
-.track { transition: background-color 120ms; }
+.track { transition: background-color 120ms; } /* TODO(contract): duración sin token de motion */
 
 /* layout.trackSize 28x16 / 35x20 / 42x24: siempre proporción 7:4, así que el ancho sale de la altura. */
 .root[data-size="1"] .track { height: 16px; aspect-ratio: 7 / 4; }

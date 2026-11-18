@@ -48,7 +48,14 @@ export function Button({
       data-loading={loading || undefined}
       disabled={disabled}
       aria-busy={loading || undefined}
-      onClick={blocked ? undefined : onPress}
+      onClick={(event) => {
+        // blockedWhen incluye loading: sin el atributo disabled, el clic aún enviaría un formulario (type="submit").
+        if (blocked) {
+          event.preventDefault();
+          return;
+        }
+        onPress?.(event);
+      }}
     >
       {icon ? (
         <span data-part="icon" className={styles.icon}>

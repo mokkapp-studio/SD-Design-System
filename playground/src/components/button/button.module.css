@@ -12,7 +12,7 @@
   white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
   /* behavior.motion: solo background-color al hover. TODO(contract): el contrato no da la duración. */
-  transition: background-color 120ms;
+  transition: background-color 120ms; /* TODO(contract): duración sin token de motion (behavior.motion no la fija) */
 }
 
 .root:disabled { cursor: not-allowed; }
@@ -41,7 +41,7 @@
   margin: auto;
   width: 16px;
   height: 16px;
-  animation: spin 800ms steps(8) infinite;
+  animation: spin 800ms steps(8) infinite; /* TODO(contract): duración del spinner sin token */
 }
 .root[data-size="3"] .spinner { width: 18px; height: 18px; }
 .root[data-size="4"] .spinner { width: 20px; height: 20px; }

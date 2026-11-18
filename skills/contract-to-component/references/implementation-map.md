@@ -5,7 +5,7 @@ Una fila por bloque. El ejemplo completo es `assets/example/icon-button/`.
 | Bloque del contrato | En el código |
 | --- | --- |
 | `name`, `id`, `version` | `export function <name>`, carpeta `<id>/`, comentario `/** @contract <name>@<version> */` |
-| `props[]` | `export interface <name>Props`: mismo nombre, tipo, `?` si tiene `default`, sin `?` si `required`. Defaults en la desestructuración |
+| `props[]` | `export interface <name>Props { … }` explícita, **sin `extends` ni `...rest`**: mismo nombre y tipo exacto, `?` si no es `required`. Defaults en la desestructuración de la firma. Solo se añade `ref` si hay `semantics.refTarget` |
 | `props[].type` con `'a' \| 'b'` | Unión de literales, idéntica |
 | `props[].name` con guion (`aria-label`) | Clave entre comillas en el tipo y alias al desestructurar: `'aria-label': ariaLabel` |
 | `props[]` tipo `ReactNode` con `slot` | Prop de tipo `ReactNode` o `children`, según `anatomy.<parte>.slot` |
@@ -20,9 +20,9 @@ Una fila por bloque. El ejemplo completo es `assets/example/icon-button/`.
 | `tokens.bindings`, `tokens.scales` | Bloque generado por `gen-css.mjs`. Las plantillas `{color.step}` se expanden por valor |
 | `layout.height/width` | Si hay token (`tokens.space.button-height-N`), ya lo da el bloque generado. Si no, valor del contrato en CSS |
 | `layout.iconSize`, `layout.autoLayout` | CSS escrito a mano con los valores del contrato |
-| `events[]` | Props `onPress`, etc. No se disparan si `blockedWhen` incluye un estado activo |
+| `events[]` | Props `onPress`, etc. No se disparan si `blockedWhen` incluye un estado activo. Si ese estado no usa `disabled` nativo (p. ej. `loading`), además `event.preventDefault()`: si no, un `type="submit"` envía el formulario igual |
 | `behavior.loading` | `loading` → `aria-busy`, spinner en lugar del contenido, no emite eventos, mismo tamaño |
-| `behavior.motion[]` | `transition` solo en la propiedad indicada; `@media (prefers-reduced-motion: reduce)` → instantáneo |
+| `behavior.motion[]` | `transition` solo en la propiedad indicada; `@media (prefers-reduced-motion: reduce)` → instantáneo. La duración sale de un token; si el contrato no la fija, la línea lleva `/* TODO(contract): … */` |
 | `behavior.responsive[]` | `@media` con el breakpoint indicado. Si es un valor suelto, es un `needsReview` |
 | `composition.forbiddenChildren` | Comentario/tipo; el contrato manda: no los renderices dentro |
 | `composition.nestedComponents` | Importa el componente existente y úsalo con sus `fixedProps` |

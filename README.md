@@ -159,7 +159,7 @@ SD-Design-System/
 │       ├── SKILL.md
 │       ├── assets/example/icon-button/   Componente real que pasa el verificador
 │       ├── references/           implementation-map · parity
-│       └── scripts/              gen-css.mjs · conformance.mjs · lib.mjs
+│       └── scripts/              gen-css.mjs · conformance(-all|.selftest).mjs · lib.mjs
 │
 ├── icons/                        🔣 Registros de iconos permitidos (un proyecto usa una librería)
 │   ├── phosphor/                 registry.json · catalog.json · icons.ts (por defecto)
@@ -273,7 +273,7 @@ flowchart LR
   VER -- sí --> PG[tsc · lint · playground]
 ```
 
-`conformance.mjs` garantiza que las props, tipos, defaults, partes (`data-part`), estados, ARIA y tokens sean los del contrato, sin hex, sin px sueltos y sin `opacity` en disabled.
+`conformance.mjs` lee el tsx con el compilador de TypeScript y el CSS por lista blanca: props con su tipo exacto y sus defaults, partes (`data-part`), `ref`, estados, ARIA y solo los tokens del contrato; sin hex, colores con nombre, `rem` ni px sueltos, sin duraciones inventadas, sin `opacity` ni `filter` en disabled y con foco visible. Lo que el contrato aún no fija se marca con `TODO(contract)` y sale como aviso. `npm run ds:conformance` (en `playground/`) lo pasa a todos los componentes y `npm run ds:conformance:self` comprueba que el propio verificador detecta errores sembrados.
 
 ### 5. Cuando algo cambia: primero el contrato
 

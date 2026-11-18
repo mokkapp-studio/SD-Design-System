@@ -7,7 +7,8 @@
     "build-storybook": "storybook build",
     "typecheck": "tsc --noEmit",
     "ds:icons": "node ../scripts/build-phosphor-icons.mjs src/components/icon/icons.ts",
-    "ds:conformance": "for c in icon button switch; do node ../skills/contract-to-component/scripts/conformance.mjs src/components/$c --ds ..; done"
+    "ds:conformance": "node ../skills/contract-to-component/scripts/conformance-all.mjs src/components --ds ..",
+    "ds:conformance:self": "node ../skills/contract-to-component/scripts/conformance.selftest.mjs"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.7",

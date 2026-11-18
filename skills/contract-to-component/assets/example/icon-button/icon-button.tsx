@@ -1,9 +1,8 @@
-/** @contract IconButton@0.1.0 */
-import type { ButtonHTMLAttributes, MouseEvent, ReactNode, Ref } from 'react';
+/** @contract IconButton@0.1.3 */
+import type { MouseEvent, ReactNode, Ref } from 'react';
 import styles from './icon-button.module.css';
 
-export interface IconButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick' | 'type' | 'disabled' | 'children' | 'aria-label'> {
+export interface IconButtonProps {
   variant?: 'classic' | 'solid' | 'soft' | 'surface' | 'outline' | 'ghost';
   color?: 'accent' | 'neutral' | 'error';
   size?: '1' | '2' | '3' | '4';
@@ -29,12 +28,10 @@ export function IconButton({
   type = 'button',
   onPress,
   ref,
-  ...rest
 }: IconButtonProps) {
   const blocked = disabled || loading; // en Figma loading solo existe con state=disable (ver meta.needsReview)
   return (
     <button
-      {...rest}
       ref={ref}
       type={type}
       className={styles.root}

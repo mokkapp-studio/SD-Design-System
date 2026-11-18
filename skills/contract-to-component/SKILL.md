@@ -11,7 +11,8 @@ La skill hermana `ui-contract-builder` crea los contratos. Esta solo los consume
 
 ## Qué garantiza y qué no
 
-- **Garantiza (se comprueba con script):** mismas props, tipos y defaults; mismas partes (`data-part`); mismos estados y atributos ARIA; **solo** los tokens del contrato, ni colores ni medidas sueltas, sin opacity en disabled; copia del contrato idéntica al original.
+- **Garantiza (se comprueba con script, leyendo el tsx con el compilador de TypeScript):** mismas props con el **tipo exacto** (ni valores de más ni de menos), obligatoriedad y defaults; sin herencias (`extends`) ni props de más; cada parte con su `data-part` en el JSX real (no en comentarios); el `ref` en `semantics.refTarget`; `semantics.element` y `role`; atributos ARIA de los estados; ni `any`, ni `style`, ni `data-state`, ni imports directos de iconos. En el CSS, **lista blanca**: cada valor es `var(--token)` de `tokens.bindings` o un número del contrato; fuera colores con nombre, hex, `rgb()`, `rem`/`em`/`pt`, duraciones sin token, `!important`, `opacity` o `filter` en disabled; foco visible obligatorio si es interactivo; todos los tokens del contrato usados. Copia del contrato idéntica al original.
+- **Excepción explícita:** una declaración CSS en una línea con `TODO(contract): motivo` pasa como **aviso**, nunca en silencio. Es la forma de dejar visible un valor que el contrato aún no fija.
 - **No garantiza:** que el render sea pixel a pixel como Figma (fuentes, geometría del anillo de foco, degradados sin variable, spinner). Eso se revisa con `references/parity.md`.
 
 ## Paso 0 — Localizar
@@ -48,8 +49,9 @@ La skill hermana `ui-contract-builder` crea los contratos. Esta solo los consume
      `node <skill>/scripts/gen-css.mjs <contrato> --ds <sistema> --write src/components/<id>/<id>.module.css`
      Escribe entre `/* @generated:start */` y `/* @generated:end */`; lo demás del archivo es tuyo. Si el script avisa de «claves sin traducir», esas las escribes tú desde el contrato (ver implementation-map).
    - Escribe a mano solo lo que el contrato no tiene como token: reinicio del elemento, tamaño del icono (`layout.iconSize`), foco, carga.
-6. **Verificar:** `node <skill>/scripts/conformance.mjs src/components/<id> --ds <sistema>`. Debe dar **0 errores**. Si falla, arregla el código (regla 8 si es el contrato). Repite.
-7. **Verificar el proyecto:** `tsc --noEmit` (o `npm run build`), `npm run lint`. Añade el componente al playground con todas sus variantes, tamaños y estados.
+6. **Verificar:** `node <skill>/scripts/conformance.mjs src/components/<id> --ds <sistema>` (desde el proyecto: necesita su `typescript`). Debe dar **0 errores**. Si falla, arregla el código (regla 8 si es el contrato). Repite. No uses `TODO(contract)` para esquivar un error que el contrato sí resuelve.
+7. **Verificar el proyecto:** `conformance-all.mjs src/components --ds <sistema>` (todas las carpetas; una carpeta sin contrato es error), `tsc --noEmit` (o `npm run build`), `npm run lint`. Añade el componente al playground con todas sus variantes, tamaños y estados.
+   Si cambias el verificador, ejecuta `conformance.selftest.mjs`: el ejemplo debe pasar y cada error sembrado debe fallar.
 8. **Paridad con Figma:** si lo piden, o si el componente es crítico, `references/parity.md`.
 9. **Resumen** (corto): archivos creados; reglas del contrato aplicadas; puntos de `needsReview` / `TODO(contract)` que quedan; resultado del verificador; cómo probarlo (ruta del playground).
 
@@ -64,4 +66,5 @@ La skill hermana `ui-contract-builder` crea los contratos. Esta solo los consume
 - `references/implementation-map.md` — de cada bloque del contrato a su código (con patrones de tsx y CSS, comportamiento nativo, React 18/19).
 - `references/parity.md` — qué significa «idéntico a Figma», cómo comprobarlo y qué queda fuera.
 - `assets/example/icon-button/` — IconButton completo: contrato, tsx, CSS con bloque generado.
-- `scripts/gen-css.mjs`, `scripts/conformance.mjs`, `scripts/lib.mjs` — Node 18+, sin dependencias.
+- `scripts/gen-css.mjs`, `scripts/lib.mjs` — Node 18+, sin dependencias.
+- `scripts/conformance.mjs` (un componente), `scripts/conformance-all.mjs` (todos), `scripts/conformance.selftest.mjs` (prueba del verificador) — Node 18+ y el `typescript` del proyecto.

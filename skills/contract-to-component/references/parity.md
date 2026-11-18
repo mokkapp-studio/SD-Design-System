@@ -48,5 +48,6 @@ Qué puede diferir aunque el contrato se cumpla, y qué hacer:
 
 - El contrato es el único sitio donde se cambia la intención: **contrato primero**, versión nueva, luego código.
 - La copia del contrato junto al componente y el comentario `@contract` permiten detectar código atrasado: el verificador falla si no coinciden con el original.
-- Ejecuta el verificador en CI para todos los componentes:
-  `for d in src/components/*/; do node design-system/skills/contract-to-component/scripts/conformance.mjs "$d" --ds design-system || exit 1; done`
+- Ejecuta el verificador en CI para todos los componentes (ajusta las rutas a dónde esté el sistema):
+  `node <sistema>/skills/contract-to-component/scripts/conformance-all.mjs src/components --ds <sistema>`
+  En este repo: `npm run ds:conformance` desde `playground/`.
