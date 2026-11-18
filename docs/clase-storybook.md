@@ -23,7 +23,7 @@ Cinco webs con el mismo estilo = cinco proyectos con el mismo submódulo. Un cam
 ## Antes de la clase (docente)
 
 - [ ] Node 20+, Git y Claude Code en todos los equipos.
-- [ ] Este repo en GitHub, con la rama de la clase (`clase`). Los alumnos necesitan la URL.
+- [ ] Este repo en GitHub con todo en `main` (la rama que usan alumnos y submódulos). Los alumnos necesitan la URL: `git@github.com:mokkapp-studio/SD-Design-System.git`.
 - [ ] En este repo: `npm i && npm run conformance:self` debe dar **23/23**.
 - [ ] Haz los dos tutoriales una vez tú (unos 20 min con todo instalado).
 
@@ -40,7 +40,7 @@ git clone <url-de-este-repo> SD-Design-System
 ```
 
 ```bash
-cd SD-Design-System && git switch clase && npm i
+cd SD-Design-System && npm i
 ```
 
 React, los iconos y Storybook (sin asistente: así todos instalan lo mismo):
@@ -169,6 +169,18 @@ Cada grupo genera 2–3 componentes en orden, con su story:
 | 4 | RadioGroup, TextArea | — |
 | 5 | NavbarItem, FooterColumn | Link |
 
+**Ampliación o deberes** (dependen de los anteriores; se hacen cuando estos ya existen en `components/`):
+
+| Componente | Necesita | Ojo |
+|---|---|---|
+| FormField | TextField, Icon | Su slot `control` lleva el campo |
+| Form | FormField, Checkbox, Button, Badge, Icon | El más largo: 20 puntos en `needsReview` |
+| Navbar | NavbarItem, Button, IconButton | Menú móvil con `open` |
+| Footer | FooterColumn, Divider, IconButton, Icon | FooterColumn usa Link |
+| AlertDialog | Button | Compuesto (dos archivos). Su anatomía usa `Heading` y `Text`, que **no tienen contrato**: usa `h2` y `p` y márcalo `TODO(contract)` |
+
+Icon, IconLibrary y PhosphorIconLibrary no son componentes que se pinten por separado: Icon se hace en la demo y los otros dos describen el registro de iconos.
+
 Prompt por componente:
 
 ```
@@ -207,10 +219,10 @@ cd mi-web
 ```
 
 ```bash
-git submodule add -b clase <url-de-este-repo> design-system
+git submodule add <url-de-este-repo> design-system
 ```
 
-(Si el sistema ya está en la rama principal, sin `-b clase`.)
+(El submódulo sigue la rama principal, `main`. Para otra rama: `git submodule add -b <rama> <url> design-system`.)
 
 ## 2.2 Instalar el sistema con la skill `ds-install` (0:10–0:20)
 

@@ -37,3 +37,12 @@ Si el componente tiene que cambiar, se cambia **primero el contrato** (y su `ver
 - Los componentes de referencia viven en `components/<id>/` (tsx, module.css, copia del contrato y `<id>.stories.tsx`). Se generan con la skill `contract-to-component` y pasan `npm run conformance` a 0 errores.
 - Storybook (`npm run storybook`) es el catálogo del sistema. Las webs que lo consumen como submódulo no llevan Storybook: generan sus componentes desde los contratos (ver `docs/clase-storybook.md`).
 - Componentes compuestos (`Nombre.Root`, `Nombre.Item`…): partes en `<id>-parts.tsx` con `'use client'` y el objeto exportado desde `<id>.tsx` sin él.
+
+## Skills de este repo (`.claude/skills/`)
+
+| Skill | Para qué |
+|---|---|
+| `ui-contract-builder` | Crear, comparar y sincronizar contratos desde Figma o una mini-spec |
+| `component-spec` | Generar la Spec («Documentation») de un componente en Figma desde su contrato |
+| `contract-to-component` | Contrato → componente React + TypeScript verificado (`npm run conformance`) |
+| `ds-install` | Instalar el sistema en una web Next.js que lo usa como submódulo |
