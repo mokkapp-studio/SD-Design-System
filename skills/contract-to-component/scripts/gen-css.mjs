@@ -55,7 +55,7 @@ function decls(obj, combo) {
 }
 const dimsOf = (obj) => [...new Set(Object.values(obj).filter((v) => typeof v === 'string').flatMap((s) => placeholders(s).map((p) => p.prop)))];
 const rules = [];
-function emit(attrs, pseudo, obj, comment) {
+function emit(attrs, pseudo, obj) {
   if (!obj || !Object.keys(obj).length) return;
   const dims = dimsOf(obj).filter((d) => enums[d]);
   const combos = dims.reduce((acc, d) => acc.flatMap((c) => enums[d].map((v) => ({ ...c, [d]: v }))), [{}]);

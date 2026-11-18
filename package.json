@@ -10,6 +10,10 @@
     "lucide:figma": "node scripts/build-lucide-figma.mjs",
     "phosphor:build": "node scripts/build-phosphor-icons.mjs",
     "phosphor:catalog": "node scripts/build-phosphor-catalog.mjs",
-    "phosphor:figma": "node scripts/build-phosphor-figma.mjs"
+    "phosphor:figma": "node scripts/build-phosphor-figma.mjs",
+    "conformance:self": "node skills/contract-to-component/scripts/conformance.selftest.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   }
 }

@@ -1,6 +1,6 @@
 # AGENTS.md — proyecto Next.js
 
-Copia este archivo a la raíz del proyecto como `AGENTS.md`. Reglas para cualquier agente de IA que trabaje aquí.
+Añade este archivo al `AGENTS.md` de la raíz del proyecto (Next.js 16 ya crea uno con un bloque propio: no lo sobrescribas). Reglas para cualquier agente de IA que trabaje aquí.
 
 ## Este proyecto
 
@@ -16,11 +16,12 @@ Copia este archivo a la raíz del proyecto como `AGENTS.md`. Reglas para cualqui
 src/
 ├── app/                              páginas (App Router)
 │   ├── globals.css                   importa tokens.css
-│   └── playground/page.tsx           muestra todos los componentes y variantes
+│   └── page.tsx                      la web: solo con componentes de src/components/
 └── components/
     └── <nombre-en-kebab>/
         ├── <nombre>.tsx              componente
         ├── <nombre>.module.css       estilos
+        ├── <nombre>.stories.tsx      story de Storybook: variantes, tamaños y estados
         ├── <nombre>.contract.json    copia del contrato (no editar a mano)
         └── <nombre>.md               documentación generada desde el contrato
 design-system/                        contratos, tokens, docs, check.mjs
@@ -88,10 +89,10 @@ Pregunta. Si algo no está en el contrato, no lo rellenes con suposiciones.
 ## Al terminar
 
 Si la skill `contract-to-component` está instalada, úsala para crear o actualizar componentes. Antes de dar por bueno un componente, ejecuta:
-`node design-system/skills/contract-to-component/scripts/conformance.mjs src/components/<nombre> --ds design-system` (0 errores).
+`node design-system/skills/contract-to-component/scripts/conformance.mjs src/components/<nombre> --ds design-system` (0 errores) y, antes de cada commit, `npm run ds:conformance` (todos los componentes).
 
 Responde con una lista corta:
 1. Archivos creados o cambiados.
 2. Reglas del contrato aplicadas.
 3. Qué has dejado fuera o te ha hecho dudar (lo de `meta.needsReview` que afecta al código).
-4. Cómo probarlo (ruta del playground).
+4. Cómo probarlo (la story en Storybook: `npm run storybook`).

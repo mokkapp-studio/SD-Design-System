@@ -31,3 +31,9 @@ Reglas para cualquier agente de IA que trabaje con este sistema de diseño.
 ## Cambios
 
 Si el componente tiene que cambiar, se cambia **primero el contrato** (y su `version`), después el código.
+
+## Componentes de referencia y Storybook
+
+- Los componentes de referencia viven en `components/<id>/` (tsx, module.css, copia del contrato y `<id>.stories.tsx`). Se generan con la skill `contract-to-component` y pasan `npm run conformance` a 0 errores.
+- Storybook (`npm run storybook`) es el catálogo del sistema. Las webs que lo consumen como submódulo no llevan Storybook: generan sus componentes desde los contratos (ver `docs/clase-storybook.md`).
+- Componentes compuestos (`Nombre.Root`, `Nombre.Item`…): partes en `<id>-parts.tsx` con `'use client'` y el objeto exportado desde `<id>.tsx` sin él.

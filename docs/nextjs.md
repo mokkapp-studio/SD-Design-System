@@ -17,6 +17,7 @@ mi-proyecto/
 │       └── button/
 │           ├── button.tsx          ← el componente
 │           ├── button.module.css   ← estilos (solo variables CSS de los tokens)
+│           ├── button.stories.tsx  ← story de Storybook (variantes, tamaños, estados)
 │           ├── button.contract.json← copia del contrato: reglas para agentes
 │           └── button.md           ← documentación legible, generada desde el contrato
 ```
@@ -29,9 +30,17 @@ El contrato junto al componente permite que un agente que abra la carpeta `butto
 2. **Git submodule** cuando quieras actualizar desde el repo del sistema: `git submodule add <url> design-system`.
 3. Más adelante, un paquete publicado. No hace falta ahora.
 
+## Instalar con la skill `ds-install` (con submódulo)
+
+```bash
+mkdir -p .claude/skills && ln -s ../../design-system/skills/ds-install .claude/skills/
+```
+
+Y en Claude Code: «Instala el sistema de diseño con la skill ds-install». O sin IA: `node design-system/skills/ds-install/scripts/install.mjs`. Pone los tokens en `globals.css`, los iconos, el tema, los scripts `ds:*`, las exclusiones de TypeScript y ESLint, las reglas y enlaza `contract-to-component`. La web no lleva Storybook: el catálogo vive en el sistema. La clase completa, paso a paso: [`clase-storybook.md`](clase-storybook.md).
+
 ## AGENTS.md del proyecto Next.js
 
-Mínimo: copia el `AGENTS.md` de este repo y añade:
+Mínimo: añade `AGENTS.nextjs.md` al final del `AGENTS.md` que crea Next.js (no lo sobrescribas) y completa:
 
 ```md
 ## Este proyecto

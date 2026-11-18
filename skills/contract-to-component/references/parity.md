@@ -8,7 +8,7 @@
 
 ## Nivel 2 — Tokens ↔ valores finales (automático, opcional)
 
-El contrato fija *qué token va en cada sitio*; `tokens.css` fija su valor. Si ambos son los de Figma, los valores coinciden. Para comprobarlo en el navegador, con el playground abierto:
+El contrato fija *qué token va en cada sitio*; `tokens.css` fija su valor. Si ambos son los de Figma, los valores coinciden. Para comprobarlo en el navegador, con Storybook abierto:
 
 1. Para cada combinación (variante × color × tamaño × estado) lee `getComputedStyle` del elemento (`background-color`, `color`, `border-color`, `box-shadow`, `height`, `border-radius`).
 2. Compara con el valor que resulta de resolver el token del contrato en `tokens.css` (modo claro y oscuro).
@@ -32,7 +32,7 @@ Qué puede diferir aunque el contrato se cumpla, y qué hacer:
 **Procedimiento:**
 
 1. En Figma, `get_screenshot` del nodo `anchors.figma.node` (o de variantes concretas).
-2. En el navegador, captura el playground del mismo componente, mismo estado y tamaño.
+2. En el navegador, captura la story del mismo componente, mismo estado y tamaño.
 3. Compara por pares: mismo tamaño en px, mismos colores, mismo radio, mismo peso de texto.
 4. Cada diferencia real: ¿es del código (corrígelo), del contrato (cámbialo primero) o de Figma (anótalo en `meta.needsReview`)?
 
@@ -48,5 +48,6 @@ Qué puede diferir aunque el contrato se cumpla, y qué hacer:
 
 - El contrato es el único sitio donde se cambia la intención: **contrato primero**, versión nueva, luego código.
 - La copia del contrato junto al componente y el comentario `@contract` permiten detectar código atrasado: el verificador falla si no coinciden con el original.
-- Ejecuta el verificador en CI para todos los componentes:
-  `for d in src/components/*/; do node design-system/skills/contract-to-component/scripts/conformance.mjs "$d" --ds design-system || exit 1; done`
+- Ejecuta el verificador en CI para todos los componentes (ajusta las rutas a dónde esté el sistema):
+  `node <sistema>/skills/contract-to-component/scripts/conformance-all.mjs src/components --ds <sistema>`
+  En el proyecto que consume el sistema: `npm run ds:conformance` (ver `docs/nextjs.md`). El autotest del verificador se ejecuta en este repo: `npm i && npm run conformance:self`.
