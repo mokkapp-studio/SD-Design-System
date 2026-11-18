@@ -1,6 +1,6 @@
 # AGENTS.md — proyecto Next.js
 
-Copia este archivo a la raíz del proyecto como `AGENTS.md`. Reglas para cualquier agente de IA que trabaje aquí.
+Añade este archivo al `AGENTS.md` de la raíz del proyecto (Next.js 16 ya crea uno con un bloque propio: no lo sobrescribas). Reglas para cualquier agente de IA que trabaje aquí.
 
 ## Este proyecto
 

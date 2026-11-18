@@ -78,12 +78,13 @@ export function boundTokens(contract) {
 
 // Números sueltos permitidos (px) y opacity del contrato
 export function numericValues(contract) {
-  const px = new Set([0]); const opacity = new Set();
+  const px = new Set([0]); const opacity = new Set(); let inLayout = false;
   const walk = (o, key = '') => {
     if (typeof o === 'number') { if (key === 'opacity') opacity.add(o); else px.add(o); }
+    else if (typeof o === 'string' && inLayout) for (const m of o.matchAll(/(\d*\.?\d+)px\b/g)) px.add(Number(m[1])); // «2px 6px» en layout
     else if (Array.isArray(o)) o.forEach((x) => walk(x, key));
     else if (o && typeof o === 'object') for (const [k, v] of Object.entries(o)) walk(v, k === 'values' ? key : k);
   };
-  walk(contract.tokens?.bindings ?? {}); walk(contract.layout ?? {});
+  walk(contract.tokens?.bindings ?? {}); inLayout = true; walk(contract.layout ?? {});
   return { px, opacity };
 }

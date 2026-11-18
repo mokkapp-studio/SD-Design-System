@@ -47,7 +47,7 @@ El verificador usa el `typescript` del proyecto. Cada componente lleva su story 
 
 ## AGENTS.md del proyecto Next.js
 
-Mínimo: copia el `AGENTS.md` de este repo y añade:
+Mínimo: añade `AGENTS.nextjs.md` al final del `AGENTS.md` que crea Next.js (no lo sobrescribas) y completa:
 
 ```md
 ## Este proyecto

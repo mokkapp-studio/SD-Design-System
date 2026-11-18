@@ -69,8 +69,10 @@ const text = (n) => n.getText(sf);
 const isExported = (n) => !!n.modifiers?.some((m) => m.kind === K.ExportKeyword);
 const keyName = (n) => (n && (ts.isIdentifier(n) || ts.isStringLiteral(n)) ? n.text : n ? text(n) : undefined);
 
+// Alias de tipo declarados en el tsx, para resolverlos al comparar
+const localAliases = new Map(sf.statements.filter((s) => ts.isTypeAliasDeclaration(s) && !s.typeParameters).map((s) => [s.name.text, text(s.type)]));
 // Forma canónica de un tipo: uniones sin orden, comillas simples, sin espacios, sin «React.», sin undefined si es opcional
-function typeKey(typeText, optional) {
+function typeKey(typeText, optional, depth = 0) {
   typeText = String(typeText).replace(/(?<=\w)\s+\([A-Z][^()]*\)\s*$/, ''); // «ReactNode (RadioGroup.Item)»: la nota entre paréntesis no es tipo
   const f = ts.createSourceFile('t.ts', `type __T = ${typeText};`, ts.ScriptTarget.Latest, true);
   const alias = f.statements[0];
@@ -78,11 +80,16 @@ function typeKey(typeText, optional) {
   const norm = (n) => {
     if (ts.isParenthesizedTypeNode(n)) return norm(n.type);
     if (ts.isUnionTypeNode(n)) {
-      let ms = n.types.map(norm);
+      const isAlias = (t) => ts.isTypeReferenceNode(t) && localAliases.has(t.typeName.getText(f));
+      let ms = n.types.flatMap((t) => (isAlias(t) ? norm(t).split('|') : [norm(t)]));
       if (optional) ms = ms.filter((m) => m !== 'undefined');
       ms = [...new Set(ms)].sort();
       if (ms.length === 2 && ms.includes('false') && ms.includes('true')) return 'boolean';
       return ms.join('|');
+    }
+    // alias local del propio archivo (type BadgeColor = …): se compara su contenido, no su nombre
+    if (ts.isTypeReferenceNode(n) && !n.typeArguments && depth < 5 && localAliases.has(n.typeName.getText(f))) {
+      return typeKey(localAliases.get(n.typeName.getText(f)), optional, depth + 1);
     }
     return n.getText(f).replace(/\breact\./gi, '').replace(/"/g, "'").replace(/\s+/g, '').replace(/;}/g, '}');
   };

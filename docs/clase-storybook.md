@@ -34,25 +34,38 @@ cd mi-web
 git submodule add <url-de-este-repo> design-system
 ```
 
+Si la clase usa una rama que no es la principal del repo, añade `-b <rama>` (por ejemplo `git submodule add -b clase <url> design-system`).
+
 Enlaza las skills (así se actualizan con el submódulo):
 
 ```bash
 mkdir -p .claude/skills && ln -s ../../design-system/skills/contract-to-component .claude/skills/ && ln -s ../../design-system/skills/ui-contract-builder .claude/skills/
 ```
 
-Reglas del proyecto:
+Reglas del proyecto. Next.js 16 ya crea un `AGENTS.md` con un bloque suyo que `next dev` vuelve a escribir: **añade** las nuestras al final, no lo sobrescribas.
 
 ```bash
-cp design-system/AGENTS.nextjs.md AGENTS.md && printf '@AGENTS.md\n' > CLAUDE.md
+printf '\n' >> AGENTS.md && cat design-system/AGENTS.nextjs.md >> AGENTS.md && printf '@AGENTS.md\n' > CLAUDE.md
 ```
 
-Tokens: al principio de `src/app/globals.css`:
+Que TypeScript y ESLint no revisen el submódulo (si no, fallan por `icons/lucide/icons.ts`, que importa una librería que el proyecto no usa):
+
+- `tsconfig.json`: `"exclude": ["node_modules", "design-system"]`
+- `eslint.config.mjs`: añade `"design-system/**"` y `"storybook-static/**"` a `globalIgnores([...])`.
+
+Tokens: sustituye **todo** `src/app/globals.css` (el de la plantilla trae colores hex y su propio modo oscuro) por:
 
 ```css
 @import '../../design-system/tokens/tokens.css';
+
+body {
+  margin: 0;
+  background: var(--tokens-colors-page-background);
+  color: var(--tokens-colors-text);
+}
 ```
 
-Y en `src/app/layout.tsx`, `<html lang="es" data-theme="light">`.
+En `src/app/layout.tsx`, `<html lang="es" data-theme="light" …>`. Borra `src/app/page.module.css` y deja `src/app/page.tsx` como `export default function Home() { return <main />; }`.
 
 Iconos:
 
@@ -70,17 +83,20 @@ Scripts en `package.json`:
 ### Storybook
 
 ```bash
-npx storybook@latest init
+npx storybook@latest init --yes
 ```
 
-Elige el framework de Next.js con Vite si lo pregunta. Después, en `.storybook/preview.ts`, carga los tokens y añade el selector de tema (el modo oscuro lo da `tokens.css`; los componentes no escriben nada para dark):
+Detecta Next.js y elige `@storybook/nextjs-vite` solo. Instala también los addons de accesibilidad (`addon-a11y`, útil en clase: pestaña «Accessibility» en cada story) y de tests (Vitest + Playwright, que descarga un navegador: **hazlo antes de clase**, tarda unos minutos). Si al final sugiere `npx storybook skills setup`, no hace falta.
 
-```ts
+Borra las stories de ejemplo que crea (`src/stories/`). Después sustituye `.storybook/preview.tsx` (es `.tsx`) para cargar los tokens y añadir el selector de tema (el modo oscuro lo da `tokens.css`; los componentes no escriben nada para dark):
+
+```tsx
 import type { Decorator, Preview } from '@storybook/nextjs-vite';
 import '../design-system/tokens/tokens.css';
 
 const withTheme: Decorator = (Story, ctx) => {
   document.documentElement.dataset.theme = String(ctx.globals.theme ?? 'light');
+  document.body.style.background = 'var(--tokens-colors-page-background)';
   return Story();
 };
 
@@ -93,13 +109,16 @@ const preview: Preview = {
   },
   initialGlobals: { theme: 'light' },
   decorators: [withTheme],
+  parameters: { a11y: { test: 'todo' } },
 };
 export default preview;
 ```
 
-Borra las stories de ejemplo que crea el instalador (`src/stories/`).
+Las stories importan los tipos de `@storybook/nextjs-vite` (no de `@storybook/react-vite`). Si una story necesita estado, usa un componente con nombre en mayúscula (`function ControlledDemo() { const [v, setV] = useState(…) }`), no un hook dentro de `render`: el lint de Next lo rechaza.
 
-**Comprobación:** `npm run storybook` abre Storybook vacío; `npm run ds:check` da 0 errores; en Claude Code (sesión nueva) «¿qué skills tienes?» lista `contract-to-component`.
+**Comprobación:** `npm run storybook` abre Storybook vacío; `npm run ds:check` da 0 errores; `npx tsc --noEmit` y `npm run lint` pasan; en Claude Code (sesión nueva) «¿qué skills tienes?» lista `contract-to-component`.
+
+> Ensayado con Next.js 16.4, React 19.3 y Storybook 10.6: Icon, Badge y RadioGroup (compuesto) generados con la skill pasan `ds:conformance`, `tsc`, `lint`, `next build` y `storybook build`, en claro y en oscuro, y el teclado del RadioGroup funciona como dice su contrato.
 
 ## Paso 2 · Demo en directo: Icon (0:35–0:50)
 
