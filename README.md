@@ -155,7 +155,11 @@ SD-Design-System/
 │   │   ├── references/           contract-format · figma-reading · mini-spec ·
 │   │   │                         composite-components · contract-to-figma · project-setup
 │   │   └── scripts/check.mjs     Validador portátil para otros proyectos
+│   ├── component-spec/           Contrato → Spec («Documentation») del componente en Figma
+│   │   ├── references/           figma-reading · spec-template
+│   │   └── scripts/              build-spec.mjs · figma/ (extraer variables, dibujar anatomía y cotas)
 │   ├── ds-install/               Instala el sistema en un proyecto Next.js (tokens, iconos, reglas)
+│   │   └── scripts/install.mjs   Repetible; en la web, npm run ds:sync lo vuelve a aplicar
 │   └── contract-to-component/    Contrato → React + TypeScript verificado
 │       ├── SKILL.md
 │       ├── assets/example/icon-button/   Componente real que pasa el verificador
@@ -277,7 +281,15 @@ flowchart LR
 
 `conformance.mjs` lee el tsx con el compilador de TypeScript y el CSS por lista blanca: props con su tipo exacto y sus defaults, partes (`data-part`), `ref`, estados, ARIA y solo los tokens del contrato; sin hex, colores con nombre, `rem` ni px sueltos, sin duraciones inventadas, sin `opacity` ni `filter` en disabled y con foco visible. Lo que el contrato aún no fija se marca con `TODO(contract)` y sale como aviso. En el proyecto que consume el sistema, `npm run ds:conformance` lo pasa a todos los componentes ([`docs/nextjs.md`](docs/nextjs.md)). En este repo, `npm i && npm run conformance:self` comprueba que el propio verificador detecta errores sembrados.
 
-### 5. Cuando algo cambia: primero el contrato
+### 5. La skill `component-spec`: del contrato a la Spec en Figma
+
+Cuando un componente ya está dibujado en Figma, genera su Spec («Documentation») desde el contrato y la publica como Spec nativa de Figma: tablas de props, tokens y medidas en Markdown, y la anatomía y las cotas como dibujo. Compara Figma con el contrato y **avisa** de los desajustes, sin corregir nada. Prompt: «Genera la Spec de Button con component-spec». Necesita el MCP de Figma; detalle en [`skills/component-spec/SKILL.md`](skills/component-spec/SKILL.md).
+
+### 6. La skill `ds-install`: el sistema dentro de una web Next.js
+
+En un proyecto Next.js con este repo como submódulo (`design-system/`), instala los tokens en `globals.css` (`@import` o copia en `:root` y modo oscuro), los iconos del registry, el tema en `<html>`, los scripts `ds:*`, las reglas para la IA y enlaza `contract-to-component`. La web no lleva Storybook: el catálogo vive aquí. Prompt: «Instala el sistema de diseño con la skill ds-install». Paso a paso en [`docs/clase-storybook.md`](docs/clase-storybook.md) (tutorial 2).
+
+### 7. Cuando algo cambia: primero el contrato
 
 ```mermaid
 flowchart LR
