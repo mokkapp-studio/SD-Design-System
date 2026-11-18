@@ -71,6 +71,7 @@ const keyName = (n) => (n && (ts.isIdentifier(n) || ts.isStringLiteral(n)) ? n.t
 
 // Forma canónica de un tipo: uniones sin orden, comillas simples, sin espacios, sin «React.», sin undefined si es opcional
 function typeKey(typeText, optional) {
+  typeText = String(typeText).replace(/(?<=\w)\s+\([A-Z][^()]*\)\s*$/, ''); // «ReactNode (RadioGroup.Item)»: la nota entre paréntesis no es tipo
   const f = ts.createSourceFile('t.ts', `type __T = ${typeText};`, ts.ScriptTarget.Latest, true);
   const alias = f.statements[0];
   if (!alias || !ts.isTypeAliasDeclaration(alias)) return String(typeText).replace(/\s+/g, '');
@@ -96,7 +97,19 @@ const compExported = compFn && (ts.isFunctionDeclaration(compFn) ? isExported(co
 if (!compFn || !compExported) err(`falta «export function ${Name}» (export con nombre)`);
 
 // Tipo de props
-const propsDecl = nodes.find((n) => (ts.isInterfaceDeclaration(n) || ts.isTypeAliasDeclaration(n)) && n.name.text === `${Name}Props`);
+// API compuesta (composition.codeParts con «Nombre.Parte»): las props del contrato son las de Nombre.Root,
+// tipadas como <Nombre>Props o <Nombre>RootProps, y Nombre se exporta como objeto { Root, Item, … }.
+const compound = (c.composition?.codeParts ?? []).some((p) => String(p.name ?? p).startsWith(`${Name}.`));
+const propsNames = compound ? [`${Name}Props`, `${Name}RootProps`] : [`${Name}Props`];
+const propsDecl = nodes.find((n) => (ts.isInterfaceDeclaration(n) || ts.isTypeAliasDeclaration(n)) && propsNames.includes(n.name.text));
+if (compound && compFn && ts.isVariableDeclaration(compFn) && compFn.initializer) {
+  const init = compFn.initializer;
+  const keys = ts.isObjectLiteralExpression(init) ? init.properties.map((p) => keyName(p.name))
+    : ts.isCallExpression(init) && /Object\.assign/.test(text(init.expression)) ? init.arguments.flatMap((a) => (ts.isObjectLiteralExpression(a) ? a.properties.map((p) => keyName(p.name)) : []))
+    : [];
+  for (const part of c.composition.codeParts.map((p) => String(p.name ?? p)).filter((n) => n.startsWith(`${Name}.`)))
+    if (!keys.includes(part.slice(Name.length + 1))) err(`composition.codeParts: falta ${part} en el objeto exportado ${Name}`);
+}
 const members = new Map(); // nombre → { optional, type }
 if (!propsDecl || !isExported(propsDecl)) err(`falta «export interface ${Name}Props»`);
 else {
@@ -127,7 +140,12 @@ else {
 }
 
 // Defaults en la desestructuración
-const fnNode = compFn && (ts.isFunctionDeclaration(compFn) ? compFn : nodes.find((n) => (ts.isArrowFunction(n) || ts.isFunctionExpression(n)) && n.pos >= compFn.pos && n.end <= compFn.end));
+// La función que recibe las props del contrato: la que tipa su primer parámetro con el tipo de props
+const typedWith = (fn) => propsDecl && fn.parameters?.[0]?.type && text(fn.parameters[0].type) === propsDecl.name.text;
+const fnNode = nodes.find((n) => (ts.isFunctionDeclaration(n) || ts.isArrowFunction(n) || ts.isFunctionExpression(n)) && typedWith(n))
+  ?? (compFn && (ts.isFunctionDeclaration(compFn) ? compFn : nodes.find((n) => (ts.isArrowFunction(n) || ts.isFunctionExpression(n)) && n.pos >= compFn.pos && n.end <= compFn.end)));
+if (propsDecl && !nodes.some((n) => (ts.isFunctionDeclaration(n) || ts.isArrowFunction(n) || ts.isFunctionExpression(n)) && typedWith(n)))
+  err(`ninguna función recibe ${propsDecl.name.text}: tipa el parámetro del componente con él`);
 const param = fnNode?.parameters?.[0];
 const defaults = new Map();
 if (fnNode && (c.props ?? []).length) {
@@ -162,7 +180,12 @@ const jsx = nodes.filter((n) => ts.isJsxOpeningElement(n) || ts.isJsxSelfClosing
 });
 const attrNames = new Set(jsx.flatMap((e) => [...e.attrs.keys()]));
 const partsInJsx = jsx.map((e) => e.attrs.get('data-part')).filter((v) => typeof v === 'string');
-for (const p of parts) if (!partsInJsx.includes(p)) err(`falta data-part="${p}" en el JSX`);
+// Una parte que es un elemento HTML lleva su data-part sí o sí. Si es un svg u otro componente
+// (Heading, AlertDialog.Cancel…), puede que el data-part lo ponga ese componente: aviso.
+for (const p of parts) if (!partsInJsx.includes(p)) {
+  const el = String(c.anatomy[p].element ?? '');
+  (/^[a-z][a-z0-9]*$/.test(el) && el !== 'svg' ? err : warn)(`falta data-part="${p}" en el JSX`);
+}
 for (const p of new Set(partsInJsx)) if (!parts.includes(p) && c.anatomy?.[p]?.element !== 'css') err(`data-part="${p}" no es una parte de anatomy`);
 const refTarget = c.semantics?.refTarget;
 if (refTarget) {

@@ -17,6 +17,7 @@ mi-proyecto/
 │       └── button/
 │           ├── button.tsx          ← el componente
 │           ├── button.module.css   ← estilos (solo variables CSS de los tokens)
+│           ├── button.stories.tsx  ← story de Storybook (variantes, tamaños, estados)
 │           ├── button.contract.json← copia del contrato: reglas para agentes
 │           └── button.md           ← documentación legible, generada desde el contrato
 ```
@@ -28,6 +29,21 @@ El contrato junto al componente permite que un agente que abra la carpeta `butto
 1. **Copiar** la carpeta `tokens/` y `contracts/` dentro de `design-system/`. Suficiente para los ejercicios.
 2. **Git submodule** cuando quieras actualizar desde el repo del sistema: `git submodule add <url> design-system`.
 3. Más adelante, un paquete publicado. No hace falta ahora.
+
+## Skills y verificador (con submódulo)
+
+```bash
+mkdir -p .claude/skills && ln -s ../../design-system/skills/contract-to-component .claude/skills/ && ln -s ../../design-system/skills/ui-contract-builder .claude/skills/
+```
+
+En `package.json` del proyecto:
+
+```json
+"ds:check": "node design-system/check.mjs design-system",
+"ds:conformance": "node design-system/skills/contract-to-component/scripts/conformance-all.mjs src/components --ds design-system"
+```
+
+El verificador usa el `typescript` del proyecto. Cada componente lleva su story (`<id>.stories.tsx`) en Storybook. La clase completa, paso a paso: [`clase-storybook.md`](clase-storybook.md).
 
 ## AGENTS.md del proyecto Next.js
 

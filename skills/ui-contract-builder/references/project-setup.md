@@ -47,6 +47,7 @@ ln -s ../../skills/ui-contract-builder .claude/skills/ui-contract-builder
 # desde la raíz del proyecto Next.js
 mkdir -p .claude/skills
 ln -s ../../design-system/skills/ui-contract-builder .claude/skills/ui-contract-builder
+ln -s ../../design-system/skills/contract-to-component .claude/skills/contract-to-component
 git add .claude/skills
 ```
 

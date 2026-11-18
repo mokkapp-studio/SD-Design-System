@@ -132,7 +132,7 @@ SD-Design-System/
 ├── AGENTS.md                     Reglas para cualquier agente de IA en este repo
 ├── AGENTS.nextjs.md              Plantilla de AGENTS.md para el proyecto Next.js que consume el sistema
 ├── check.mjs                     Validador: contratos, tokens e iconos (sin dependencias)
-├── package.json                  Scripts npm (tokens, check, iconos)
+├── package.json                  Scripts npm (tokens, check, iconos, autotest del verificador)
 │
 ├── tokens/                       🎨 Decisiones visuales
 │   ├── tokens.json               Única fuente de tokens (exportada de Figma, con modos)
@@ -182,6 +182,7 @@ SD-Design-System/
     ├── components.md             Índice de componentes y vocabulario de props
     ├── icons.md                  Iconos (Phosphor, con Lucide como alternativa)
     ├── nextjs.md                 Llevar el sistema a un proyecto Next.js
+    ├── clase-storybook.md        Clase: Next.js + Storybook con todos los componentes
     ├── prompts-nextjs.md         Prompts listos para usar con el agente
     └── ejercicios.md             Ejercicios prácticos
 ```
@@ -270,10 +271,10 @@ flowchart LR
   GEN --> CSS[gen-css.mjs<br/>bloque de tokens generado]
   CSS --> VER{conformance.mjs<br/>¿0 errores?}
   VER -- no --> FIX[Arreglar el código] --> VER
-  VER -- sí --> PG[tsc · lint · playground]
+  VER -- sí --> PG[tsc · lint · Storybook]
 ```
 
-`conformance.mjs` lee el tsx con el compilador de TypeScript y el CSS por lista blanca: props con su tipo exacto y sus defaults, partes (`data-part`), `ref`, estados, ARIA y solo los tokens del contrato; sin hex, colores con nombre, `rem` ni px sueltos, sin duraciones inventadas, sin `opacity` ni `filter` en disabled y con foco visible. Lo que el contrato aún no fija se marca con `TODO(contract)` y sale como aviso. `npm run ds:conformance` (en `playground/`) lo pasa a todos los componentes y `npm run ds:conformance:self` comprueba que el propio verificador detecta errores sembrados.
+`conformance.mjs` lee el tsx con el compilador de TypeScript y el CSS por lista blanca: props con su tipo exacto y sus defaults, partes (`data-part`), `ref`, estados, ARIA y solo los tokens del contrato; sin hex, colores con nombre, `rem` ni px sueltos, sin duraciones inventadas, sin `opacity` ni `filter` en disabled y con foco visible. Lo que el contrato aún no fija se marca con `TODO(contract)` y sale como aviso. En el proyecto que consume el sistema, `npm run ds:conformance` lo pasa a todos los componentes ([`docs/nextjs.md`](docs/nextjs.md)). En este repo, `npm i && npm run conformance:self` comprueba que el propio verificador detecta errores sembrados.
 
 ### 5. Cuando algo cambia: primero el contrato
 
@@ -355,6 +356,7 @@ El agente lee [`AGENTS.md`](AGENTS.md) antes de tocar nada. **Si algo no está e
 | [`docs/components.md`](docs/components.md) | Índice de componentes y vocabulario de props |
 | [`docs/icons.md`](docs/icons.md) | Iconos con Phosphor (por defecto) o Lucide |
 | [`docs/nextjs.md`](docs/nextjs.md) | Llevar el sistema a un proyecto Next.js |
+| [`docs/clase-storybook.md`](docs/clase-storybook.md) | Clase paso a paso: submódulo, componentes con la skill y Storybook |
 | [`docs/prompts-nextjs.md`](docs/prompts-nextjs.md) | Prompts listos para trabajar con el agente |
 | [`docs/ejercicios.md`](docs/ejercicios.md) | Ejercicios prácticos para aprender el sistema |
 
@@ -366,7 +368,7 @@ El agente lee [`AGENTS.md`](AGENTS.md) antes de tocar nada. **Si algo no está e
 
 ## 🚫 Qué no incluye (a propósito)
 
-CI, Storybook y un generador de documentación. Se añaden cuando hagan falta.
+Componentes, Storybook, CI y un generador de documentación. Los componentes y su Storybook se construyen en el proyecto que consume el sistema ([`docs/clase-storybook.md`](docs/clase-storybook.md)); lo demás se añade cuando haga falta.
 
 ---
 

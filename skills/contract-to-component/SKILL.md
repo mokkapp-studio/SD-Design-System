@@ -50,10 +50,10 @@ La skill hermana `ui-contract-builder` crea los contratos. Esta solo los consume
      Escribe entre `/* @generated:start */` y `/* @generated:end */`; lo demás del archivo es tuyo. Si el script avisa de «claves sin traducir», esas las escribes tú desde el contrato (ver implementation-map).
    - Escribe a mano solo lo que el contrato no tiene como token: reinicio del elemento, tamaño del icono (`layout.iconSize`), foco, carga.
 6. **Verificar:** `node <skill>/scripts/conformance.mjs src/components/<id> --ds <sistema>` (desde el proyecto: necesita su `typescript`). Debe dar **0 errores**. Si falla, arregla el código (regla 8 si es el contrato). Repite. No uses `TODO(contract)` para esquivar un error que el contrato sí resuelve.
-7. **Verificar el proyecto:** `conformance-all.mjs src/components --ds <sistema>` (todas las carpetas; una carpeta sin contrato es error), `tsc --noEmit` (o `npm run build`), `npm run lint`. Añade el componente al playground con todas sus variantes, tamaños y estados.
+7. **Verificar el proyecto:** `conformance-all.mjs src/components --ds <sistema>` (todas las carpetas; una carpeta sin contrato es error), `tsc --noEmit` (o `npm run build`), `npm run lint`. Escribe su story (`<id>.stories.tsx`) con todas sus variantes, tamaños y estados.
    Si cambias el verificador, ejecuta `conformance.selftest.mjs`: el ejemplo debe pasar y cada error sembrado debe fallar.
 8. **Paridad con Figma:** si lo piden, o si el componente es crítico, `references/parity.md`.
-9. **Resumen** (corto): archivos creados; reglas del contrato aplicadas; puntos de `needsReview` / `TODO(contract)` que quedan; resultado del verificador; cómo probarlo (ruta del playground).
+9. **Resumen** (corto): archivos creados; reglas del contrato aplicadas; puntos de `needsReview` / `TODO(contract)` que quedan; resultado del verificador; cómo probarlo (su story en Storybook).
 
 ## Actualizar un componente cuando cambia el contrato
 

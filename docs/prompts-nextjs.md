@@ -18,10 +18,11 @@ Lee AGENTS.md. Prepara el proyecto Next.js para usar el sistema de diseño de de
 1. En src/app/globals.css importa design-system/tokens/tokens.css al principio.
 2. En src/app/layout.tsx añade data-theme="light" al <html>.
 3. Añade a package.json los scripts:
-   "ds:check": "node design-system/check.mjs"
+   "ds:check": "node design-system/check.mjs design-system"
    "ds:tokens": "node design-system/scripts/build-tokens.mjs"
-4. Crea src/components/ y src/app/playground/page.tsx (una página vacía con el título «Playground»).
-5. Comprueba que `npm run dev` arranca y que `npm run ds:check` pasa.
+   "ds:conformance": "node design-system/skills/contract-to-component/scripts/conformance-all.mjs src/components --ds design-system"
+4. Crea src/components/ y prepara Storybook: `npx storybook@latest init` (framework Next.js con Vite). En .storybook/preview.ts importa ../design-system/tokens/tokens.css y añade un selector de tema que ponga data-theme="light" o "dark" en <html>.
+5. Comprueba que `npm run dev` y `npm run storybook` arrancan y que `npm run ds:check` pasa.
 
 No crees ningún componente todavía. Resume lo que has cambiado.
 ```
@@ -49,7 +50,7 @@ Adelante con el plan, con estos ajustes: <ajustes o «ninguno»>.
 
 1. Crea src/components/<nombre>/ con <nombre>.tsx y <nombre>.module.css.
 2. Copia el contrato a src/components/<nombre>/<nombre>.contract.json (sin modificarlo).
-3. Añade el componente al playground con todas sus variantes, tamaños y estados.
+3. Escribe src/components/<nombre>/<nombre>.stories.tsx con todas sus variantes, tamaños y estados.
 4. Ejecuta `npm run build` y `npm run lint`. Corrige lo que falle.
 
 Termina con el resumen de AGENTS.md.
@@ -117,7 +118,7 @@ Termina con la lista de componentes usados y los que faltan.
 design-system/contracts/<Componente>.contract.json ha cambiado (versión <x.y.z>).
 1. Vuelve a copiarlo a src/components/<nombre>/<nombre>.contract.json.
 2. Compara el contrato nuevo con el código actual y dime qué hay que cambiar. No cambies código todavía.
-3. Cuando te lo confirme, aplícalo, regenera <nombre>.md y actualiza el playground.
+3. Cuando te lo confirme, aplícalo, regenera <nombre>.md y actualiza su story.
 ```
 
 ## 7. Cambiaron los tokens
@@ -146,7 +147,7 @@ Lee AGENTS.md y design-system/docs/icons.md. Instala los iconos de Phosphor:
 1. npm install @phosphor-icons/react
 2. Añade a package.json el script "ds:icons": "node design-system/scripts/build-phosphor-icons.mjs src/components/icon/icons.ts" y ejecútalo.
 3. Crea src/components/icon/ con icon.tsx y icon.module.css desde design-system/contracts/Icon.contract.json (con la prop weight: regular por defecto, fill para el estado activo), y copia el contrato.
-4. Añade al playground una fila con todos los iconos de design-system/icons/phosphor/registry.json a los tamaños 14, 16, 18 y 20, en los pesos regular y fill.
+4. Añade a icon.stories.tsx una story con todos los iconos de design-system/icons/phosphor/registry.json a los tamaños 14, 16, 18 y 20, en los pesos regular y fill.
 No modifiques otros componentes todavía. Resume lo que has hecho.
 ```
 
@@ -157,7 +158,7 @@ Lee design-system/contracts/<Componente>.contract.json y src/components/icon/.
 El componente tiene slots de icono (<icon, iconEnd…>). Haz que:
 - el tamaño del icono salga de layout.iconSize del contrato, por CSS según size;
 - el color se herede (currentColor);
-- el playground muestre el componente con y sin icono.
+- su story muestre el componente con y sin icono.
 No importes iconos dentro del componente: los recibe como nodo.
 ```
 
