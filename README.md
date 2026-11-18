@@ -155,6 +155,7 @@ SD-Design-System/
 │   │   ├── references/           contract-format · figma-reading · mini-spec ·
 │   │   │                         composite-components · contract-to-figma · project-setup
 │   │   └── scripts/check.mjs     Validador portátil para otros proyectos
+│   ├── ds-install/               Instala el sistema en un proyecto Next.js (tokens, iconos, reglas)
 │   └── contract-to-component/    Contrato → React + TypeScript verificado
 │       ├── SKILL.md
 │       ├── assets/example/icon-button/   Componente real que pasa el verificador
@@ -182,7 +183,7 @@ SD-Design-System/
     ├── components.md             Índice de componentes y vocabulario de props
     ├── icons.md                  Iconos (Phosphor, con Lucide como alternativa)
     ├── nextjs.md                 Llevar el sistema a un proyecto Next.js
-    ├── clase-storybook.md        Clase: Next.js + Storybook con todos los componentes
+    ├── clase-storybook.md        Clase: Storybook aquí + webs Next.js con el submódulo
     ├── prompts-nextjs.md         Prompts listos para usar con el agente
     └── ejercicios.md             Ejercicios prácticos
 ```
@@ -356,7 +357,7 @@ El agente lee [`AGENTS.md`](AGENTS.md) antes de tocar nada. **Si algo no está e
 | [`docs/components.md`](docs/components.md) | Índice de componentes y vocabulario de props |
 | [`docs/icons.md`](docs/icons.md) | Iconos con Phosphor (por defecto) o Lucide |
 | [`docs/nextjs.md`](docs/nextjs.md) | Llevar el sistema a un proyecto Next.js |
-| [`docs/clase-storybook.md`](docs/clase-storybook.md) | Clase paso a paso: submódulo, componentes con la skill y Storybook |
+| [`docs/clase-storybook.md`](docs/clase-storybook.md) | Clase en dos tutoriales: Storybook en este repo y una web Next.js con el sistema como submódulo |
 | [`docs/prompts-nextjs.md`](docs/prompts-nextjs.md) | Prompts listos para trabajar con el agente |
 | [`docs/ejercicios.md`](docs/ejercicios.md) | Ejercicios prácticos para aprender el sistema |
 
@@ -368,7 +369,7 @@ El agente lee [`AGENTS.md`](AGENTS.md) antes de tocar nada. **Si algo no está e
 
 ## 🚫 Qué no incluye (a propósito)
 
-Componentes, Storybook, CI y un generador de documentación. Los componentes y su Storybook se construyen en el proyecto que consume el sistema ([`docs/clase-storybook.md`](docs/clase-storybook.md)); lo demás se añade cuando haga falta.
+Componentes, Storybook, CI y un generador de documentación. Los componentes de referencia (`components/`) y su Storybook se montan en este repo durante la clase, y cada web Next.js genera los suyos desde los contratos con `ds-install` y `contract-to-component` ([`docs/clase-storybook.md`](docs/clase-storybook.md)); lo demás se añade cuando haga falta.
 
 ---
 

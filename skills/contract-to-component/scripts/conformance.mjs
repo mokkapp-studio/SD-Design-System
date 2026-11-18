@@ -61,16 +61,21 @@ if (!header) err(`falta el comentario «@contract ${Name}@${c.version}» al prin
 else if (header[1] !== Name || header[2] !== c.version) err(`el tsx dice @contract ${header[1]}@${header[2]}; el contrato es ${Name}@${c.version}`);
 
 // ─── 2. TSX con el compilador ────────────────────────────────────────────────
-const sf = ts.createSourceFile(tsxName, tsx, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+// Todos los .tsx de la carpeta (salvo stories y tests) cuentan como el componente: p. ej. un archivo
+// «use client» con las partes y otro sin él que exporta el objeto compuesto.
+const sources = files.filter((f) => f.endsWith('.tsx') && !/\.(test|stories)\.tsx$/.test(f))
+  .map((f) => ts.createSourceFile(f, f === tsxName ? tsx : fs.readFileSync(path.join(dir, f), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX));
+const sf = sources.find((x) => x.fileName === tsxName);
 const K = ts.SyntaxKind;
 const nodes = [];
-(function visit(n) { nodes.push(n); ts.forEachChild(n, visit); })(sf);
-const text = (n) => n.getText(sf);
+for (const src of sources) (function visit(n) { nodes.push(n); ts.forEachChild(n, visit); })(src);
+const text = (n) => n.getText();
+const isClientFile = (src) => src.statements[0] && ts.isExpressionStatement(src.statements[0]) && ts.isStringLiteral(src.statements[0].expression) && src.statements[0].expression.text === 'use client';
 const isExported = (n) => !!n.modifiers?.some((m) => m.kind === K.ExportKeyword);
 const keyName = (n) => (n && (ts.isIdentifier(n) || ts.isStringLiteral(n)) ? n.text : n ? text(n) : undefined);
 
 // Alias de tipo declarados en el tsx, para resolverlos al comparar
-const localAliases = new Map(sf.statements.filter((s) => ts.isTypeAliasDeclaration(s) && !s.typeParameters).map((s) => [s.name.text, text(s.type)]));
+const localAliases = new Map(sources.flatMap((x) => x.statements).filter((s) => ts.isTypeAliasDeclaration(s) && !s.typeParameters).map((s) => [s.name.text, text(s.type)]));
 // Forma canónica de un tipo: uniones sin orden, comillas simples, sin espacios, sin «React.», sin undefined si es opcional
 function typeKey(typeText, optional, depth = 0) {
   typeText = String(typeText).replace(/(?<=\w)\s+\([A-Z][^()]*\)\s*$/, ''); // «ReactNode (RadioGroup.Item)»: la nota entre paréntesis no es tipo
@@ -220,9 +225,14 @@ for (const n of nodes) if (ts.isImportDeclaration(n)) {
   const from = n.moduleSpecifier.text;
   if (from === 'lucide-react' || /^@phosphor-icons\/react/.test(from)) err(`import directo de ${from}: usa los iconos del registry (icons.ts) a través de Icon`);
 }
-const hooks = nodes.filter((n) => ts.isCallExpression(n) && ts.isIdentifier(n.expression) && /^use(State|Effect|LayoutEffect|Ref|Reducer|Context|Transition|Optimistic|ActionState)$/.test(n.expression.text));
-const useClient = sf.statements[0] && ts.isExpressionStatement(sf.statements[0]) && ts.isStringLiteral(sf.statements[0].expression) && sf.statements[0].expression.text === 'use client';
-if (hooks.length && !useClient) err('usa hooks de estado o efecto pero falta «use client» al principio del archivo');
+for (const src of sources) {
+  const hooks = nodes.filter((n) => n.getSourceFile() === src && ts.isCallExpression(n) && ts.isIdentifier(n.expression) && /^use(State|Effect|LayoutEffect|Ref|Reducer|Context|Transition|Optimistic|ActionState)$/.test(n.expression.text));
+  if (hooks.length && !isClientFile(src)) err(`${src.fileName} usa hooks de estado o efecto pero le falta «use client» al principio`);
+}
+// Next.js: en un Server Component no se puede escribir <RadioGroup.Root> si el objeto RadioGroup se exporta
+// desde un archivo «use client» (las referencias de cliente no admiten la notación con punto).
+if (compound && compFn && ts.isVariableDeclaration(compFn) && isClientFile(compFn.getSourceFile()))
+  err(`${Name} se exporta como objeto desde un archivo «use client»: <${Name}.Root> fallará en Server Components de Next.js. Pon las partes en un archivo «use client» (p. ej. ${id}-parts.tsx) y exporta el objeto { Root, … } desde ${id}.tsx, sin «use client»`);
 
 // Elementos nativos que el contrato prohíbe dentro
 for (const f of c.composition?.forbiddenChildren ?? []) {
@@ -317,7 +327,7 @@ if (unused.length) err(`${unused.length} tokens de tokens.bindings no aparecen e
 
 // ─── 4. Lo que queda por decidir ─────────────────────────────────────────────
 const nr = c.meta?.needsReview ?? [];
-const todos = (tsx + css).match(/TODO\(contract\)/g)?.length ?? 0;
+const todos = (sources.map((x) => x.text).join('\n') + css).match(/TODO\(contract\)/g)?.length ?? 0;
 if (nr.length) warn(`el contrato tiene ${nr.length} puntos en meta.needsReview y el código ${todos} TODO(contract): confirma que ninguno se ha rellenado con suposiciones`);
 
 for (const w of warnings) console.log('aviso  ', w);

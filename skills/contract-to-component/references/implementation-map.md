@@ -25,6 +25,7 @@ Una fila por bloque. El ejemplo completo es `assets/example/icon-button/`.
 | `behavior.motion[]` | `transition` solo en la propiedad indicada; `@media (prefers-reduced-motion: reduce)` → instantáneo. La duración sale de un token; si el contrato no la fija, la línea lleva `/* TODO(contract): … */` |
 | `behavior.responsive[]` | `@media` con el breakpoint indicado. Si es un valor suelto, es un `needsReview` |
 | `composition.forbiddenChildren` | Comentario/tipo; el contrato manda: no los renderices dentro |
+| `composition.codeParts` (`Nombre.Root`, `Nombre.Item`…) | API compuesta con contexto de React. **Dos archivos:** las partes en `<id>-parts.tsx` con `'use client'` (exportadas, con sus tipos de props) y `<id>.tsx` sin `'use client'`, con la cabecera `@contract` y `export const Nombre = { Root, Item }`. Así `<Nombre.Root>` funciona en Server Components de Next.js; el verificador lee los dos |
 | `composition.nestedComponents` | Importa el componente existente y úsalo con sus `fixedProps` |
 | `a11y` | Nombre accesible, teclado, foco visible, área mínima. `aria-label` obligatorio si el contrato lo exige (prop requerida) |
 | `meta.needsReview` | Lo que afecte: pregunta, o `TODO(contract): …` y a la lista del resumen |

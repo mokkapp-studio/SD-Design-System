@@ -30,20 +30,13 @@ El contrato junto al componente permite que un agente que abra la carpeta `butto
 2. **Git submodule** cuando quieras actualizar desde el repo del sistema: `git submodule add <url> design-system`.
 3. Más adelante, un paquete publicado. No hace falta ahora.
 
-## Skills y verificador (con submódulo)
+## Instalar con la skill `ds-install` (con submódulo)
 
 ```bash
-mkdir -p .claude/skills && ln -s ../../design-system/skills/contract-to-component .claude/skills/ && ln -s ../../design-system/skills/ui-contract-builder .claude/skills/
+mkdir -p .claude/skills && ln -s ../../design-system/skills/ds-install .claude/skills/
 ```
 
-En `package.json` del proyecto:
-
-```json
-"ds:check": "node design-system/check.mjs design-system",
-"ds:conformance": "node design-system/skills/contract-to-component/scripts/conformance-all.mjs src/components --ds design-system"
-```
-
-El verificador usa el `typescript` del proyecto. Cada componente lleva su story (`<id>.stories.tsx`) en Storybook. La clase completa, paso a paso: [`clase-storybook.md`](clase-storybook.md).
+Y en Claude Code: «Instala el sistema de diseño con la skill ds-install». O sin IA: `node design-system/skills/ds-install/scripts/install.mjs`. Pone los tokens en `globals.css`, los iconos, el tema, los scripts `ds:*`, las exclusiones de TypeScript y ESLint, las reglas y enlaza `contract-to-component`. La web no lleva Storybook: el catálogo vive en el sistema. La clase completa, paso a paso: [`clase-storybook.md`](clase-storybook.md).
 
 ## AGENTS.md del proyecto Next.js
 
