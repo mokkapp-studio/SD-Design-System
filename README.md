@@ -189,6 +189,7 @@ SD-Design-System/
     ├── nextjs.md                 Llevar el sistema a un proyecto Next.js
     ├── clase-storybook.md        Clase: Storybook aquí + webs Next.js con el submódulo
     ├── prompts-nextjs.md         Prompts listos para usar con el agente
+    ├── paquete-npm.md            Clase: del contrato al paquete npm
     └── ejercicios.md             Ejercicios prácticos
 ```
 
@@ -370,6 +371,7 @@ El agente lee [`AGENTS.md`](AGENTS.md) antes de tocar nada. **Si algo no está e
 | [`docs/icons.md`](docs/icons.md) | Iconos con Phosphor (por defecto) o Lucide |
 | [`docs/nextjs.md`](docs/nextjs.md) | Llevar el sistema a un proyecto Next.js |
 | [`docs/clase-storybook.md`](docs/clase-storybook.md) | Clase en dos tutoriales: Storybook en este repo y una web Next.js con el sistema como submódulo |
+| [`docs/paquete-npm.md`](docs/paquete-npm.md) | Clase: Storybook desde cero, componentes desde los contratos, paquete npm local y uso en Next.js |
 | [`docs/prompts-nextjs.md`](docs/prompts-nextjs.md) | Prompts listos para trabajar con el agente |
 | [`docs/ejercicios.md`](docs/ejercicios.md) | Ejercicios prácticos para aprender el sistema |
 
